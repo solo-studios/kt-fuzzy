@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2015 Thibault Debatty
  *
  * The file StringSimilarity.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:11 p.m.
+ * Last modified on 22-10-2021 04:48 p.m.
  *
  * MIT License
  *
@@ -35,7 +35,7 @@ package ca.solostudios.stringsimilarity.interfaces
  *
  * @author Thibault Debatty
  */
-interface StringSimilarity {
+public interface StringSimilarity {
     /**
      * Compute and return a measure of similarity between 2 strings.
      * Will always be >= `0`.
@@ -43,5 +43,5 @@ interface StringSimilarity {
      * @param s2 The second string
      * @return The string similarity. `0` means both strings are completely different.
      */
-    fun similarity(s1: String, s2: String): Double
+    public fun similarity(s1: String, s2: String): Double
 }

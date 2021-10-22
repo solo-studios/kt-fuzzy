@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file StringDistance.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:11 p.m.
+ * Last modified on 22-10-2021 04:48 p.m.
  *
  * MIT License
  *
@@ -31,7 +31,7 @@ package ca.solostudios.stringsimilarity.interfaces
  * Class for computing the distance between two strings.
  * @author Thibault Debatty
  */
-interface StringDistance {
+public interface StringDistance {
     /**
      * Compute and return a measure of distance.
      * Will always be >= `0`.
@@ -39,5 +39,5 @@ interface StringDistance {
      * @param s2 The second string
      * @return The string distance. `0` Means the strings are identical.
      */
-    fun distance(s1: String, s2: String): Double
+    public fun distance(s1: String, s2: String): Double
 }

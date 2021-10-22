@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kt-fuzzy
- * Last modified on 22-10-2021 03:27 p.m.
+ * Last modified on 22-10-2021 04:50 p.m.
  *
  * MIT License
  *
@@ -39,11 +39,19 @@ repositories {
 }
 
 kotlin {
+    explicitApi()
+    
+    targets.all {
+        compilations.all {
+            kotlinOptions.apiVersion = "1.5"
+            kotlinOptions.languageVersion = "1.5"
+            kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
+        }
+    }
+    
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-            kotlinOptions.languageVersion = "1.5"
-            kotlinOptions.apiVersion = "1.5"
         }
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()

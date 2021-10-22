@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file NormalizedStringSimilarity.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:10 p.m.
+ * Last modified on 22-10-2021 04:48 p.m.
  *
  * MIT License
  *
@@ -32,7 +32,7 @@ package ca.solostudios.stringsimilarity.interfaces
  *
  * @author Thibault Debatty
  */
-interface NormalizedStringSimilarity : StringSimilarity {
+public interface NormalizedStringSimilarity : StringSimilarity {
     /**
      * Compute and return a measure of distance.
      * Must be Will always be `1` >= x >= `0`.

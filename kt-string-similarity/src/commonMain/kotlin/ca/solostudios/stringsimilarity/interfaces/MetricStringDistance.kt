@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file MetricStringDistance.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:10 p.m.
+ * Last modified on 22-10-2021 04:48 p.m.
  *
  * MIT License
  *
@@ -38,7 +38,7 @@ package ca.solostudios.stringsimilarity.interfaces
  *
  * @author Thibault Debatty
  */
-interface MetricStringDistance : StringDistance {
+public interface MetricStringDistance : StringDistance {
     /**
      * Compute and return the metric distance.
      * @param s1 The first string.
