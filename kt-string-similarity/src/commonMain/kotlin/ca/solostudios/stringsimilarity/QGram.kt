@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file QGram.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:41 p.m.
+ * Last modified on 22-10-2021 05:44 p.m.
  *
  * MIT License
  *
@@ -43,8 +43,8 @@ import kotlin.math.abs
  * @throws IllegalArgumentException if k is &lt;= 0
  * @author Thibault Debatty
  */
-public class QGram(k: Int = 3) : ShingleBased(k),
-                                 StringDistance {
+public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
+                                         StringDistance {
     
     /**
      * The distance between two strings is defined as the L1 norm of the

@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file ShingleBased.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:41 p.m.
+ * Last modified on 22-10-2021 05:44 p.m.
  *
  * MIT License
  *
@@ -77,7 +77,7 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
     }
     
     public companion object {
-        private const val DEFAULT_K = 3
+        public const val DEFAULT_K: Int = 3
         
         /**
          * Pattern for finding multiple following spaces.
