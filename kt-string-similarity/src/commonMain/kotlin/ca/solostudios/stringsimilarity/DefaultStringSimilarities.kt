@@ -2,7 +2,7 @@
  * kt-string-similarity - A library implementing different string similarity and distance measures.
  * Copyright (c) 2015-2015 Thibault Debatty
  *
- * The file ExperimentalSimilarity.kt is part of kt-fuzzy
+ * The file DefaultStringSimilarities.kt is part of kt-fuzzy
  * Last modified on 22-10-2021 06:05 p.m.
  *
  * MIT License
@@ -26,9 +26,39 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity.annotations
+package ca.solostudios.stringsimilarity
 
-@RequiresOptIn(message = "This API is experimental. It may be unstable or not behave properly.")
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
-public annotation class ExperimentalSimilarity
+import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
+
+public object StringMatcher {
+    public val cosine: Cosine = Cosine()
+    
+    public val damerau: Damerau = Damerau()
+    
+    public val jaccard: Jaccard = Jaccard()
+    
+    public val jaroWinkler: JaroWinkler = JaroWinkler()
+    
+    public val levenshtein: Levenshtein = Levenshtein()
+    
+    public val longestCommonSubsequence: LongestCommonSubsequence = LongestCommonSubsequence()
+    
+    public val metricLCS: MetricLCS = MetricLCS()
+    
+    public val nGram: NGram = NGram()
+    
+    public val normalizedLevenshtein: NormalizedLevenshtein = NormalizedLevenshtein()
+    
+    public val optimalStringAlignment: OptimalStringAlignment = OptimalStringAlignment()
+    
+    public val qGram: QGram = QGram()
+    
+    public val ratcliffObershelp: RatcliffObershelp = RatcliffObershelp()
+    
+    @ExperimentalSimilarity
+    public val sift4: Sift4 = Sift4()
+    
+    public val sorensenDice: SorensenDice = SorensenDice()
+    
+    public val weightedLevenshtein: WeightedLevenshtein = WeightedLevenshtein({ _, _ -> 1.0 })
+}
