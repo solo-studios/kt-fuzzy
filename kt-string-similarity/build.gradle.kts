@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kt-fuzzy
- * Last modified on 22-10-2021 04:50 p.m.
+ * Last modified on 22-10-2021 08:05 p.m.
  *
  * MIT License
  *
@@ -59,6 +59,11 @@ kotlin {
     
     js(BOTH) {
         browser {
+            testTask {
+                useKarma {
+                    useFirefox()
+                }
+            }
             commonWebpackConfig {
                 cssSupport.enabled = true
             }
@@ -81,6 +86,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("com.soywiz.korlibs.korio:korio:2.2.0")
             }
         }
         val jvmMain by getting {
