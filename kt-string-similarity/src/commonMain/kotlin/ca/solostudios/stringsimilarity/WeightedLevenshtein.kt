@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file WeightedLevenshtein.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:22 p.m.
+ * Last modified on 22-10-2021 08:02 p.m.
  *
  * MIT License
  *
@@ -45,7 +45,7 @@ public class WeightedLevenshtein(
         public val charInsertionDeletionWeight: (Char) -> Weights = { Weights(1.0, 1.0) },
                                 ) : StringDistance {
     
-    override fun distance(s1: String, s2: String): Double = distance(s1, s2)
+    override fun distance(s1: String, s2: String): Double = distance(s1, s2, limit = Double.MAX_VALUE)
     
     /**
      * Compute Levenshtein distance using provided weights for substitution.

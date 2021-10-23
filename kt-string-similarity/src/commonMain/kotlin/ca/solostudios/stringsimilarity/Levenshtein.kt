@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file Levenshtein.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:00 p.m.
+ * Last modified on 22-10-2021 08:01 p.m.
  *
  * MIT License
  *
@@ -64,7 +64,7 @@ public class Levenshtein : MetricStringDistance {
      * @return The computed Levenshtein distance.
      * @see distance
      */
-    override fun distance(s1: String, s2: String): Double = distance(s1, s2)
+    override fun distance(s1: String, s2: String): Double = distance(s1, s2, limit = Int.MAX_VALUE)
     
     /**
      * The Levenshtein distance, or edit distance, between two words is the
