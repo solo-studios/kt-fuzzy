@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file Sift4.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:49 p.m.
+ * Last modified on 22-10-2021 08:11 p.m.
  *
  * MIT License
  *
@@ -65,13 +65,13 @@ public class Sift4 : StringDistance {
      * @return
      */
     override fun distance(s1: String, s2: String): Double {
-        // if (s1.isEmpty()) {
-        //     return s2.length.toDouble()
-        // }
-        
-        // if (s2.isEmpty()) {
-        //     return s1.length.toDouble()
-        // }
+        if (s1.isEmpty()) {
+            return s2.length.toDouble()
+        }
+    
+        if (s2.isEmpty()) {
+            return s1.length.toDouble()
+        }
         val l1 = s1.length
         val l2 = s2.length
         var c1 = 0 // cursor for string 1
@@ -79,7 +79,7 @@ public class Sift4 : StringDistance {
         var lcss = 0 // largest common subsequence
         var localCs = 0 // local common substring
         var trans = 0 // number of transpositions ('ab' vs 'ba')
-        
+    
         /**
          * Used to store relation between same character in different positions
          * c1 and c2 in the input strings.

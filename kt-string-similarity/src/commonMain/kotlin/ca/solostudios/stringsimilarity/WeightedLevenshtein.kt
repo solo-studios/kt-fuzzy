@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file WeightedLevenshtein.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:02 p.m.
+ * Last modified on 22-10-2021 08:10 p.m.
  *
  * MIT License
  *
@@ -60,7 +60,7 @@ public class WeightedLevenshtein(
      */
     public fun distance(s1: String, s2: String, limit: Double = Double.MAX_VALUE): Double {
         if (s1 == s2) {
-            return 0.toDouble()
+            return 0.0
         }
         if (s1.isEmpty()) {
             return s2.length.toDouble()

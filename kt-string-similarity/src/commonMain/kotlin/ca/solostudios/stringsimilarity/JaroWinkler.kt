@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file JaroWinkler.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:54 p.m.
+ * Last modified on 22-10-2021 08:10 p.m.
  *
  * MIT License
  *
@@ -61,12 +61,12 @@ public class JaroWinkler(public val threshold: Double = DEFAULT_THRESHOLD) : Nor
             return 1.0
         }
         val mtp = matches(s1, s2)
-        val m = mtp[0].toFloat()
-        if (m == 0f) {
+        val m = mtp[0].toDouble()
+        if (m == 0.0) {
             return 0.0
         }
         val j = ((m / s1.length + m / s2.length + (m - mtp[1]) / m)
-                / THREE).toDouble()
+                / THREE)
         var jw = j
         if (j > threshold) {
             jw = j + min(JW_COEFFICIENT, 1.0 / mtp[THREE]) * mtp[2] * (1 - j)

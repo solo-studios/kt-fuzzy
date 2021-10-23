@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file NormalizedLevenshtein.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:10 p.m.
+ * Last modified on 22-10-2021 08:10 p.m.
  *
  * MIT License
  *
@@ -51,13 +51,13 @@ public class NormalizedLevenshtein : NormalizedStringDistance,
      */
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2) {
-            return 0.toDouble()
+            return 0.0
         }
         
         val maxLen: Int = max(s1.length, s2.length)
         
         return if (maxLen == 0) {
-            0.toDouble()
+            0.0
         } else levenshtein.distance(s1, s2) / maxLen
     }
     

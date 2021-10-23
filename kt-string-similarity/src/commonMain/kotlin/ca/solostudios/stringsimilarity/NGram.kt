@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file NGram.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:12 p.m.
+ * Last modified on 22-10-2021 08:10 p.m.
  *
  * MIT License
  *
@@ -52,13 +52,13 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
      */
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2) {
-            return 0.toDouble()
+            return 0.0
         }
         val special = '\n'
         val sl = s1.length
         val tl = s2.length
         if (sl == 0 || tl == 0) {
-            return 1.toDouble()
+            return 1.0
         }
         var cost = 0
         if (sl < n || tl < n) {
@@ -139,7 +139,7 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
         
         // our last action in the above loop was to switch d and p, so p now
         // actually has the most recent cost counts
-        return p[sl] / max(tl, sl).toDouble()
+        return p[sl] / max(tl, sl)
     }
     
     private companion object {
