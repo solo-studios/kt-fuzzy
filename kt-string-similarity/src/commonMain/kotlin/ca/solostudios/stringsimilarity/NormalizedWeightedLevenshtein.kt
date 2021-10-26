@@ -4,10 +4,10 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import kotlin.math.max
 
-public class NormalizedWeightedLevenshteinDistance(
+public class NormalizedWeightedLevenshtein(
         charSubstitutionWeight: (Char, Char) -> Double,
         charInsertionDeletionWeight: (Char) -> WeightedLevenshtein.Weights = { WeightedLevenshtein.Weights(1.0, 1.0) },
-                                                  ) : NormalizedStringDistance,
+                                          ) : NormalizedStringDistance,
                                                       NormalizedStringSimilarity {
     private val weightedLevenshtein: WeightedLevenshtein = WeightedLevenshtein(charSubstitutionWeight, charInsertionDeletionWeight)
     
