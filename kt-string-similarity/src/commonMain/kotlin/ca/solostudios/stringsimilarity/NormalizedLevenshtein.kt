@@ -56,9 +56,11 @@ public class NormalizedLevenshtein : NormalizedStringDistance,
         
         val maxLen: Int = max(s1.length, s2.length)
         
-        return if (maxLen == 0) {
-            0.0
-        } else levenshtein.distance(s1, s2) / maxLen
+        
+        return if (maxLen == 0) 0.0 else levenshtein.distance(s1, s2) / maxLen
+        // the python library "thefuzz" (renamed from "fuzzywuzzy" uses the sum of the lengths, rather than the max.
+        // val lenSum = s1.length + s2.length
+        // return if (lenSum == 0) 0.0 else (levenshtein.distance(s1, s2)) / lenSum
     }
     
     /**
