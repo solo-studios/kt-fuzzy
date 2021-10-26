@@ -1,14 +1,12 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
-import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import kotlin.math.max
 
 public class NormalizedWeightedLevenshtein(
         charSubstitutionWeight: (Char, Char) -> Double,
         charInsertionDeletionWeight: (Char) -> WeightedLevenshtein.Weights = { WeightedLevenshtein.Weights(1.0, 1.0) },
-                                          ) : NormalizedStringDistance,
-                                                      NormalizedStringSimilarity {
+                                          ) : NormalizedStringDistance {
     private val weightedLevenshtein: WeightedLevenshtein = WeightedLevenshtein(charSubstitutionWeight, charInsertionDeletionWeight)
     
     /**
@@ -29,15 +27,5 @@ public class NormalizedWeightedLevenshtein(
         // the python library "thefuzz" (renamed from "fuzzywuzzy" uses the sum of the lengths, rather than the max.
         // val lenSum = s1.length + s2.length
         // return if (lenSum == 0) 0.0 else (weightedLevenshtein.distance(s1, s2)) / lenSum
-    }
-    
-    /**
-     * Return 1 - distance.
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1.0 - the computed distance
-     */
-    override fun similarity(s1: String, s2: String): Double {
-        return 1.0 - distance(s1, s2)
     }
 }
