@@ -32,9 +32,16 @@ package ca.solostudios.stringsimilarity.interfaces
  * String distances that implement this interface are metrics.
  * This means:
  * - `d(x, y) >= 0` (non-negativity, or separation axiom)
+ *    * The result can never be negative.
  * - `d(x, y) = 0` if and only if x = y (identity, or coincidence axiom)
+ *    * If `x` and `y` are the same, the result must be `0`.
  * - `d(x, y) = d(y, x)` (symmetry)
+ *    * The distance between `x` and `y` must be equal to the distance between `y` and `x`. (Independent of order)
  * - `d(x, z) <= d(x, y) + d(y, z)` (triangle inequality).
+ *    * The points `x`, `y`, and `z` can be rendered as a triangle in 3d space.
+ *      Therefore, the sum of the length of any side (eg. `d(x, z)`) must be
+ *      equal to or less than the sum of the lengths of the other two sides.
+ *      (eg. `d(x, y) + d(y, z)`)
  *
  * @author Thibault Debatty
  */
