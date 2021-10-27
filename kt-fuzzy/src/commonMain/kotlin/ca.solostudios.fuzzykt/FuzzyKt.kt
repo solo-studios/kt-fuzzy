@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file FuzzyKt.kt is part of kt-fuzzy
- * Last modified on 26-10-2021 10:09 p.m.
+ * Last modified on 26-10-2021 10:10 p.m.
  *
  * MIT License
  *
@@ -61,10 +61,7 @@ public object FuzzyKt {
         val upperBound = min(start + shorter.length, longer.length)
         val lowerBound = upperBound - shorter.length
         
-        println("upperBound: $upperBound, lowerBound: $lowerBound")
-        
         val splitString = longer.substring(lowerBound, upperBound)
-        println(splitString)
         
         return normalizedLevenshtein.similarity(splitString, shorter)
     }
