@@ -83,7 +83,9 @@ kotlin {
     
     sourceSets {
         val commonMain by getting {
-            
+            dependencies {
+                api(project(":kt-string-similarity"))
+            }
         }
         val commonTest by getting {
             dependencies {
