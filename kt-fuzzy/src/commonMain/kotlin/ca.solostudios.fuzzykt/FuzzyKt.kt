@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file FuzzyKt.kt is part of kt-fuzzy
- * Last modified on 26-10-2021 10:06 p.m.
+ * Last modified on 26-10-2021 10:09 p.m.
  *
  * MIT License
  *
@@ -76,15 +76,14 @@ public object FuzzyKt {
      * @param s2
      * @return
      */
-    private fun longestCommonSubstring(s1: String, s2: String): Pair<Int, Int> { // black magic I took from google
-        
+    public fun longestCommonSubstring(s1: String, s2: String): Pair<Int, Int> { // black magic I took from google
         var max = 0
         val dp = Array(s1.length) { IntArray(s2.length) }
         var endIndex = -1
         for (i in s1.indices) {
             for (j in s2.indices) {
                 if (s1[i] == s2[j]) {
-                    
+                
                     // If first row or column
                     if (i == 0 || j == 0) {
                         dp[i][j] = 1
