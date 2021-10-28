@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file FuzzyKt.kt is part of kt-fuzzy
- * Last modified on 26-10-2021 10:10 p.m.
+ * Last modified on 27-10-2021 08:03 p.m.
  *
  * MIT License
  *
@@ -67,7 +67,8 @@ public object FuzzyKt {
     }
     
     /**
-     * Returns the start and end index of the longest common substring.
+     * Returns the start and end index of the longest common substring,
+     * in reference to the first string passed.
      *
      * @param s1
      * @param s2
@@ -80,7 +81,7 @@ public object FuzzyKt {
         for (i in s1.indices) {
             for (j in s2.indices) {
                 if (s1[i] == s2[j]) {
-                
+    
                     // If first row or column
                     if (i == 0 || j == 0) {
                         dp[i][j] = 1
