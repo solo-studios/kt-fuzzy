@@ -494,12 +494,12 @@ It was developed using experimental testing, and without theoretical background.
 fun main() {
     val s1 = "This is the first string"
     val s2 = "And this is another string"
-    val sift4 = Sift4()
-    sift4.setMaxOffset(5)
-    val expResult = 11.0
+    val sift4 = Sift4(maxOffset = 5)
+    
+    val expectedResult = 11.0
     val result = sift4.distance(s1, s2)
     
-    assertEquals(expResult, result, 0.0)
+    assertEquals(expectedResult, result, 0.0)
 }
 ```
 
