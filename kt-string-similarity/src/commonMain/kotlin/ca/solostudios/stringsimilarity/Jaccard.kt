@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file Jaccard.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:44 p.m.
+ * Last modified on 09-02-2023 12:55 p.m.
  *
  * MIT License
  *
@@ -57,11 +57,11 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
         if (s1 == s2) {
             return 1.0
         }
-        val profile1 = getProfile(s1)
-        val profile2 = getProfile(s2)
-        
+        val profile1 = profile(s1)
+        val profile2 = profile(s2)
+    
         val union = mutableSetOf<String>()
-        
+    
         union.addAll(profile1.keys)
         union.addAll(profile2.keys)
         val inter = profile1.keys.size + profile2.keys.size - union.size

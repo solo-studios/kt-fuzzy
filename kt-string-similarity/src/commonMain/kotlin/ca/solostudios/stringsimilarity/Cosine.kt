@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file Cosine.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:48 p.m.
+ * Last modified on 09-02-2023 12:55 p.m.
  *
  * MIT License
  *
@@ -62,10 +62,9 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
         if (s1.length < k || s2.length < k) {
             return 0.0
         }
-        val profile1: Map<String, Int> = getProfile(s1)
-        val profile2: Map<String, Int> = getProfile(s2)
-        return (dotProduct(profile1, profile2)
-                / (norm(profile1) * norm(profile2)))
+        val profile1 = profile(s1)
+        val profile2 = profile(s2)
+        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2)))
     }
     
     /**
@@ -114,14 +113,10 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
                 profile1: Map<String, Int>,
                 profile2: Map<String, Int>
                                      ): Double {
-            
+    
             // Loop over the smallest map
-            var smallProfile = profile2
-            var largeProfile = profile1
-            if (profile1.size < profile2.size) {
-                smallProfile = profile1
-                largeProfile = profile2
-            }
+            val smallProfile = minOf(profile1, profile2, compareBy { it.size })
+            val largeProfile = maxOf(profile1, profile2, compareBy { it.size })
             var agg = 0.0
             for ((key, value) in smallProfile) {
                 val i = largeProfile[key] ?: continue

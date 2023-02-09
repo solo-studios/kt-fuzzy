@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file ShingleBased.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:44 p.m.
+ * Last modified on 09-02-2023 12:55 p.m.
  *
  * MIT License
  *
@@ -60,10 +60,10 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
      * @param string
      * @return the profile of this string, as an unmodifiable Map
      */
-    public fun getProfile(string: String): Map<String, Int> {
+    public fun profile(string: String): Map<String, Int> {
         val shingles = mutableMapOf<String, Int>()
         val stringNoSpace: String = SPACE_REG.replace(string, " ")
-        
+    
         for (i in 0 until stringNoSpace.length - k + 1) {
             val shingle = stringNoSpace.substring(i, i + k)
             val old = shingles[shingle]

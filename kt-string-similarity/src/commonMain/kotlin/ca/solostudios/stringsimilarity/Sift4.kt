@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file Sift4.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:11 p.m.
+ * Last modified on 09-02-2023 12:37 p.m.
  *
  * MIT License
  *
@@ -44,19 +44,19 @@ import kotlin.math.round
  * @author Thibault Debatty
  */
 @ExperimentalSimilarity
-public class Sift4 : StringDistance {
-    /**
-     * Set the maximum distance to search for character transposition.
-     * Compute cost of algorithm is O(n . maxOffset)
-     */
-    public var maxOffset: Int = DEFAULT_MAX_OFFSET
-    
+public class Sift4(
+        /**
+         * Set the maximum distance to search for character transposition.
+         * Compute cost of algorithm is `O(n * maxOffset)`
+         */
+        private val maxOffset: Int = DEFAULT_MAX_OFFSET
+                  ) : StringDistance {
     
     /**
      * Sift4 - a general purpose string distance algorithm inspired by
      * JaroWinkler and Longest Common Subsequence.
-     * Original JavaScript algorithm by siderite, java port by Nathan Fischer
-     * 2016.
+     * Original JavaScript algorithm by siderite, java port by Nathan Fischer 2016.
+     *
      * [https://siderite.dev/blog/super-fast-and-accurate-string-distance.html]
      * [https://blackdoor.github.io/blog/sift4-java/]
      *
@@ -68,7 +68,7 @@ public class Sift4 : StringDistance {
         if (s1.isEmpty()) {
             return s2.length.toDouble()
         }
-    
+        
         if (s2.isEmpty()) {
             return s1.length.toDouble()
         }
@@ -79,7 +79,7 @@ public class Sift4 : StringDistance {
         var lcss = 0 // largest common subsequence
         var localCs = 0 // local common substring
         var trans = 0 // number of transpositions ('ab' vs 'ba')
-    
+        
         /**
          * Used to store relation between same character in different positions
          * c1 and c2 in the input strings.
@@ -92,7 +92,7 @@ public class Sift4 : StringDistance {
         while (c1 < l1 && c2 < l2) {
             if (s1[c1] == s2[c2]) {
                 localCs++
-                var isTrans = false // 
+                var isTrans = false //
                 // see if current match is a transposition
                 var i = 0
                 while (i < offsetArr.size) {

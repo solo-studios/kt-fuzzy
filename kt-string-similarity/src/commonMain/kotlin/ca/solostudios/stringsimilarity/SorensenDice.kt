@@ -1,9 +1,9 @@
 /*
  * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * Copyright (c) 2015-2015 Thibault Debatty
  *
  * The file SorensenDice.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:46 p.m.
+ * Last modified on 09-02-2023 12:22 p.m.
  *
  * MIT License
  *
@@ -58,8 +58,8 @@ public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k),
         if (s1 == s2) {
             return 1.0
         }
-        val profile1: Map<String, Int> = getProfile(s1)
-        val profile2: Map<String, Int> = getProfile(s2)
+        val profile1 = profile(s1)
+        val profile2 = profile(s2)
         val union: MutableSet<String> = HashSet()
         union.addAll(profile1.keys)
         union.addAll(profile2.keys)
