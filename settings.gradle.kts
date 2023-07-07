@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file settings.gradle.kts is part of kt-fuzzy
- * Last modified on 22-10-2021 03:14 p.m.
+ * The file settings.gradle.kts is part of kotlin-fuzzy
+ * Last modified on 07-07-2023 02:01 a.m.
  *
  * MIT License
  *
@@ -26,13 +26,9 @@
  * SOFTWARE.
  */
 
-rootProject.name = "kt-fuzzy"
+rootProject.name = "kotlin-fuzzy"
 
 include("kt-string-similarity")
 include("kt-fuzzy")
 
-pluginManagement {
-    plugins {
-        kotlin("multiplatform") version "1.5.31"
-    }
-}
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

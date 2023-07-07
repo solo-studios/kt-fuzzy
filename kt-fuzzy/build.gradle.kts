@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kt-fuzzy
- * Last modified on 27-10-2021 08:04 p.m.
+ * The file build.gradle.kts is part of kotlin-fuzzy
+ * Last modified on 07-07-2023 02:01 a.m.
  *
  * MIT License
  *
@@ -26,89 +26,38 @@
  * SOFTWARE.
  */
 
-
 plugins {
-    kotlin("multiplatform")
+    `kt-fuzzy`.repositories
+    `kt-fuzzy`.compilation
+    `kt-fuzzy`.tasks
+    `kt-fuzzy`.publishing
+    `kt-fuzzy`.dokka
 }
 
 group = "ca.solo-studios"
 version = "0.1.0"
+description = """
+    A dependency-less Kotlin Multiplatform library for fuzzy string matching
+""".trimIndent()
 
 repositories {
     mavenCentral()
 }
 
 kotlin {
-    explicitApi()
-    
-    targets.all {
-        compilations.all {
-            kotlinOptions.apiVersion = "1.5"
-            kotlinOptions.languageVersion = "1.5"
-            kotlinOptions.freeCompilerArgs = listOf("-Xopt-in=kotlin.RequiresOptIn")
-        }
-    }
-    
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-        testRuns["test"].executionTask.configure {
-            useJUnitPlatform()
-        }
-    }
-    
-    js(BOTH) {
-        browser {
-            testTask {
-                useKarma {
-                    useFirefox()
-                }
-            }
-    
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-    }
-    
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux"    -> linuxX64("native")
-        isMingwX64           -> mingwX64("native")
-        else                 -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-    
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":kt-string-similarity"))
+                implementation(libs.kotlin.stdlib)
+
+                api(projects.ktStringSimilarity)
             }
         }
+
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlin.test)
             }
-        }
-        val jvmMain by getting {
-            
-        }
-        val jvmTest by getting {
-            
-        }
-        val jsMain by getting {
-            
-        }
-        val jsTest by getting {
-            
-        }
-        val nativeMain by getting {
-            
-        }
-        val nativeTest by getting {
-            
         }
     }
 }

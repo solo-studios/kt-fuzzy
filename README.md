@@ -29,7 +29,7 @@ There are two modules that can be used:
 ### Kotlin String Similarity
 
 The secondary module, Kotlin String Similarity implements various string similarity and distance measures. It contains
-over a dozen such algorithsm, including Levenshtein distance (and sibblings), Jaro-Winkler, Longest Common Subsequence,
+over a dozen such algorithms, including Levenshtein distance (and siblings), Jaro-Winkler, Longest Common Subsequence,
 cosine similarity, and many others.
 
 It primarily a *direct port* of [Java String Similarity](https://github.com/tdebatty/java-string-similarity) by
@@ -69,10 +69,3 @@ implementation 'ca.solo-studios:kt-fuzzy:VERSION'
 ```kotlin
 implementation("ca.solo-studios:kt-fuzzy:VERSION")
 ```
-
-## Kotlin String Similarity
-
-Kotlin String Similarity is a port of tdebatty's
-[java-string-similarity](https://github.com/tdebatty/java-string-similarity) to Kotlin Multiplatform.
-
-Read [README for Kotlin String Similarity](kt-string-similarity/README.md) for more info

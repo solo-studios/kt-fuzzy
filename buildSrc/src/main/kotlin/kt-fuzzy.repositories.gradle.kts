@@ -1,8 +1,8 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
+ * The file kt-fuzzy.repositories.gradle.kts is part of kotlin-fuzzy
  * Last modified on 07-07-2023 02:01 a.m.
  *
  * MIT License
@@ -26,35 +26,10 @@
  * SOFTWARE.
  */
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-}
-
-group = "ca.solo-studios"
-version = "2.0.0"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
 repositories {
     mavenCentral()
-}
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
+    maven("https://maven.solo-studios.ca/releases/") {
+        name = "Solo Studios"
     }
 }

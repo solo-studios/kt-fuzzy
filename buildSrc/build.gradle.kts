@@ -1,6 +1,6 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
  * Last modified on 07-07-2023 02:01 a.m.
@@ -27,34 +27,41 @@
  */
 
 plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
+    `kotlin-dsl`
 }
-
-group = "ca.solo-studios"
-version = "2.0.0"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
 
 repositories {
     mavenCentral()
+    // for kotlin-dsl plugin
+    gradlePluginPortal()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
+    target {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8.toString()
+                languageVersion = "1.8"
+                apiVersion = "1.8"
             }
         }
     }
+}
+
+dependencies {
+    implementation(libs.dokka.base)
+    implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.kotlin))
+    implementation(gradlePlugin("org.jetbrains.kotlin.multiplatform", libs.versions.kotlin))
+
+    // https://github.com/gradle/gradle/issues/15383
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+}
+
+fun gradlePlugin(id: String, version: Provider<String>): String {
+    return "$id:$id.gradle.plugin:${version.get()}"
 }

@@ -33,7 +33,7 @@ import kotlin.math.min
 
 public object FuzzyKt {
     private val normalizedLevenshtein = NormalizedLevenshtein()
-    
+
     /**
      * The similarity ratio between the two strings.
      *
@@ -44,7 +44,7 @@ public object FuzzyKt {
     public fun ratio(s1: String, s2: String): Double {
         return normalizedLevenshtein.similarity(s1, s2)
     }
-    
+
     /**
      * The ratio between the smallest of the two strings and the most similar substring.
      * (Longest common substring, adjusted to the same length as the shortest string.)
@@ -55,17 +55,17 @@ public object FuzzyKt {
      */
     public fun partialRatio(s1: String, s2: String): Double {
         val (shorter, longer) = if (s1.length > s2.length) s2 to s1 else s1 to s2
-        
+
         val (start, _) = longestCommonSubstring(s1, s2)
-        
+
         val upperBound = min(start + shorter.length, longer.length)
         val lowerBound = upperBound - shorter.length
-        
+
         val splitString = longer.substring(lowerBound, upperBound)
-        
+
         return normalizedLevenshtein.similarity(splitString, shorter)
     }
-    
+
     /**
      * Returns the start and end index of the longest common substring,
      * in reference to the first string passed.
@@ -81,7 +81,7 @@ public object FuzzyKt {
         for (i in s1.indices) {
             for (j in s2.indices) {
                 if (s1[i] == s2[j]) {
-    
+
                     // If first row or column
                     if (i == 0 || j == 0) {
                         dp[i][j] = 1

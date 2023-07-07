@@ -1,8 +1,8 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
+ * The file kt-fuzzy.tasks.gradle.kts is part of kotlin-fuzzy
  * Last modified on 07-07-2023 02:01 a.m.
  *
  * MIT License
@@ -26,35 +26,47 @@
  * SOFTWARE.
  */
 
+import org.gradle.jvm.tasks.Jar
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
+    kotlin("multiplatform")
+
+    id("org.jetbrains.dokka")
 }
 
-group = "ca.solo-studios"
-version = "2.0.0"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
+val ext = the<ExtraPropertiesExtension>()
+val base = the<BasePluginExtension>()
 
-repositories {
-    mavenCentral()
-}
+tasks {
+    withType<AbstractArchiveTask>().configureEach {
+        archiveBaseName.set(project.name)
+    }
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
+    withType<Javadoc>().configureEach {
+        options {
+            encoding = "UTF-8"
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
+    }
+
+    withType<Jar>().configureEach {
+        from(rootProject.file("LICENSE"))
+    }
+
+    named<Task>("build") {
+        dependsOn(withType<Jar>())
+    }
+
+    val dokkaHtml by getting(DokkaTask::class)
+
+    val javadocJar by creating(Jar::class) {
+        dependsOn(dokkaHtml)
+        from(dokkaHtml.outputDirectory)
+        archiveClassifier = "javadoc"
+        group = JavaBasePlugin.DOCUMENTATION_GROUP
+    }
+
+    artifacts {
+        archives(javadocJar)
     }
 }

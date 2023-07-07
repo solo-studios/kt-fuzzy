@@ -1,8 +1,8 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
+ * The file Utilities.kt is part of kotlin-fuzzy
  * Last modified on 07-07-2023 02:01 a.m.
  *
  * MIT License
@@ -26,35 +26,32 @@
  * SOFTWARE.
  */
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-}
+import org.gradle.api.Project
+import java.util.Locale
 
-group = "ca.solo-studios"
-version = "2.0.0"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
+fun String.capitalize(): String = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
-repositories {
-    mavenCentral()
-}
+fun Any?.toStringOrEmpty() = this as? String ?: this?.toString() ?: ""
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
+val Project.nameFormatted: String
+    get() = project.name.split("-").joinToString(separator = " ") { word ->
+        if (word == "kt")
+            "Kotlin"
+        else
+            word.capitalize()
     }
+
+val Project.isSnapshot: Boolean
+    get() = version.toString().endsWith("-SNAPSHOT")
+
+object Repository {
+    val projectUser = "solo-studios"
+    val projectRepo = "kt-fuzzy"
+    val projectBaseUri = "github.com/$projectUser/$projectRepo"
+    val projectUrl = "https://$projectBaseUri"
 }
+
+/**
+ * Project info class for the `processDokkaIncludes` task.
+ */
+data class ProjectInfo(val group: String, val module: String, val version: String)
