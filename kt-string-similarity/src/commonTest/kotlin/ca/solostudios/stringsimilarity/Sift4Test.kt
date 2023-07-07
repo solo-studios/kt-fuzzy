@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Sift4Test.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 06:53 p.m.
+ * The file Sift4Test.kt is part of kotlin-fuzzy
+ * Last modified on 07-07-2023 01:59 a.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -44,19 +44,19 @@ class Sift4Test {
     @OptIn(ExperimentalSimilarity::class)
     fun testDistance() {
         println("SIFT4 distance")
-        val s1 = "This is the first string"
-        val s2 = "And this is another string"
-        val sift4 = Sift4()
-        sift4.maxOffset = 5
+        val sift4Offset5 = Sift4(maxOffset = 5)
         val expResult = 11.0
-        val result = sift4.distance(s1, s2)
+        val result = sift4Offset5.distance("This is the first string", "And this is another string")
         assertEquals(expResult, result, 0.0)
-        sift4.maxOffset = 10
+
+        val sift4Offset10 = Sift4(maxOffset = 10)
         assertEquals(
-                12.0,
-                sift4.distance(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                        "Amet Lorm ispum dolor sit amet, consetetur adixxxpiscing elit."),
-                0.0)
+            12.0,
+            sift4Offset10.distance(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "Amet Lorm ispum dolor sit amet, consetetur adixxxpiscing elit."
+            ),
+            0.0
+        )
     }
 }
