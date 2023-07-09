@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file JaccardTest.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:05 p.m.
+ * The file JaccardTest.kt is part of kotlin-fuzzy
+ * Last modified on 09-07-2023 06:57 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -42,7 +42,7 @@ class JaccardTest {
     fun testSimilarity() {
         println("similarity")
         val instance = Jaccard(2)
-        
+
         // AB BC CD DE DF
         // 1  1  1  1  0
         // 1  1  1  0  1
@@ -50,7 +50,7 @@ class JaccardTest {
         val result: Double = instance.similarity("ABCDE", "ABCDF")
         assertEquals(0.6, result, 0.0)
     }
-    
+
     /**
      * Test of distance method, of class Jaccard.
      */

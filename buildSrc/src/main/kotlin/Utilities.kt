@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Utilities.kt is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:01 a.m.
+ * Last modified on 07-07-2023 05:01 p.m.
  *
  * MIT License
  *
@@ -26,7 +26,9 @@
  * SOFTWARE.
  */
 
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.the
 import java.util.Locale
 
 fun String.capitalize(): String = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -43,6 +45,10 @@ val Project.nameFormatted: String
 
 val Project.isSnapshot: Boolean
     get() = version.toString().endsWith("-SNAPSHOT")
+
+// https://github.com/gradle/gradle/issues/15383
+val Project.libs: LibrariesForLibs
+    get() = the<LibrariesForLibs>()
 
 object Repository {
     val projectUser = "solo-studios"

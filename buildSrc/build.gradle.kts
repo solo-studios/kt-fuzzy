@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:01 a.m.
+ * Last modified on 08-07-2023 07:56 p.m.
  *
  * MIT License
  *
@@ -55,6 +55,9 @@ kotlin {
 
 dependencies {
     implementation(libs.dokka.base)
+
+    implementation(gradlePlugin("io.kotest.multiplatform", libs.versions.kotest))
+
     implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.kotlin))
     implementation(gradlePlugin("org.jetbrains.kotlin.multiplatform", libs.versions.kotlin))
 

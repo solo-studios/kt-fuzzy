@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file RatcliffObershelpTest.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:05 p.m.
+ * The file RatcliffObershelpTest.kt is part of kotlin-fuzzy
+ * Last modified on 09-07-2023 07:03 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -42,7 +42,7 @@ class RatcliffObershelpTest {
     fun testSimilarity() {
         println("similarity")
         val instance = RatcliffObershelp()
-        
+
         // test data from other algorithms
         // "My string" vs "My tsring"
         // Substrings:
@@ -52,10 +52,11 @@ class RatcliffObershelpTest {
         //                    = 16/18
         //                    = 0.888888
         assertEquals(
-                0.888888,
-                instance.similarity("My string", "My tsring"),
-                0.000001)
-        
+            0.888888,
+            instance.similarity("My string", "My tsring"),
+            0.000001,
+        )
+
         // test data from other algorithms
         // "My string" vs "My tsring"
         // Substrings:
@@ -65,57 +66,63 @@ class RatcliffObershelpTest {
         //                    = 14/18
         //                    = 0.777778
         assertEquals(
-                0.777778,
-                instance.similarity("My string", "My ntrisg"),
-                0.000001)
-        
+            0.777778,
+            instance.similarity("My string", "My ntrisg"),
+            0.000001,
+        )
+
         // test data from essay by Ilya Ilyankou
         // "Comparison of Jaro-Winkler and Ratcliff/Obershelp algorithms
         // in spell check"
         // https://ilyankou.files.wordpress.com/2015/06/ib-extended-essay.pdf
         // p13, expected result is 0.857
         assertEquals(
-                0.857,
-                instance.similarity("MATEMATICA", "MATHEMATICS"),
-                0.001)
-        
+            0.857,
+            instance.similarity("MATEMATICA", "MATHEMATICS"),
+            0.001,
+        )
+
         // test data from stringmetric
         // https://github.com/rockymadden/stringmetric
         // expected output is 0.7368421052631579
         assertEquals(
-                0.736842,
-                instance.similarity("aleksander", "alexandre"),
-                0.000001)
-        
+            0.736842,
+            instance.similarity("aleksander", "alexandre"),
+            0.000001,
+        )
+
         // test data from stringmetric
         // https://github.com/rockymadden/stringmetric
         // expected output is 0.6666666666666666
         assertEquals(
-                0.666666,
-                instance.similarity("pennsylvania", "pencilvaneya"),
-                0.000001)
-        
+            0.666666,
+            instance.similarity("pennsylvania", "pencilvaneya"),
+            0.000001,
+        )
+
         // test data from wikipedia
         // https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching
         // expected output is 14/18 = 0.7777777777777778‬
         assertEquals(
-                0.777778,
-                instance.similarity("WIKIMEDIA", "WIKIMANIA"),
-                0.000001)
-        
+            0.777778,
+            instance.similarity("WIKIMEDIA", "WIKIMANIA"),
+            0.000001,
+        )
+
         // test data from wikipedia
         // https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching
         // expected output is 24/40 = 0.65
         assertEquals(
-                0.6,
-                instance.similarity("GESTALT PATTERN MATCHING", "GESTALT PRACTICE"),
-                0.000001)
+            0.6,
+            instance.similarity("GESTALT PATTERN MATCHING", "GESTALT PRACTICE"),
+            0.000001,
+        )
     }
-    
+
     @Test
     fun testDistance() {
         // val instance = RatcliffObershelp()
-        
+
         // TODO: regular (non-null/empty) distance tests
     }
 }

@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:01 a.m.
+ * Last modified on 09-07-2023 03:45 p.m.
  *
  * MIT License
  *
@@ -32,6 +32,7 @@ plugins {
     `kt-fuzzy`.tasks
     `kt-fuzzy`.publishing
     `kt-fuzzy`.dokka
+    `kt-fuzzy`.testing
 }
 
 group = "ca.solo-studios"
@@ -57,7 +58,6 @@ kotlin {
 
         val commonTest by getting {
             dependencies {
-                implementation(libs.kotlin.test)
             }
         }
     }

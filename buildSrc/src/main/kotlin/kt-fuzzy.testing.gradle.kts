@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 09-07-2023 06:58 p.m.
+ * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
+ * Last modified on 09-07-2023 06:39 p.m.
  *
  * MIT License
  *
@@ -26,68 +26,55 @@
  * SOFTWARE.
  */
 
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsSubTargetDsl
+import kotlin.math.max
+
 plugins {
     kotlin("multiplatform")
+    id("io.kotest.multiplatform")
 }
 
 kotlin {
-    explicitApi()
+    sourceSets {
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotest.framework)
+                implementation(libs.kotest.assertions)
+                implementation(libs.kotest.property)
+                // implementation(kotlin("test"))
+                // implementation(kotlin("test-annotations-common"))
+                // implementation(kotlin("test-common"))
+            }
+        }
 
-    targets.all {
-        compilations.all {
-            kotlinOptions {
-                freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-                apiVersion = "1.8"
-                languageVersion = "1.8"
+        val jvmTest by getting {
+            dependencies {
+                implementation("io.kotest:kotest-runner-junit5:5.6.2")
             }
         }
     }
 
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+    js(IR) {
+        nodejs {
+            configureTests()
+        }
+        browser {
+            configureTests()
         }
     }
+}
 
-    // Why is kotlin/js broken? I don't fucking know!
-    // For some reason it shows errors when importing a library I definitely added as a dependency!
-    js(IR) {
-        useCommonJs()
-        generateTypeScriptDefinitions()
-
-        nodejs()
-        browser()
+fun KotlinJsSubTargetDsl.configureTests() {
+    testTask {
+        useMocha()
     }
+}
 
+tasks {
+    withType<Test>().all {
+        useJUnitPlatform()
 
-    mingwX64()
-
-    linuxX64()
-    linuxArm64()
-
-    macosX64()
-    macosArm64()
-
-    // TODO build android shit (idk why it doesn't work, too lazy to figure it out, the jvm source sets should be fine)
-    // android()
-    // androidNativeX64()
-    // androidNativeX86()
-    // androidNativeArm32()
-    // androidNativeArm64()
-
-    ios()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    watchos()
-    watchosX64()
-    watchosArm32()
-    watchosArm64()
-    watchosSimulatorArm64()
-
-    tvos()
-    tvosX64()
-    tvosArm64()
-    tvosSimulatorArm64()
+        failFast = false
+        maxParallelForks = max(Runtime.getRuntime().availableProcessors() - 1, 1)
+    }
 }

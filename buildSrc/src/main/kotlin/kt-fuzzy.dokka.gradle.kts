@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:00 a.m.
+ * Last modified on 09-07-2023 03:45 p.m.
  *
  * MIT License
  *
@@ -38,9 +38,6 @@ import org.jetbrains.dokka.gradle.DokkaTaskPartial
 plugins {
     id("org.jetbrains.dokka")
 }
-
-// https://github.com/gradle/gradle/issues/15383
-val libs = the<LibrariesForLibs>()
 
 dependencies {
     dokkaPlugin(libs.dokka.mathjax.plugin)

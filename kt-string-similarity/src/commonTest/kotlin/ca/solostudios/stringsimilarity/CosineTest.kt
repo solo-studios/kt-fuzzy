@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file CosineTest.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:05 p.m.
+ * The file CosineTest.kt is part of kotlin-fuzzy
+ * Last modified on 09-07-2023 06:58 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -45,7 +45,7 @@ class CosineTest {
         val result: Double = instance.similarity("ABC", "ABCE")
         assertEquals(0.71, result, 0.01)
     }
-    
+
     /**
      * If one of the strings is smaller than k, the similarity should be 0.
      */
@@ -56,14 +56,14 @@ class CosineTest {
         val result: Double = instance.similarity("AB", "ABCE")
         assertEquals(0.0, result, 0.00001)
     }
-    
+
     /*
         @Test
         @Throws(IOException::class)
         fun testLargeString() {
             println("Test with large strings")
             val cos = Cosine()
-            
+
             // read from 2 text files
             val string1 = readResourceFile("71816-2.txt")
             val string2 = readResourceFile("11328-1.txt")
@@ -71,14 +71,14 @@ class CosineTest {
             assertEquals(0.8115, similarity, 0.001)
         }
     */
-    
+
     @Test
     fun testDistance() {
         val instance = Cosine()
         val result: Double = instance.distance("ABC", "ABCE")
         assertEquals(0.29, result, 0.01)
     }
-    
+
     @Test
     fun testDistanceSmallString() {
         println("test small string")
@@ -86,13 +86,13 @@ class CosineTest {
         val result: Double = instance.distance("AB", "ABCE")
         assertEquals(1.0, result, 0.00001)
     }
-    
+
     /*
         @Test
         fun testDistanceLargeString() {
             println("Test with large strings")
             val cos = Cosine()
-            
+
             // read from 2 text files
             val string1 = readResourceFile("71816-2.txt")
             val string2 = readResourceFile("11328-1.txt")
