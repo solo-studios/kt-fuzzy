@@ -27,7 +27,7 @@
  */
 
 import java.time.Year
-import org.gradle.accessors.dm.LibrariesForLibs
+import org.jetbrains.dokka.DokkaConfiguration.Visibility
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.AbstractDokkaTask
@@ -68,7 +68,7 @@ tasks {
     withType<AbstractDokkaTask> {
         pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
             footerMessage = "© ${Year.now()} Copyright solo-studios"
-            separateInheritedMembers = true
+            separateInheritedMembers = false
             customStyleSheets = rootDokkaDirectory.resolve("styles").listFiles()?.toList() ?: listOf()
             templatesDir = rootDokkaDirectory.resolve("templates")
         }
@@ -94,6 +94,7 @@ tasks {
             includes.from(processDokkaIncludes.outputs.files.asFileTree)
 
             reportUndocumented = true
+            documentedVisibilities = setOf(Visibility.PUBLIC, Visibility.PROTECTED)
         }
     }
 

@@ -26,6 +26,26 @@
         }
     </script>
     <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            menuSettings: {
+                zoom: "Double-Click",
+                zscale: "300%"
+            },
+            styles: {
+                "#MathJax_Zoom": {
+                    "background-color": "var(--background-color)",
+                    "box-shadow": "5px 5px 15px var(--background-color)",
+                    "-webkit-box-shadow": "5px 5px 15px var(--background-color)",
+                    "-moz-box-shadow": "5px 5px 15px var(--background-color)",
+                    "-khtml-box-shadow": "5px 5px 15px var(--background-color)",
+                    "border": "1px solid var(--color-dark)"
+                },
+                ".MathJax": {}
+            }
+        })
+    </script>
+    <!-- MathJax script -->
     <script type="text/javascript" id="MathJax-script" async="async"
             src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML&latest"></script>
     <#-- Resources (scripts, stylesheets) are handled by Dokka.

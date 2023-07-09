@@ -1,0 +1,65 @@
+/*
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ *
+ * The file dokka.css is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 06:11 p.m.
+ *
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/* Global styles */
+html {
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+}
+
+/* Dark Theme styles */
+:root.theme-dark {
+    --highlight-color: rgba(127, 82, 255, 0.75);
+    --highlight-text-color: rgb(135, 90, 255);
+    --active-section-color: var(--highlight-text-color);
+    --active-tab-border-color: var(--highlight-text-color);
+    --sidemenu-section-active-color: var(--highlight-color);
+    /*--sidemenu-section-active-color: color-mix(in hsl, var(--highlight-color) 20%);*/
+    /*--inactive-section-color: rgba(25,25,28,.7);*/
+    /*--inactive-section-color: hsla(0, 0%, 100%, 0.4);*/
+    --color-scrollbar: hsla(0, 0%, 100%, 0.8);
+    --color-scrollbar-track: transparent;
+}
+
+/* Light Theme styles */
+:root {
+    --color-scrollbar-track: transparent;
+}
+
+/* Block Quote styles */
+blockquote {
+    border-left: 2px solid var(--hover-link-color);
+    color: color-mix(in hsl, var(--average-color) 40%, var(--default-font-color));
+    /*margin: revert;*/
+    margin: revert revert revert 2rem;
+}
+
+/* Section Tab styles */
+.section-tab, .platform-hinted > .platform-bookmarks-row > .platform-bookmark {
+    font-weight: 500;
+}

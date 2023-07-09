@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file ShingleBased.kt is part of kt-fuzzy
- * Last modified on 09-02-2023 12:55 p.m.
+ * The file ShingleBased.kt is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 06:34 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -36,16 +36,16 @@ package ca.solostudios.stringsimilarity
  * strings or documents.
  *
  * Generally speaking, a k-gram is any sequence of k tokens. We use here the
- * definition from Leskovec, Rajaraman &amp; Ullman (2014), "Mining of Massive
+ * definition from Leskovec, Rajaraman & Ullman (2014), "Mining of Massive
  * Datasets", Cambridge University Press: Multiple subsequent spaces are
  * replaced by a single space, and a k-gram is a sequence of k characters.
  *
- * Default value of k is 3. A good rule of thumb is to imagine that there are
- * only 20 characters and estimate the number of k-shingles as 20^k. For small
- * documents like e-mails, k = 5 is a recommended value. For large documents,
- * such as research articles, k = 9 is considered a safe choice.
+ * Default value of [k] is `3`. A good rule of thumb is to imagine that there are
+ * only 20 characters and estimate the number of k-shingles as \(20^k\). For small
+ * documents like e-mails, \(k = 5\) is a recommended value. For large documents,
+ * such as research articles, \(k = 9\) is considered a safe choice.
  * @param k The length of k-shingles.
- * @throws IllegalArgumentException if k is &lt;= 0
+ * @throws IllegalArgumentException if \(k \leqslant 0\)
  * @author Thibault Debatty
  */
 public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
@@ -63,7 +63,7 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
     public fun profile(string: String): Map<String, Int> {
         val shingles = mutableMapOf<String, Int>()
         val stringNoSpace: String = SPACE_REG.replace(string, " ")
-    
+
         for (i in 0 until stringNoSpace.length - k + 1) {
             val shingle = stringNoSpace.substring(i, i + k)
             val old = shingles[shingle]
@@ -75,17 +75,17 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
         }
         return shingles
     }
-    
+
     public companion object {
         public const val DEFAULT_K: Int = 3
-        
+
         /**
          * Pattern for finding multiple following spaces.
          */
         private val SPACE_REG: Regex = Regex("\\s+")
     }
-    
+
     init {
-        require(k > 0) { "k should be positive!" }
+        require(k > 0) { "k must be positive!" }
     }
 }

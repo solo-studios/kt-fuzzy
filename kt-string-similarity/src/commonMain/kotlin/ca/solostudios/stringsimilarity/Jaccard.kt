@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Jaccard.kt is part of kt-fuzzy
- * Last modified on 09-02-2023 12:55 p.m.
+ * The file Jaccard.kt is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 06:57 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -39,13 +39,14 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  * the cardinality of each n-gram is not taken into account.
  * Distance is computed as 1 - cosine similarity.
  * Jaccard index is a metric distance.
- * @author Thibault Debatty
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
                                            MetricStringDistance,
                                            NormalizedStringDistance,
                                            NormalizedStringSimilarity {
-    
+
     /**
      * Compute Jaccard index: |A inter B| / |A union B|.
      * @param s1 The first string to compare.
@@ -59,15 +60,15 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
         }
         val profile1 = profile(s1)
         val profile2 = profile(s2)
-    
+
         val union = mutableSetOf<String>()
-    
+
         union.addAll(profile1.keys)
         union.addAll(profile2.keys)
         val inter = profile1.keys.size + profile2.keys.size - union.size
         return 1.0 * inter / union.size
     }
-    
+
     /**
      * Distance is computed as 1 - similarity.
      * @param s1 The first string to compare.

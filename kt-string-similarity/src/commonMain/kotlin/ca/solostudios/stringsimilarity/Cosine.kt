@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Cosine.kt is part of kt-fuzzy
- * Last modified on 09-02-2023 12:55 p.m.
+ * The file Cosine.kt is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 07:50 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -38,22 +38,26 @@ import kotlin.math.sqrt
  * strings is the cosine of their respective vectors.
  *
  * The similarity between the two strings is the cosine of the angle between
- * these two vectors representation. It is computed as V1 . V2 / (|V1| * |V2|)
- * The cosine distance is computed as 1 - cosine similarity.
+ * these two vectors representation. It is computed as
+ * \(\frac{\vec{v_1} \cdot \vec{v_2}}{\lVert\vec{v_1}\rVert \times \lVert\vec{v_2}\rVert}\).
  *
- * @author Thibault Debatty
+ * The cosine distance is computed as \(1 - \text{cosine similarity}\).
+ *
+ * @author Thibault Debatty, solonovamax
+ * @see NormalizedStringDistance
+ * @see NormalizedStringSimilarity
  */
 public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
                                           NormalizedStringDistance,
                                           NormalizedStringSimilarity {
-    
+
     /**
-     * Compute the cosine similarity between strings.
+     * Computes the cosine similarity of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The cosine similarity in the range [0, 1]
-     * @throws NullPointerException if s1 or s2 is null.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized cosine similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2) {
@@ -66,54 +70,62 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
         val profile2 = profile(s2)
         return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2)))
     }
-    
+
     /**
-     * Return 1.0 - similarity.
+     * Computes the cosine distance of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1.0 - the cosine similarity in the range [0, 1]
-     * @throws NullPointerException if s1 or s2 is null.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized cosine distance.
+     * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
     }
-    
+
     /**
-     * Compute similarity between precomputed profiles.
+     * Computes the cosine similarity of precomputed profiles.
      *
-     * @param profile1
-     * @param profile2
-     * @return
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized cosine similarity.
+     * @see NormalizedStringSimilarity
      */
-    public fun similarity(
-            profile1: Map<String, Int>,
-            profile2: Map<String, Int>
-                         ): Double {
-        return (dotProduct(profile1, profile2)
-                / (norm(profile1) * norm(profile2)))
+    public fun similarity(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2)))
     }
-    
-    public companion object {
+
+    /**
+     * Computes the cosine distance of precomputed profiles.
+     *
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized cosine distance.
+     * @see NormalizedStringDistance
+     */
+    public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        return 1.0 - similarity(profile1, profile2)
+    }
+
+    private companion object {
         /**
-         * Compute the norm L2 : sqrt(Sum_i( v_i²)).
+         * Computes the \(L^2\) norm.
+         *
+         * \(L^2 \coloneqq \lVert\vec{v}\rVert_2 = \sqrt{\sum_{i=1}^{n} (v_i^2)}\)
          *
          * @param profile
-         * @return L2 norm
+         * @return The \(L^2) norm
          */
         private inline fun norm(profile: Map<String, Int>): Double {
             var agg = 0.0
             for ((_, value) in profile) {
-                agg += 1.0 * value * value
+                agg += value * value
             }
             return sqrt(agg)
         }
-        
-        private inline fun dotProduct(
-                profile1: Map<String, Int>,
-                profile2: Map<String, Int>
-                                     ): Double {
-    
+
+        private inline fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+
             // Loop over the smallest map
             val smallProfile = minOf(profile1, profile2, compareBy { it.size })
             val largeProfile = maxOf(profile1, profile2, compareBy { it.size })

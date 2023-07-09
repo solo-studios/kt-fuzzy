@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedStringSimilarity.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:48 p.m.
+ * The file NormalizedStringSimilarity.kt is part of kotlin-fuzzy
+ * Last modified on 09-07-2023 03:36 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -28,27 +28,34 @@
 package ca.solostudios.stringsimilarity.interfaces
 
 /**
- * A string distance that has been normalized based on the length of a string.
+ * Normalized string similarities return a normalized similarity between two strings.
  *
- * As stated in [Computation of Normalized Edit Distance and Applications](https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf),
- * > Given two strings `X` and `Y` over a finite alphabet,
- * > the normalized edit distance between `X` and `Y`, `d(X,Y)`
- * > is defined as the minimum of `W(P)/L(P)`,
- * > here `P` is an editing path between `X` and `Y`, `W(P)`
- * > is the sum of the weights of the elementary edit operations of `P`,
- * > and L(P) is the number of these operations (length of `P`).
+ * The returned distance is always in the range \(&#91;0, 1]\).
+ * - `0` indicates that both strings are identical.
+ * - `1` indicates that neither string have anything in common.
  *
- * @author Thibault Debatty
+ * As stated in
+ * [Computation of Normalized Edit Distance and Applications](https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf)
+ * <sup>[&#91;archive.org&#93;](https://web.archive.org/web/20220303061601/https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf)</sup>,
+ *
+ * > Given two strings \(x\) and \(y\) over a finite alphabet,
+ * > the normalized edit distance between \(x\) and \(y\), \(d(x,y)\)
+ * > is defined as the minimum of \(W(p)/L(p)\),
+ * > here \(p\) is an editing path between \(x\) and \(y\), \(W(p)\)
+ * > is the sum of the weights of the elementary edit operations of \(p\),
+ * > and \(L(p)\) is the number of these operations (length of \(p\)).
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public interface NormalizedStringSimilarity : StringSimilarity {
     /**
-     * Compute and return a measure of similarity.
+     * Computes the similarity of two strings.
      * The similarity will be normalized using the number of operations that are performed.
      *
-     *
-     * @param s1 The first string
-     * @param s2 The second string
-     * @return The string similarity (0 means both strings are completely different)
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double
 }

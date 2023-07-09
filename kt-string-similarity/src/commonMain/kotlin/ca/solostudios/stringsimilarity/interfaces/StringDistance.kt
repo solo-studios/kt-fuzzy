@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file StringDistance.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:48 p.m.
+ * The file StringDistance.kt is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 08:19 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -28,16 +28,22 @@
 package ca.solostudios.stringsimilarity.interfaces
 
 /**
- * Class for computing the distance between two strings.
- * @author Thibault Debatty
+ * String distances return a distance between two strings.
+ *
+ * The returned distance will always be \(\geqslant 0\).
+ *
+ * `0` indicates that both strings are identical.
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public interface StringDistance {
     /**
-     * Compute and return a measure of distance.
-     * Will always be >= `0`.
-     * @param s1 The first string
-     * @param s2 The second string
-     * @return The string distance. `0` Means the strings are identical.
+     * Computes the distance of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The distance.
+     * @see StringDistance
      */
     public fun distance(s1: String, s2: String): Double
 }

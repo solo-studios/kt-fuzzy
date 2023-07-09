@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2021-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file StringSimilarity.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 04:48 p.m.
+ * The file StringSimilarity.kt is part of kotlin-fuzzy
+ * Last modified on 08-07-2023 08:19 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,23 +25,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-
-
 package ca.solostudios.stringsimilarity.interfaces
 
 /**
- * Class for computing the similarity between two strings.
+ * String similarities return a similarity between two strings.
  *
- * @author Thibault Debatty
+ * The returned similarity will always be \(\geqslant 0\).
+ *
+ * `0` indicates that neither string have anything in common.
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public interface StringSimilarity {
     /**
-     * Compute and return a measure of similarity between 2 strings.
-     * Will always be >= `0`.
+     * Computes the similarity of two strings.
+     *
      * @param s1 The first string
      * @param s2 The second string
-     * @return The string similarity. `0` means both strings are completely different.
+     * @return The similarity.
+     * @see StringDistance
      */
     public fun similarity(s1: String, s2: String): Double
 }
