@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 09-07-2023 03:45 p.m.
+ * Last modified on 10-07-2023 07:05 p.m.
  *
  * MIT License
  *
@@ -26,6 +26,8 @@
  * SOFTWARE.
  */
 
+@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+
 plugins {
     `kt-fuzzy`.repositories
     `kt-fuzzy`.compilation
@@ -46,7 +48,6 @@ repositories {
 }
 
 kotlin {
-    @Suppress("UNUSED_VARIABLE")
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -58,6 +59,7 @@ kotlin {
 
         val commonTest by getting {
             dependencies {
+                implementation(libs.kotlin.test) // temporary
             }
         }
     }
