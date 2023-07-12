@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file MetricStringDistance.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 03:43 p.m.
+ * Last modified on 12-07-2023 04:25 p.m.
  *
  * MIT License
  *
@@ -43,7 +43,6 @@ package ca.solostudios.stringsimilarity.interfaces
  *    - The distance between any two points can never be negative.
  * 4. Triangle Inequality Axiom:
  *    - \(d(x, z) \leqslant d(x, y) + d(y, z)\)
- *    - The points \(x\), \(y\), and \(z\) can construct a triangle in n-dimensional space.
  *    - The points \(x\), \(y\), and \(z\) can construct a triangle in n-dimensional space.
  *      Therefore, the length of any side (eg. \(d(x, z)\)) must be
  *      equal to or less than the sum of the lengths of the other two sides.

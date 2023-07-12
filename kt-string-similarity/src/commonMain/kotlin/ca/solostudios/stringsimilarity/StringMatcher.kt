@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StringMatcher.kt is part of kotlin-fuzzy
- * Last modified on 09-02-2023 12:55 p.m.
+ * Last modified on 12-07-2023 04:10 p.m.
  *
  * MIT License
  *
@@ -31,6 +31,7 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
 
 public object StringMatcher {
+    @ExperimentalSimilarity
     public val cosine: Cosine = Cosine()
 
     public val damerau: Damerau = Damerau()

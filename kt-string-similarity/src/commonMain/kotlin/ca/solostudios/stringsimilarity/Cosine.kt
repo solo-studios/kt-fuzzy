@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 07:50 p.m.
+ * Last modified on 12-07-2023 04:26 p.m.
  *
  * MIT License
  *
@@ -27,12 +27,13 @@
  */
 package ca.solostudios.stringsimilarity
 
+import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import kotlin.math.sqrt
 
 /**
- * Implements Cosine Similarity between strings. The strings are first
+ * Implements Soft Cosine Similarity between strings. The strings are first
  * transformed in vectors of occurrences of k-shingles (sequences of k
  * characters). In this n-dimensional space, the similarity between the two
  * strings is the cosine of their respective vectors.
@@ -43,14 +44,17 @@ import kotlin.math.sqrt
  *
  * The cosine distance is computed as \(1 - \text{cosine similarity}\).
  *
+ * **This class is currently marked as experimental, as I believe it is broken.
+ * Further testing is required.**
+ *
  * @author Thibault Debatty, solonovamax
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
  */
+@ExperimentalSimilarity
 public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
                                           NormalizedStringDistance,
                                           NormalizedStringSimilarity {
-
     /**
      * Computes the cosine similarity of two strings.
      *
@@ -68,7 +72,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
         }
         val profile1 = profile(s1)
         val profile2 = profile(s2)
-        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2)))
+        return (dotProduct(profile1, profile2) / norm(profile1) * norm(profile2)).coerceIn(0.0, 1.0)
     }
 
     /**
@@ -116,7 +120,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
          * @param profile
          * @return The \(L^2) norm
          */
-        private inline fun norm(profile: Map<String, Int>): Double {
+        inline fun norm(profile: Map<String, Int>): Double {
             var agg = 0.0
             for ((_, value) in profile) {
                 agg += value * value
@@ -124,8 +128,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
             return sqrt(agg)
         }
 
-        private inline fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
-
+        inline fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
             // Loop over the smallest map
             val smallProfile = minOf(profile1, profile2, compareBy { it.size })
             val largeProfile = maxOf(profile1, profile2, compareBy { it.size })

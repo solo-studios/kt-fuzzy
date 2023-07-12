@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedStringSimilarity.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 03:36 p.m.
+ * Last modified on 12-07-2023 02:49 p.m.
  *
  * MIT License
  *
@@ -31,8 +31,8 @@ package ca.solostudios.stringsimilarity.interfaces
  * Normalized string similarities return a normalized similarity between two strings.
  *
  * The returned distance is always in the range \(&#91;0, 1]\).
- * - `0` indicates that both strings are identical.
- * - `1` indicates that neither string have anything in common.
+ * - `0` indicates that neither string have anything in common.
+ * - `1` indicates that both strings are identical.
  *
  * As stated in
  * [Computation of Normalized Edit Distance and Applications](https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf)
