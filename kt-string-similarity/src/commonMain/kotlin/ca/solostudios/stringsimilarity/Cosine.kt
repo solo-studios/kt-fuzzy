@@ -1,9 +1,9 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * kotlin-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 12-07-2023 04:26 p.m.
+ * Last modified on 16-07-2023 05:01 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -72,7 +72,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
         }
         val profile1 = profile(s1)
         val profile2 = profile(s2)
-        return (dotProduct(profile1, profile2) / norm(profile1) * norm(profile2)).coerceIn(0.0, 1.0)
+        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2))).coerceIn(0.0, 1.0)
     }
 
     /**
