@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.tasks.gradle.kts is part of kotlin-fuzzy
- * Last modified on 16-07-2023 04:49 p.m.
+ * Last modified on 16-07-2023 04:56 p.m.
  *
  * MIT License
  *
@@ -57,7 +57,7 @@ tasks {
         dependsOn(withType<Jar>())
     }
 
-    val dokkaHtml by named<DokkaTask>("build")
+    val dokkaHtml by named<DokkaTask>("dokkaHtml")
 
     val javadocJar by register<Jar>("javadocJar") {
         dependsOn(dokkaHtml)
