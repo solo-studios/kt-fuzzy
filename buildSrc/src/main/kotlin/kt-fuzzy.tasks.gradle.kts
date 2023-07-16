@@ -1,9 +1,9 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * kotlin-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.tasks.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:01 a.m.
+ * Last modified on 16-07-2023 04:49 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -57,9 +57,9 @@ tasks {
         dependsOn(withType<Jar>())
     }
 
-    val dokkaHtml by getting(DokkaTask::class)
+    val dokkaHtml by named<DokkaTask>("build")
 
-    val javadocJar by creating(Jar::class) {
+    val javadocJar by register<Jar>("javadocJar") {
         dependsOn(dokkaHtml)
         from(dokkaHtml.outputDirectory)
         archiveClassifier = "javadoc"
