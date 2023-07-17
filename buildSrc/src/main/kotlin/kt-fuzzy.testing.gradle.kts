@@ -1,9 +1,9 @@
 /*
- * kotlin-fuzzy - A Kotlin library for fuzzy string matching
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 16-07-2023 04:23 p.m.
+ * Last modified on 17-07-2023 02:31 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,6 +25,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsSubTargetDsl
 import kotlin.math.max
@@ -38,7 +40,8 @@ kotlin {
     sourceSets {
         val commonTest by getting {
             dependencies {
-                implementation(libs.kotest.framework)
+                implementation(libs.kotest.framework.engine)
+                implementation(libs.kotest.framework.datatest)
                 implementation(libs.kotest.assertions)
                 implementation(libs.kotest.property)
                 // implementation(kotlin("test"))

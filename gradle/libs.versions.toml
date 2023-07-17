@@ -29,7 +29,8 @@ dokka-mathjax-plugin = { group = "org.jetbrains.dokka", name = "mathjax-plugin",
 
 ## Kotest
 ### A flexible and elegant multi-platform test framework for Kotlin
-kotest-framework = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
+kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
+kotest-framework-datatest = { group = "io.kotest", name = "kotest-framework-datatest", version.ref = "kotest" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
 

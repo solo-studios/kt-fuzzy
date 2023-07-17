@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file DamerauTest.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:01 p.m.
+ * The file PreComputedJs.kt is part of kotlin-fuzzy
+ * Last modified on 17-07-2023 06:16 p.m.
  *
  * MIT License
  *
@@ -25,31 +25,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package ca.solostudios.stringsimilarity
 
+import ca.solostudios.stringsimilarity.utils.DEFAULT_TOLERANCE
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.assertions.withClue
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.datatest.getStableIdentifier
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
 
-/**
- *
- * @author Thibault Debatty
- */
-class DamerauTest : FunSpec({
-    val damerau = Damerau()
-    include(metricDistanceTests(damerau))
-
-    val precomputed = listOf(
-        FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
-        FuzzyTestData("ABCDEF", "BACDFE", 2.0),
-        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
-        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
-        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 18.0),
-        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 21.0),
-        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 18.0),
-        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 21.0),
-        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 10.0),
-        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
-    )
-
-    include(precomputedDistanceTests(precomputed, damerau))
-})
+actual fun FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<FuzzyTestData>,
+    similarityFunction: (String, String) -> Double,
+) {
+    context(context) {
+        precomputed.forEach {
+            withClue({ getStableIdentifier(it) }) {
+                similarityFunction(it.first, it.second) shouldBe (it.similarity plusOrMinus DEFAULT_TOLERANCE)
+            }
+        }
+    }
+}
