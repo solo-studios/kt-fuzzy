@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jaccard.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 06:57 p.m.
+ * Last modified on 17-07-2023 04:38 p.m.
  *
  * MIT License
  *
@@ -58,13 +58,18 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
         if (s1 == s2) {
             return 1.0
         }
+
+        if (s1.isEmpty() || s2.isEmpty())
+            return 0.0
+
         val profile1 = profile(s1)
         val profile2 = profile(s2)
 
-        val union = mutableSetOf<String>()
+        if (profile1.isEmpty() && profile2.isEmpty())
+            return 0.0 // if they're both empty, it causes problems
 
-        union.addAll(profile1.keys)
-        union.addAll(profile2.keys)
+        val union = profile1.keys union profile2.keys
+
         val inter = profile1.keys.size + profile2.keys.size - union.size
         return 1.0 * inter / union.size
     }

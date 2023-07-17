@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StringSimilarity.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 08:19 p.m.
+ * Last modified on 17-07-2023 03:51 p.m.
  *
  * MIT License
  *
@@ -32,7 +32,8 @@ package ca.solostudios.stringsimilarity.interfaces
  *
  * The returned similarity will always be \(\geqslant 0\).
  *
- * `0` indicates that neither string have anything in common.
+ * - `0` indicates that neither string have anything in common.
+ * - If two strings are identical, then it should never return `0`.
  *
  * @author Thibault Debatty, solonovamax
  */

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file ShingleBased.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 06:34 p.m.
+ * Last modified on 17-07-2023 03:36 p.m.
  *
  * MIT License
  *
@@ -61,19 +61,12 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
      * @return the profile of this string, as an unmodifiable Map
      */
     public fun profile(string: String): Map<String, Int> {
-        val shingles = mutableMapOf<String, Int>()
         val stringNoSpace: String = SPACE_REG.replace(string, " ")
 
-        for (i in 0 until stringNoSpace.length - k + 1) {
-            val shingle = stringNoSpace.substring(i, i + k)
-            val old = shingles[shingle]
-            if (old != null) {
-                shingles[shingle] = old + 1
-            } else {
-                shingles[shingle] = 1
-            }
-        }
-        return shingles
+        // val a = stringNoSpace.chunked(k).groupBy { it }.mapValues { it.value.size }
+        return stringNoSpace.windowedSequence(size = k, partialWindows = false)
+            .groupBy { it }
+            .mapValues { it.value.size }
     }
 
     public companion object {
