@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StringMatcher.kt is part of kotlin-fuzzy
- * Last modified on 12-07-2023 04:10 p.m.
+ * Last modified on 17-07-2023 09:44 p.m.
  *
  * MIT License
  *
@@ -34,7 +34,7 @@ public object StringMatcher {
     @ExperimentalSimilarity
     public val cosine: Cosine = Cosine()
 
-    public val damerau: Damerau = Damerau()
+    public val damerauLevenshtein: DamerauLevenshtein = DamerauLevenshtein()
 
     public val jaccard: Jaccard = Jaccard()
 

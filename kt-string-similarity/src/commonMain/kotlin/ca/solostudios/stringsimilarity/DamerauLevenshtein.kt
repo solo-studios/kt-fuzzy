@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Damerau.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 07:53 p.m.
+ * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
+ * Last modified on 17-07-2023 09:44 p.m.
  *
  * MIT License
  *
@@ -45,7 +45,7 @@ import kotlin.math.min
  * @author Thibault Debatty, solonovamax
  * @see MetricStringDistance
  */
-public class Damerau : MetricStringDistance {
+public class DamerauLevenshtein : MetricStringDistance {
     /**
      * Compute the distance between strings: the minimum number of operations
      * needed to transform one string into the other (insertion, deletion,

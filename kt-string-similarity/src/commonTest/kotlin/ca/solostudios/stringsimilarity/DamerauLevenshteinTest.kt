@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file DamerauTest.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:01 p.m.
+ * The file DamerauLevenshteinTest.kt is part of kotlin-fuzzy
+ * Last modified on 17-07-2023 09:47 p.m.
  *
  * MIT License
  *
@@ -34,9 +34,9 @@ import io.kotest.core.spec.style.FunSpec
  *
  * @author Thibault Debatty
  */
-class DamerauTest : FunSpec({
-    val damerau = Damerau()
-    include(metricDistanceTests(damerau))
+class DamerauLevenshteinTest : FunSpec({
+    val damerauLevenshtein = DamerauLevenshtein()
+    include(metricDistanceTests(damerauLevenshtein))
 
     val precomputed = listOf(
         FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
@@ -51,5 +51,5 @@ class DamerauTest : FunSpec({
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
     )
 
-    include(precomputedDistanceTests(precomputed, damerau))
+    include(precomputedDistanceTests(precomputed, damerauLevenshtein))
 })
