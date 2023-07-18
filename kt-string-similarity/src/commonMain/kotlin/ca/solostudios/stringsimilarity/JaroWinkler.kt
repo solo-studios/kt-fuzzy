@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:39 p.m.
+ * Last modified on 18-07-2023 07:22 p.m.
  *
  * MIT License
  *
@@ -59,19 +59,21 @@ public class JaroWinkler(
      * @return The Jaro-Winkler similarity in the range [0, 1]
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
             return 1.0
-        }
+
         val mtp = matches(s1, s2)
-        val m = mtp[0].toDouble()
-        if (m == 0.0) {
+        val m = mtp.matches.toDouble()
+
+        if (mtp.matches == 0)
             return 0.0
-        }
-        val j = ((m / s1.length + m / s2.length + (m - mtp[1]) / m) / THREE)
-        return if (j > threshold)
-            j + min(JW_COEFFICIENT, 1.0 / mtp[THREE]) * mtp[2] * (1 - j)
+
+        val jaroSimilarity = ((m / s1.length) + (m / s2.length) + (m - mtp.transpositions) / m) / 3
+
+        return if (jaroSimilarity > threshold)
+            jaroSimilarity + min(JW_COEFFICIENT, 1.0 / mtp.longestLength) * mtp.commonPrefixLength * (1 - jaroSimilarity)
         else
-            j
+            jaroSimilarity
     }
 
     /**
@@ -85,14 +87,14 @@ public class JaroWinkler(
         return 1.0 - similarity(s1, s2)
     }
 
-    private fun matches(s1: String, s2: String): IntArray {
+    private fun matches(s1: String, s2: String): Matches {
         val (shortest, longest) = minMaxByLength(s1, s2)
         val searchRange = max(longest.length / 2 - 1, 0)
         val matchIndexes = IntArray(shortest.length) { -1 }
 
         val matchFlags = BooleanArray(longest.length)
 
-        val matches = shortest.asSequence().mapIndexedNotNull { index, char ->
+        val matches = shortest.mapIndexedNotNull { index, char ->
             val low = max(index - searchRange, 0)
             val high = min(index + searchRange + 1, longest.length)
             val matchIndex = (low until high).firstOrNull { i ->
@@ -105,24 +107,32 @@ public class JaroWinkler(
             } else {
                 null
             }
-        }.count()
+        }.size
 
         val ms1 = shortest.filterIndexed { i, _ -> matchIndexes[i] != -1 }.toCharArray()
         val ms2 = longest.filterIndexed { i, _ -> matchFlags[i] }.toCharArray()
 
-        val transpositions = ms1.asSequence().zip(ms2.asSequence()).count { (c1, c2) -> c1 != c2 }
+        // val transpositions = ms1.zip(ms2).count { (c1, c2) -> c1 != c2 } / 2
+        var transpositions = 0
+        ms1.forEachIndexed { i, c1 ->
+            if (c1 != ms2[i])
+                transpositions++
+        }
 
-        // val transpositions = ms1.foldIndexed(0) { index, acc, char ->
-        //     if (char != ms2[index]) acc.inc() else acc
-        // }
+        val commonPrefixLength = shortest.commonPrefixWith(longest).length
 
-        val prefix = shortest.indices.takeWhile { mi -> s1[mi] == s2[mi] }.count()
-        return intArrayOf(matches, transpositions / 2, prefix, longest.length)
+        return Matches(matches, transpositions / 2, commonPrefixLength, longest.length)
     }
+
+    private data class Matches(
+        val matches: Int,
+        val transpositions: Int,
+        val commonPrefixLength: Int,
+        val longestLength: Int,
+    )
 
     private companion object {
         private const val DEFAULT_THRESHOLD = 0.7
-        private const val THREE = 3
         private const val JW_COEFFICIENT = 0.1
     }
 }
