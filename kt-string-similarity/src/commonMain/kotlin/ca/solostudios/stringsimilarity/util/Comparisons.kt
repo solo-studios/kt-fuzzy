@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Comparisons.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:06 p.m.
+ * Last modified on 17-07-2023 09:26 p.m.
  *
  * MIT License
  *
@@ -28,6 +28,8 @@
 
 package ca.solostudios.stringsimilarity.util
 
+import kotlin.math.max
+
 /**
  * Returns the min and the max of two values according to the order specified by the given [comparator].
  *
@@ -37,4 +39,24 @@ package ca.solostudios.stringsimilarity.util
  */
 internal fun <T> minMaxOf(a: T, b: T, comparator: Comparator<in T>): Pair<T, T> {
     return if (comparator.compare(a, b) <= 0) a to b else b to a
+}
+
+/**
+ * Returns the longest and the shortest of two strings.
+ *
+ * If values are equal, they are returned in the order provided.
+ *
+ * @return A pair of longest-shortest strings.
+ */
+internal fun minMaxByLength(a: String, b: String): Pair<String, String> {
+    return if (a.length >= b.length) a to b else b to a
+}
+
+/**
+ * Returns the length of the longest string.
+ *
+ * @return The length of the longest string.
+ */
+internal fun maxLength(a: String, b: String): Int {
+    return max(a.length, b.length)
 }

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 08:49 p.m.
+ * Last modified on 17-07-2023 09:26 p.m.
  *
  * MIT License
  *
@@ -30,7 +30,7 @@ package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
-import ca.solostudios.stringsimilarity.util.minMaxOf
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 import kotlin.math.max
 import kotlin.math.min
 
@@ -86,7 +86,7 @@ public class JaroWinkler(
     }
 
     private fun matches(s1: String, s2: String): IntArray {
-        val (shortest, longest) = minMaxOf(s1, s2, compareBy { it.length })
+        val (shortest, longest) = minMaxByLength(s1, s2)
         val searchRange = max(longest.length / 2 - 1, 0)
         val matchIndexes = IntArray(shortest.length) { -1 }
 

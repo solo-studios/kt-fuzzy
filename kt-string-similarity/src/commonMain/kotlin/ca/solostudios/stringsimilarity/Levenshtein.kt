@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Levenshtein.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:05 p.m.
+ * Last modified on 17-07-2023 09:32 p.m.
  *
  * MIT License
  *
@@ -29,8 +29,9 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import kotlin.math.max
+import ca.solostudios.stringsimilarity.util.maxLength
 import kotlin.math.min
 
 /**
@@ -38,66 +39,44 @@ import kotlin.math.min
  * single-character edits (insertions, deletions, or substitutions) required to
  * change one string into the other.
  *
+ * @param limit The maximum result to compute before stopping.
  * @author Thibault Debatty
  */
-public class Levenshtein : MetricStringDistance, StringSimilarity {
+public class Levenshtein(
     /**
-     * The Levenshtein distance, or edit distance, between two words is the
-     * minimum number of single-character edits (insertions, deletions, or
-     * substitutions) required to change one word into the other.
-     *
-     *[ http://en.wikipedia.org/wiki/Levenshtein_distance]
-     *
-     * It is always at least the difference of the sizes of the two strings.
-     * It is at most the length of the longer string.
-     * It is zero if and only if the strings are equal.
-     * If the strings are the same size, the Hamming distance is an upper bound
-     * on the Levenshtein distance.
-     * The Levenshtein distance verifies the triangle inequality (the distance
-     * between two strings is no greater than the sum Levenshtein distances from
-     * a third string).
-     *
-     * Implementation uses dynamic programming (Wagner–Fischer algorithm), with
-     * only 2 rows of data. The space requirement is thus O(m) and the algorithm
-     * runs in O(mn).
-     *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The computed Levenshtein distance.
-     * @see distance
-     */
-    override fun distance(s1: String, s2: String): Double = distance(s1, s2, limit = Int.MAX_VALUE)
-
-    /**
-     * The Levenshtein distance, or edit distance, between two words is the
-     * minimum number of single-character edits (insertions, deletions, or
-     * substitutions) required to change one word into the other.
-     *
-     *[ http://en.wikipedia.org/wiki/Levenshtein_distance]
-     *
-     * It is always at least the difference of the sizes of the two strings.
-     * It is at most the length of the longer string.
-     * It is zero if and only if the strings are equal.
-     * If the strings are the same size, the Hamming distance is an upper bound
-     * on the Levenshtein distance.
-     * The Levenshtein distance verifies the triangle inequality (the distance
-     * between two strings is no greater than the sum Levenshtein distances from
-     * a third string).
-     *
-     * Implementation uses dynamic programming (Wagner–Fischer algorithm), with
-     * only 2 rows of data. The space requirement is thus O(m) and the algorithm
-     * runs in O(mn).
-     *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @param limit The maximum result to compute before stopping. This
+     * The maximum result to compute before stopping. This
      * means that the calculation can terminate early if you
      * only care about strings with a certain similarity.
      * Set this to Integer.MAX_VALUE if you want to run the
      * calculation to completion in every case.
+     */
+    public val limit: Int = Int.MAX_VALUE,
+) : MetricStringDistance, StringDistance, StringSimilarity {
+    /**
+     * The Levenshtein distance, or edit distance, between two words is the
+     * minimum number of single-character edits (insertions, deletions, or
+     * substitutions) required to change one word into the other.
+     *
+     * [Levenshtein distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
+     *
+     * It is always at least the difference of the sizes of the two strings.
+     * It is at most the length of the longer string.
+     * It is zero if and only if the strings are equal.
+     * If the strings are the same size, the Hamming distance is an upper bound
+     * on the Levenshtein distance.
+     * The Levenshtein distance verifies the triangle inequality (the distance
+     * between two strings is no greater than the sum Levenshtein distances from
+     * a third string).
+     *
+     * Implementation uses dynamic programming (Wagner–Fischer algorithm), with
+     * only 2 rows of data. The space requirement is thus \(O(m)\) and the algorithm
+     * runs in \(O(mn)\).
+     *
+     * @param s1 The first string to compare.
+     * @param s2 The second string to compare.
      * @return The computed Levenshtein distance.
      */
-    public fun distance(s1: String, s2: String, limit: Int = Int.MAX_VALUE): Double {
+    override fun distance(s1: String, s2: String): Double {
         if (s1 == s2) {
             return 0.0
         }
@@ -150,11 +129,32 @@ public class Levenshtein : MetricStringDistance, StringSimilarity {
         return v0[s2.length].toDouble()
     }
 
+    /**
+     * The similarity is \(\text{length of longest string}- 1\)
+     * The Levenshtein distance, or edit distance, between two words is the
+     * minimum number of single-character edits (insertions, deletions, or
+     * substitutions) required to change one word into the other.
+     *
+     * [Levenshtein distance](http://en.wikipedia.org/wiki/Levenshtein_distance)
+     *
+     * It is always at least the difference of the sizes of the two strings.
+     * It is at most the length of the longer string.
+     * It is zero if and only if the strings are equal.
+     * If the strings are the same size, the Hamming distance is an upper bound
+     * on the Levenshtein distance.
+     * The Levenshtein distance verifies the triangle inequality (the distance
+     * between two strings is no greater than the sum Levenshtein distances from
+     * a third string).
+     *
+     * Implementation uses dynamic programming (Wagner–Fischer algorithm), with
+     * only 2 rows of data. The space requirement is thus \(O(m)\) and the algorithm
+     * runs in \(O(mn)\).
+     *
+     * @param s1 The first string to compare.
+     * @param s2 The second string to compare.
+     * @return The computed Levenshtein distance.
+     */
     override fun similarity(s1: String, s2: String): Double {
-        return (max(s1.length, s2.length) - distance(s1, s2))
-    }
-
-    public fun similarity(s1: String, s2: String, limit: Int = Int.MAX_VALUE): Double {
-        return (max(s1.length, s2.length) - distance(s1, s2, limit))
+        return (maxLength(s1, s2) - distance(s1, s2))
     }
 }
