@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Levenshtein.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:32 p.m.
+ * Last modified on 18-07-2023 07:27 p.m.
  *
  * MIT License
  *
@@ -96,7 +96,7 @@ public class Levenshtein(
         var v1 = IntArray(s2.length + 1)
         var vtemp: IntArray
 
-        for (i in s1.indices) {
+        s1.forEachIndexed { i, c1 ->
             // calculate v1 (current row distances) from the previous row v0
             // first element of v1 is A[i+1][0]
             //   edit distance is delete (i+1) chars from s to match empty t
@@ -104,8 +104,8 @@ public class Levenshtein(
             var minv1 = v1[0]
 
             // use formula to fill in the rest of the row
-            s2.forEachIndexed { j, char ->
-                val cost = if (s1[i] == char) 0 else 1
+            s2.forEachIndexed { j, c2 ->
+                val cost = if (c1 == c2) 0 else 1
 
                 v1[j + 1] = min(
                     v1[j] + 1,  // Cost of insertion
@@ -126,11 +126,13 @@ public class Levenshtein(
             v0 = v1
             v1 = vtemp
         }
+
         return v0[s2.length].toDouble()
     }
 
     /**
-     * The similarity is \(\text{length of longest string}- 1\)
+     * The similarity is \(\text{length of longest string}- 1\).
+     *
      * The Levenshtein distance, or edit distance, between two words is the
      * minimum number of single-character edits (insertions, deletions, or
      * substitutions) required to change one word into the other.
@@ -152,7 +154,7 @@ public class Levenshtein(
      *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
-     * @return The computed Levenshtein distance.
+     * @return The computed Levenshtein similarity.
      */
     override fun similarity(s1: String, s2: String): Double {
         return (maxLength(s1, s2) - distance(s1, s2))
