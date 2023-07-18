@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Comparisons.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:26 p.m.
+ * Last modified on 18-07-2023 07:09 p.m.
  *
  * MIT License
  *
@@ -49,7 +49,7 @@ internal fun <T> minMaxOf(a: T, b: T, comparator: Comparator<in T>): Pair<T, T> 
  * @return A pair of longest-shortest strings.
  */
 internal fun minMaxByLength(a: String, b: String): Pair<String, String> {
-    return if (a.length >= b.length) a to b else b to a
+    return if (a.length <= b.length) a to b else b to a
 }
 
 /**
