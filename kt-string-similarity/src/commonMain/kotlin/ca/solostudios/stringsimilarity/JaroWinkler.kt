@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file JaroWinkler.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:10 p.m.
+ * The file JaroWinkler.kt is part of kotlin-fuzzy
+ * Last modified on 17-07-2023 08:49 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -30,6 +30,7 @@ package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
+import ca.solostudios.stringsimilarity.util.minMaxOf
 import kotlin.math.max
 import kotlin.math.min
 
@@ -46,9 +47,10 @@ import kotlin.math.min
  * bonus. The default value is 0.7.
  * @author Thibault Debatty
  */
-public class JaroWinkler(public val threshold: Double = DEFAULT_THRESHOLD) : NormalizedStringSimilarity,
-                                                                             NormalizedStringDistance {
-    
+public class JaroWinkler(
+    public val threshold: Double = DEFAULT_THRESHOLD,
+) : NormalizedStringSimilarity,
+    NormalizedStringDistance {
     /**
      * Compute Jaro-Winkler similarity.
      * @param s1 The first string to compare.
@@ -65,15 +67,13 @@ public class JaroWinkler(public val threshold: Double = DEFAULT_THRESHOLD) : Nor
         if (m == 0.0) {
             return 0.0
         }
-        val j = ((m / s1.length + m / s2.length + (m - mtp[1]) / m)
-                / THREE)
-        var jw = j
-        if (j > threshold) {
-            jw = j + min(JW_COEFFICIENT, 1.0 / mtp[THREE]) * mtp[2] * (1 - j)
-        }
-        return jw
+        val j = ((m / s1.length + m / s2.length + (m - mtp[1]) / m) / THREE)
+        return if (j > threshold)
+            j + min(JW_COEFFICIENT, 1.0 / mtp[THREE]) * mtp[2] * (1 - j)
+        else
+            j
     }
-    
+
     /**
      * Return 1 - similarity.
      * @param s1 The first string to compare.
@@ -84,78 +84,43 @@ public class JaroWinkler(public val threshold: Double = DEFAULT_THRESHOLD) : Nor
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
     }
-    
+
     private fun matches(s1: String, s2: String): IntArray {
-        val max: String
-        val min: String
-        if (s1.length > s2.length) {
-            max = s1
-            min = s2
-        } else {
-            max = s2
-            min = s1
-        }
-        val range: Int = max(max.length / 2 - 1, 0)
-        val matchIndexes = IntArray(min.length)
-        matchIndexes.fill(-1)
-        
-        val matchFlags = BooleanArray(max.length)
-        
-        var matches = 0
-        for (mi in min.indices) {
-            val c1 = min[mi]
-            var xi: Int = max(mi - range, 0)
-            val xn: Int = min(mi + range + 1, max.length)
-            while (xi < xn) {
-                if (!matchFlags[xi] && c1 == max[xi]) {
-                    matchIndexes[mi] = xi
-                    matchFlags[xi] = true
-                    matches++
-                    break
-                }
-                xi++
+        val (shortest, longest) = minMaxOf(s1, s2, compareBy { it.length })
+        val searchRange = max(longest.length / 2 - 1, 0)
+        val matchIndexes = IntArray(shortest.length) { -1 }
+
+        val matchFlags = BooleanArray(longest.length)
+
+        val matches = shortest.asSequence().mapIndexedNotNull { index, char ->
+            val low = max(index - searchRange, 0)
+            val high = min(index + searchRange + 1, longest.length)
+            val matchIndex = (low until high).firstOrNull { i ->
+                !matchFlags[i] && char == longest[i]
             }
-        }
-        val ms1 = CharArray(matches)
-        val ms2 = CharArray(matches)
-        
-        var i2 = 0
-        var si2 = 0
-        while (i2 < min.length) {
-            if (matchIndexes[i2] != -1) {
-                ms1[si2] = min[i2]
-                si2++
-            }
-            i2++
-        }
-        
-        var i = 0
-        var si = 0
-        while (i < max.length) {
-            if (matchFlags[i]) {
-                ms2[si] = max[i]
-                si++
-            }
-            i++
-        }
-        var transpositions = 0
-        for (mi in ms1.indices) {
-            if (ms1[mi] != ms2[mi]) {
-                transpositions++
-            }
-        }
-        var prefix = 0
-        for (mi in 0 until min.length) {
-            if (s1[mi] == s2[mi]) {
-                prefix++
+            if (matchIndex != null) {
+                matchIndexes[index] = matchIndex
+                matchFlags[matchIndex] = true
+                char
             } else {
-                break
+                null
             }
-        }
-        return intArrayOf(matches, transpositions / 2, prefix, max.length)
+        }.count()
+
+        val ms1 = shortest.filterIndexed { i, _ -> matchIndexes[i] != -1 }.toCharArray()
+        val ms2 = longest.filterIndexed { i, _ -> matchFlags[i] }.toCharArray()
+
+        val transpositions = ms1.asSequence().zip(ms2.asSequence()).count { (c1, c2) -> c1 != c2 }
+
+        // val transpositions = ms1.foldIndexed(0) { index, acc, char ->
+        //     if (char != ms2[index]) acc.inc() else acc
+        // }
+
+        val prefix = shortest.indices.takeWhile { mi -> s1[mi] == s2[mi] }.count()
+        return intArrayOf(matches, transpositions / 2, prefix, longest.length)
     }
-    
-    public companion object {
+
+    private companion object {
         private const val DEFAULT_THRESHOLD = 0.7
         private const val THREE = 3
         private const val JW_COEFFICIENT = 0.1

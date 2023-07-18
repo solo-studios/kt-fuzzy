@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Levenshtein.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:10 p.m.
+ * The file Levenshtein.kt is part of kotlin-fuzzy
+ * Last modified on 17-07-2023 09:05 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -29,6 +29,8 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -38,7 +40,7 @@ import kotlin.math.min
  *
  * @author Thibault Debatty
  */
-public class Levenshtein : MetricStringDistance {
+public class Levenshtein : MetricStringDistance, StringSimilarity {
     /**
      * The Levenshtein distance, or edit distance, between two words is the
      * minimum number of single-character edits (insertions, deletions, or
@@ -65,7 +67,7 @@ public class Levenshtein : MetricStringDistance {
      * @see distance
      */
     override fun distance(s1: String, s2: String): Double = distance(s1, s2, limit = Int.MAX_VALUE)
-    
+
     /**
      * The Levenshtein distance, or edit distance, between two words is the
      * minimum number of single-character edits (insertions, deletions, or
@@ -105,51 +107,54 @@ public class Levenshtein : MetricStringDistance {
         if (s2.isEmpty()) {
             return s1.length.toDouble()
         }
-        
+
         // create two work vectors of integer distances
-        var v0 = IntArray(s2.length + 1)
-        var v1 = IntArray(s2.length + 1)
-        var vtemp: IntArray
-        
+
         // initialize v0 (the previous row of distances)
         // this row is A[0][i]: edit distance for an empty s
         // the distance is just the number of characters to delete from t
-        for (i in v0.indices) {
-            v0[i] = i
-        }
+        var v0 = IntArray(s2.length + 1) { it }
+        var v1 = IntArray(s2.length + 1)
+        var vtemp: IntArray
+
         for (i in s1.indices) {
             // calculate v1 (current row distances) from the previous row v0
             // first element of v1 is A[i+1][0]
             //   edit distance is delete (i+1) chars from s to match empty t
             v1[0] = i + 1
             var minv1 = v1[0]
-            
+
             // use formula to fill in the rest of the row
-            for (j in s2.indices) {
-                var cost = 1
-                if (s1[i] == s2[j]) {
-                    cost = 0
-                }
+            s2.forEachIndexed { j, char ->
+                val cost = if (s1[i] == char) 0 else 1
+
                 v1[j + 1] = min(
-                        v1[j] + 1,  // Cost of insertion
-                        min(
-                                v0[j + 1] + 1,  // Cost of remove
-                                v0[j] + cost, // Cost of substitution
-                           ))
+                    v1[j] + 1,  // Cost of insertion
+                    min(
+                        v0[j + 1] + 1,  // Cost of remove
+                        v0[j] + cost, // Cost of substitution
+                    )
+                )
                 minv1 = min(minv1, v1[j + 1])
             }
+
             if (minv1 >= limit) {
                 return limit.toDouble()
             }
-            
-            // copy v1 (current row) to v0 (previous row) for next iteration
-            //System.arraycopy(v1, 0, v0, 0, v0.length);
-            
+
             // Flip references to current and previous row
             vtemp = v0
             v0 = v1
             v1 = vtemp
         }
         return v0[s2.length].toDouble()
+    }
+
+    override fun similarity(s1: String, s2: String): Double {
+        return (max(s1.length, s2.length) - distance(s1, s2))
+    }
+
+    public fun similarity(s1: String, s2: String, limit: Int = Int.MAX_VALUE): Double {
+        return (max(s1.length, s2.length) - distance(s1, s2, limit))
     }
 }

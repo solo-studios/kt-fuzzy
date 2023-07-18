@@ -1,9 +1,9 @@
 /*
- * kotlin-fuzzy - A Kotlin library for fuzzy string matching
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 16-07-2023 05:01 p.m.
+ * Last modified on 17-07-2023 09:04 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -30,6 +30,7 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
+import ca.solostudios.stringsimilarity.util.minMaxOf
 import kotlin.math.sqrt
 
 /**
@@ -72,7 +73,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
         }
         val profile1 = profile(s1)
         val profile2 = profile(s2)
-        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2))).coerceIn(0.0, 1.0)
+        return similarity(profile1, profile2)
     }
 
     /**
@@ -96,7 +97,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
      * @see NormalizedStringSimilarity
      */
     public fun similarity(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
-        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2)))
+        return (dotProduct(profile1, profile2) / (norm(profile1) * norm(profile2))).coerceIn(0.0, 1.0)
     }
 
     /**
@@ -130,8 +131,8 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
 
         inline fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
             // Loop over the smallest map
-            val smallProfile = minOf(profile1, profile2, compareBy { it.size })
-            val largeProfile = maxOf(profile1, profile2, compareBy { it.size })
+            val (smallProfile, largeProfile) = minMaxOf(profile1, profile2, compareBy { it.size })
+
             var agg = 0.0
             for ((key, value) in smallProfile) {
                 val i = largeProfile[key] ?: continue
