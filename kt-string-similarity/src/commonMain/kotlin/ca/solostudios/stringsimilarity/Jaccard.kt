@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jaccard.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 04:38 p.m.
+ * Last modified on 17-07-2023 09:39 p.m.
  *
  * MIT License
  *
@@ -49,10 +49,10 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
 
     /**
      * Compute Jaccard index: |A inter B| / |A union B|.
+     *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
      * @return The Jaccard index in the range [0, 1]
-     * @throws NullPointerException if s1 or s2 is null.
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2) {
@@ -76,10 +76,10 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
 
     /**
      * Distance is computed as 1 - similarity.
+     *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
      * @return 1 - the Jaccard similarity.
-     * @throws NullPointerException if s1 or s2 is null.
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)

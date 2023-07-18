@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:26 p.m.
+ * Last modified on 17-07-2023 09:39 p.m.
  *
  * MIT License
  *
@@ -53,10 +53,10 @@ public class JaroWinkler(
     NormalizedStringDistance {
     /**
      * Compute Jaro-Winkler similarity.
+     *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
      * @return The Jaro-Winkler similarity in the range [0, 1]
-     * @throws NullPointerException if s1 or s2 is null.
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2) {
@@ -76,10 +76,10 @@ public class JaroWinkler(
 
     /**
      * Return 1 - similarity.
+     *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
      * @return 1 - similarity.
-     * @throws NullPointerException if s1 or s2 is null.
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
