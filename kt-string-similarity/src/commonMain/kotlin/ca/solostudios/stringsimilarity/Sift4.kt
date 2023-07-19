@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file Sift4.kt is part of kt-fuzzy
- * Last modified on 09-02-2023 12:37 p.m.
+ * The file Sift4.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:26 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -41,7 +41,7 @@ import kotlin.math.round
  * [https://siderite.dev/blog/super-fast-and-accurate-string-distance.html]
  * [https://blackdoor.github.io/blog/sift4-java/]
  *
- * @author Thibault Debatty
+ * @author Thibault Debatty, solonovamax
  */
 @ExperimentalSimilarity
 public class Sift4(
@@ -51,7 +51,7 @@ public class Sift4(
          */
         private val maxOffset: Int = DEFAULT_MAX_OFFSET
                   ) : StringDistance {
-    
+
     /**
      * Sift4 - a general purpose string distance algorithm inspired by
      * JaroWinkler and Longest Common Subsequence.
@@ -68,7 +68,7 @@ public class Sift4(
         if (s1.isEmpty()) {
             return s2.length.toDouble()
         }
-        
+
         if (s2.isEmpty()) {
             return s1.length.toDouble()
         }
@@ -79,16 +79,16 @@ public class Sift4(
         var lcss = 0 // largest common subsequence
         var localCs = 0 // local common substring
         var trans = 0 // number of transpositions ('ab' vs 'ba')
-        
+
         /**
          * Used to store relation between same character in different positions
          * c1 and c2 in the input strings.
          */
         class Offset(val c1: Int, val c2: Int, var trans: Boolean)
-        
+
         // offset pair array, for computing the transpositions
         val offsetArr = mutableListOf<Offset>()
-        
+
         while (c1 < l1 && c2 < l2) {
             if (s1[c1] == s2[c2]) {
                 localCs++
@@ -121,7 +121,7 @@ public class Sift4(
                 }
                 offsetArr.add(Offset(c1, c2, isTrans))
             } else {
-                
+
                 // s1.charAt(c1) != s2.charAt(c2)
                 lcss += localCs
                 localCs = 0
@@ -130,7 +130,7 @@ public class Sift4(
                     c1 = min(c1, c2)
                     c2 = c1
                 }
-                
+
                 // if matching characters are found, remove 1 from both cursors
                 // (they get incremented at the end of the loop)
                 // so that we can have only one code block handling matches
@@ -164,7 +164,7 @@ public class Sift4(
         // add the cost of transpositions to the final result
         return round(((max(l1, l2) - lcss + trans).toDouble()))
     }
-    
+
     private companion object {
         private const val DEFAULT_MAX_OFFSET = 10
     }

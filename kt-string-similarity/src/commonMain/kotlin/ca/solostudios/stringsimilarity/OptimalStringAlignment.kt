@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file OptimalStringAlignment.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:31 p.m.
+ * The file OptimalStringAlignment.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:46 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -39,7 +39,7 @@ import kotlin.math.min
  * strings equal under the condition that no substring is edited more than once,
  * whereas Damerau-Levenshtein presents no such restriction.
  *
- * @author Michail Bogdanos
+ * @author Michail Bogdanos, solonovamax
  */
 public class OptimalStringAlignment : StringDistance {
     /**
@@ -53,7 +53,7 @@ public class OptimalStringAlignment : StringDistance {
      * @return the OSA distance
      */
     override fun distance(s1: String, s2: String): Double {
-        
+
         if (s1 == s2) {
             return 0.0
         }
@@ -65,34 +65,31 @@ public class OptimalStringAlignment : StringDistance {
         if (m == 0) {
             return n.toDouble()
         }
-        
+
         // Create the distance matrix H[0 .. s1.length+1][0 .. s2.length+1]
         val d = Array(n + 2) { IntArray(m + 2) }
-        
+
         // initialize top row and leftmost column
-        for (i in 0 .. n) {
+        for (i in 0..n) {
             d[i][0] = i
         }
-        for (j in 0 .. m) {
+        for (j in 0..m) {
             d[0][j] = j
         }
-        
+
         // fill the distance matrix
-        var cost: Int
-        for (i in 1 .. n) {
-            for (j in 1 .. m) {
-                
+        for (i in 1..n) {
+            for (j in 1..m) {
+
                 // if s1[i - 1] = s2[j - 1] then cost = 0, else cost = 1
-                cost = 1
-                if (s1[i - 1] == s2[j - 1]) {
-                    cost = 0
-                }
-                d[i][j] = min(
-                        d[i - 1][j - 1] + cost,  // substitution
-                        d[i][j - 1] + 1,  // insertion
-                        d[i - 1][j] + 1 // deletion
-                             )
-                
+                val cost = if (s1[i - 1] == s2[j - 1]) 0 else 1
+
+                d[i][j] = minOf(
+                    d[i - 1][j - 1] + cost, // substitution
+                    d[i][j - 1] + 1,        // insertion
+                    d[i - 1][j] + 1         // deletion
+                )
+
                 // transposition check
                 if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) {
                     d[i][j] = min(d[i][j], d[i - 2][j - 2] + cost)
@@ -100,13 +97,5 @@ public class OptimalStringAlignment : StringDistance {
             }
         }
         return d[n][m].toDouble()
-    }
-    
-    private companion object {
-        private fun min(
-                a: Int, b: Int, c: Int
-                       ): Int {
-            return min(a, min(b, c))
-        }
     }
 }

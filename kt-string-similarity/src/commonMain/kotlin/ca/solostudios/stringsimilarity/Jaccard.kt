@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jaccard.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:39 p.m.
+ * Last modified on 18-07-2023 09:30 p.m.
  *
  * MIT License
  *
@@ -33,38 +33,60 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
  * Each input string is converted into a set of n-grams, the Jaccard index is
- * then computed as |V1 inter V2| / |V1 union V2|.
+ * then computed as \(\frac{\lVert V_1 \cap V_2 \rVert}{\lVert V_1 \cup V_2 \rVert}\).
  * Like Q-Gram distance, the input strings are first converted into sets of
  * n-grams (sequences of n characters, also called k-shingles), but this time
  * the cardinality of each n-gram is not taken into account.
- * Distance is computed as 1 - cosine similarity.
- * Jaccard index is a metric distance.
+ *
+ * The distance is computed as \(1 - \text{similarity}\).
  *
  * @author Thibault Debatty, solonovamax
+ * @see MetricStringDistance
+ * @see NormalizedStringDistance
+ * @see NormalizedStringSimilarity
+ * @see ShingleBased
  */
-public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
-                                           MetricStringDistance,
-                                           NormalizedStringDistance,
-                                           NormalizedStringSimilarity {
+public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k), MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
 
     /**
-     * Compute Jaccard index: |A inter B| / |A union B|.
+     * Computes the Jaccard similarity of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The Jaccard index in the range [0, 1]
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Jaccard similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
             return 1.0
-        }
-
         if (s1.isEmpty() || s2.isEmpty())
             return 0.0
 
-        val profile1 = profile(s1)
-        val profile2 = profile(s2)
+        return similarity(profile(s1), profile(s2))
+    }
 
+    /**
+     * Computes the Jaccard distance of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Jaccard distance.
+     * @see NormalizedStringDistance
+     * @see MetricStringDistance
+     */
+    override fun distance(s1: String, s2: String): Double {
+        return 1.0 - similarity(s1, s2)
+    }
+
+    /**
+     * Computes the Jaccard similarity of precomputed profiles.
+     *
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized Jaccard similarity.
+     * @see NormalizedStringSimilarity
+     */
+    public fun similarity(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
         if (profile1.isEmpty() && profile2.isEmpty())
             return 0.0 // if they're both empty, it causes problems
 
@@ -75,13 +97,14 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k),
     }
 
     /**
-     * Distance is computed as 1 - similarity.
+     * Computes the Jaccard distance of precomputed profiles.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1 - the Jaccard similarity.
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized Jaccard distance.
+     * @see NormalizedStringDistance
      */
-    override fun distance(s1: String, s2: String): Double {
-        return 1.0 - similarity(s1, s2)
+    public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        return 1.0 - similarity(profile1, profile2)
     }
 }

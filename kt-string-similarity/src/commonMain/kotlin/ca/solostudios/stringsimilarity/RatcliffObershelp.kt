@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file RatcliffObershelp.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 05:58 p.m.
+ * The file RatcliffObershelp.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:26 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -40,7 +40,7 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  * The Ratcliff/Obershelp distance is computed as 1 - Ratcliff/Obershelp
  * similarity.
  *
- * @author Ligi [https://github.com/dxpux] (as a patch for fuzzystring)
+ * @author [Ligi](https://github.com/dxpux), solonovamax
  * Ported to java from .net by denmase
  */
 public class RatcliffObershelp : NormalizedStringSimilarity,
@@ -64,7 +64,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity,
         }
         return 2.0 * sum_of_matches / (s1.length + s2.length)
     }
-    
+
     /**
      * Return 1 - similarity.
      *
@@ -76,7 +76,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity,
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
     }
-    
+
     private companion object {
         private fun getMatchList(s1: String, s2: String): List<String> {
             val list = mutableListOf<String>()
@@ -94,7 +94,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity,
             }
             return list
         }
-        
+
         private fun frontMaxMatch(s1: String, s2: String): String {
             var longest = 0
             var longestsubstring = ""

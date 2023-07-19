@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:44 p.m.
+ * Last modified on 18-07-2023 09:05 p.m.
  *
  * MIT License
  *
@@ -47,19 +47,16 @@ import kotlin.math.min
  */
 public class DamerauLevenshtein : MetricStringDistance {
     /**
-     * Compute the distance between strings: the minimum number of operations
-     * needed to transform one string into the other (insertion, deletion,
-     * substitution of a single character, or a transposition of two adjacent
-     * characters).
+     * Computes the Damerau-Levenshtein distance metric of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The computed distance.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The Damerau-Levenshtein distance.
+     * @see MetricStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
             return 0.0
-        }
 
         // INFinite distance is the max possible distance
         val inf = s1.length + s2.length

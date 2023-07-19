@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StringMatcher.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:44 p.m.
+ * Last modified on 18-07-2023 09:15 p.m.
  *
  * MIT License
  *
@@ -42,9 +42,9 @@ public object StringMatcher {
 
     public val levenshtein: Levenshtein = Levenshtein()
 
-    public val longestCommonSubsequence: LongestCommonSubsequence = LongestCommonSubsequence()
+    public val LCS: LCS = LCS()
 
-    public val metricLCS: MetricLCS = MetricLCS()
+    public val normalizedLCS: NormalizedLCS = NormalizedLCS()
 
     public val nGram: NGram = NGram()
 

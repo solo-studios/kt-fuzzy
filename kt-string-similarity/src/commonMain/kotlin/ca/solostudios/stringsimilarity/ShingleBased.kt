@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file ShingleBased.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 03:36 p.m.
+ * Last modified on 18-07-2023 09:28 p.m.
  *
  * MIT License
  *
@@ -46,7 +46,7 @@ package ca.solostudios.stringsimilarity
  * such as research articles, \(k = 9\) is considered a safe choice.
  * @param k The length of k-shingles.
  * @throws IllegalArgumentException if \(k \leqslant 0\)
- * @author Thibault Debatty
+ * @author Thibault Debatty, solonovamax
  */
 public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
     /**
@@ -61,7 +61,7 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
      * @return the profile of this string, as an unmodifiable Map
      */
     public fun profile(string: String): Map<String, Int> {
-        val stringNoSpace: String = SPACE_REG.replace(string, " ")
+        val stringNoSpace: String = SPACE_REGEX.replace(string, " ")
 
         // val a = stringNoSpace.chunked(k).groupBy { it }.mapValues { it.value.size }
         return stringNoSpace.windowedSequence(size = k, partialWindows = false)
@@ -75,7 +75,7 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
         /**
          * Pattern for finding multiple following spaces.
          */
-        private val SPACE_REG: Regex = Regex("\\s+")
+        private val SPACE_REGEX: Regex = Regex("\\s+")
     }
 
     init {

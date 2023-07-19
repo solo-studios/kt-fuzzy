@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file QGram.kt is part of kt-fuzzy
- * Last modified on 09-02-2023 12:21 p.m.
+ * The file QGram.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:26 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -41,11 +41,11 @@ import kotlin.math.abs
  * requires O(m.n).
  * @param k The length of k-shingles.
  * @throws IllegalArgumentException if k is &lt;= 0
- * @author Thibault Debatty
+ * @author Thibault Debatty, solonovamax
  */
 public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
                                          StringDistance {
-    
+
     /**
      * The distance between two strings is defined as the L1 norm of the
      * difference of their profiles (the number of occurence of each k-shingle).
@@ -63,7 +63,7 @@ public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
         val profile2 = profile(s2)
         return distance(profile1, profile2)
     }
-    
+
     /**
      * Compute QGram distance using precomputed profiles.
      *
@@ -78,7 +78,7 @@ public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
         val union = mutableSetOf<String>()
         union.addAll(profile1.keys)
         union.addAll(profile2.keys)
-        
+
         var agg = 0
         for (key in union) {
             var v1 = 0

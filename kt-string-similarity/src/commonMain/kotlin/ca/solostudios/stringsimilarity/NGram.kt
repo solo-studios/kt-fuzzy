@@ -1,9 +1,9 @@
 /*
- * kt-string-similarity - A library implementing different string similarity and distance measures.
- * Copyright (c) 2015-2015 Thibault Debatty
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NGram.kt is part of kt-fuzzy
- * Last modified on 22-10-2021 08:10 p.m.
+ * The file NGram.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:32 p.m.
  *
  * MIT License
  *
@@ -17,7 +17,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-STRING-SIMILARITY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -29,6 +29,8 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
+import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
+import ca.solostudios.stringsimilarity.util.minLength
 import kotlin.math.max
 import kotlin.math.min
 
@@ -41,29 +43,36 @@ import kotlin.math.min
  * weight of first characters. The normalization is achieved by dividing the
  * total similarity score the original length of the longest word.
  *
- * [http:// webdocs.cs.ualberta.ca/~kondrak/papers/spire05.pdf]
+ * [N-Gram Similarity and Distance](http://webdocs.cs.ualberta.ca/~kondrak/papers/spire05.pdf)
+ *
+ * @author Thibault Debatty, solonovamax
+ * @see NormalizedStringDistance
+ * @see NormalizedStringSimilarity
  */
-public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
+public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, NormalizedStringSimilarity {
     /**
-     * Compute n-gram distance.
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The computed n-gram distance in the range [0, 1]
+     * Computes the N-Gram distance of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The N-Gram distance.
+     * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
             return 0.0
-        }
+        if (s1.isEmpty() || s2.isEmpty())
+            return 1.0
+
         val special = '\n'
         val sl = s1.length
         val tl = s2.length
-        if (sl == 0 || tl == 0) {
-            return 1.0
-        }
+
         var cost = 0
         if (sl < n || tl < n) {
             var i = 0
-            val ni: Int = min(sl, tl)
+            val ni = minLength(s1, s2)
+
             while (i < ni) {
                 if (s1[i] == s2[i]) {
                     cost++
@@ -76,7 +85,7 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
         var p: DoubleArray // 'previous' cost array, horizontally
         var d: DoubleArray // cost array, horizontally
         var d2: DoubleArray // placeholder to assist in swapping p and d
-        
+
         // construct sa with prefix
         for (i in sa.indices) {
             if (i < n - 1) {
@@ -87,7 +96,7 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
         }
         p = DoubleArray(sl + 1)
         d = DoubleArray(sl + 1)
-        
+
         // indexes into strings s and t
         var i: Int // iterates through source
         var tJ = CharArray(n) // jth n-gram of t
@@ -98,7 +107,6 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
         }
         var j = 1 // iterates through target
         while (j <= tl) {
-            
             // construct t_j n-gram
             if (j < n) {
                 for (ti in 0 until n - j) {
@@ -136,12 +144,24 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance {
             d = d2
             j++
         }
-        
+
         // our last action in the above loop was to switch d and p, so p now
         // actually has the most recent cost counts
         return p[sl] / max(tl, sl)
     }
-    
+
+    /**
+     * Computes the N-Gram similarity of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized N-Gram similarity.
+     * @see NormalizedStringSimilarity
+     */
+    override fun similarity(s1: String, s2: String): Double {
+        return 1.0 - distance(s1, s2)
+    }
+
     private companion object {
         private const val DEFAULT_N = 2
     }

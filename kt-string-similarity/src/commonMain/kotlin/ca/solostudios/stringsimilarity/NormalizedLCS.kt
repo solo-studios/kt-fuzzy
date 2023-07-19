@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:40 p.m.
+ * The file NormalizedLCS.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:48 p.m.
  *
  * MIT License
  *
@@ -30,34 +30,32 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
+import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.util.maxLength
 
 /**
- * This distance is computed as Levenshtein distance divided by the length of
- * the longest string. The resulting value is always in the range \(&#91;0, 1]\),
- * but it is not a [metric][MetricStringDistance] anymore! The similarity is computed as 1 - normalized
- * distance.
+ * Distance metric based on Longest Common Subsequence, from the notes
+ * "An LCS-based string metric" by Daniel Bakkelund.
  *
- * The normalized Levenshtein distance between Strings \(X\) and \(Y\) is:
- * \(\frac{\lvert Levenshtein(X, Y) \rvert}{max(\lvert X \rvert, \vert Y \rvert)}\).
+ * The normalized LCS distance between Strings \(X\) and \(Y\) is:
+ * \(1 - \frac{\lvert LCS(X, Y) \rvert}{max(\lvert X \rvert, \vert Y \rvert)}\).
  *
- * @param limit The maximum result to compute before stopping, before normalization.
+ * The similarity is \(1.0 - distance(X, Y)\).
+ *
  * @author Thibault Debatty, solonovamax
- * @see Levenshtein
+ * @see LCS
  */
-public class NormalizedLevenshtein(
-    limit: Int = Int.MAX_VALUE,
-) : NormalizedStringDistance,
-    NormalizedStringSimilarity {
-    private val levenshtein: Levenshtein = Levenshtein(limit)
+public class NormalizedLCS : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
+    private val lcs = LCS()
 
     /**
-     * Computes the normalized Levenshtein distance of two strings.
+     * Computes the Longest Common Subsequence distance of two strings.
      *
      * @param s1 The first string.
      * @param s2 The second string.
-     * @return The normalized Levenshtein distance.
-     * @see NormalizedStringDistance
+     * @return The normalized Longest Common Subsequence distance.
+     * @see MetricStringDistance
+     * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
@@ -65,17 +63,9 @@ public class NormalizedLevenshtein(
         if (s1.isEmpty() || s2.isEmpty())
             return 1.0
 
-        return levenshtein.distance(s1, s2) / maxLength(s1, s2)
+        return 1.0 - (lcs.lcsLength(s1, s2).toDouble() / maxLength(s1, s2))
     }
 
-    /**
-     * Computes the normalized Levenshtein similarity of two strings.
-     *
-     * @param s1 The first string.
-     * @param s2 The second string.
-     * @return The normalized Levenshtein similarity.
-     * @see NormalizedStringSimilarity
-     */
     override fun similarity(s1: String, s2: String): Double {
         return 1.0 - distance(s1, s2)
     }

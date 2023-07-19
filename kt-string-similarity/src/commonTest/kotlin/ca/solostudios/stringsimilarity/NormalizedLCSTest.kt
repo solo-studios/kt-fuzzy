@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file LongestCommonSubsequenceTest.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 06:57 p.m.
+ * The file NormalizedLCSTest.kt is part of kotlin-fuzzy
+ * Last modified on 18-07-2023 09:39 p.m.
  *
  * MIT License
  *
@@ -25,25 +25,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package ca.solostudios.stringsimilarity
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/**
- *
- * @author Thibault Debatty
- */
-class LongestCommonSubsequenceTest {
-    /**
-     * Test of distance method, of class LongestCommonSubsequence.
-     */
+class NormalizedLCSTest {
     @Test
     fun testDistance() {
-        println("distance")
-        val instance = LongestCommonSubsequence()
-        // LCS = GA or GC => distance = 4 (remove 3 letters and add 1)
-        assertEquals(4.0, instance.distance("AGCAT", "GAC"), 0.0)
-        assertEquals(1.0, instance.distance("AGCAT", "AGCT"), 0.0)
+        val normalizedLCS = NormalizedLCS()
+
+        // LCS: "ABCDEF" => length = 6
+        // longest = "ABCDEFHJKL" => length = 10
+        // => 1 - 6/10 = 0.4
+        assertEquals(normalizedLCS.distance("ABCDEFG", "ABCDEFHJKL"), 0.4, absoluteTolerance = 0.001) // prints 0.4
+
+        // LCS: "ABDF" => length = 4
+        // longest = "ABDEF" => length = 5
+        // => 1 - 4 / 5 = 0.2
+        assertEquals(normalizedLCS.distance("ABDEF", "ABDIF"), 0.2, absoluteTolerance = 0.001) // prints 0.2
     }
 }

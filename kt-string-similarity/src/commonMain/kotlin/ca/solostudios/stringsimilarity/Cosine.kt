@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:04 p.m.
+ * Last modified on 18-07-2023 09:43 p.m.
  *
  * MIT License
  *
@@ -27,7 +27,6 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import ca.solostudios.stringsimilarity.util.minMaxOf
@@ -37,51 +36,42 @@ import kotlin.math.sqrt
  * Implements Soft Cosine Similarity between strings. The strings are first
  * transformed in vectors of occurrences of k-shingles (sequences of k
  * characters). In this n-dimensional space, the similarity between the two
- * strings is the cosine of their respective vectors.
+ * strings is the Cosine of their respective vectors.
  *
- * The similarity between the two strings is the cosine of the angle between
+ * The similarity between the two strings is the Cosine of the angle between
  * these two vectors representation. It is computed as
  * \(\frac{\vec{v_1} \cdot \vec{v_2}}{\lVert\vec{v_1}\rVert \times \lVert\vec{v_2}\rVert}\).
  *
- * The cosine distance is computed as \(1 - \text{cosine similarity}\).
- *
- * **This class is currently marked as experimental, as I believe it is broken.
- * Further testing is required.**
+ * The Cosine distance is computed as \(1 - \text{Cosine similarity}\).
  *
  * @author Thibault Debatty, solonovamax
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
  */
-@ExperimentalSimilarity
-public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
-                                          NormalizedStringDistance,
-                                          NormalizedStringSimilarity {
+public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDistance, NormalizedStringSimilarity {
     /**
-     * Computes the cosine similarity of two strings.
+     * Computes the Cosine similarity of two strings.
      *
      * @param s1 The first string.
      * @param s2 The second string.
-     * @return The normalized cosine similarity.
+     * @return The normalized Cosine similarity.
      * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
             return 1.0
-        }
-        if (s1.length < k || s2.length < k) {
+        if (s1.length < k || s2.length < k)
             return 0.0
-        }
-        val profile1 = profile(s1)
-        val profile2 = profile(s2)
-        return similarity(profile1, profile2)
+
+        return similarity(profile(s1), profile(s2))
     }
 
     /**
-     * Computes the cosine distance of two strings.
+     * Computes the Cosine distance of two strings.
      *
      * @param s1 The first string.
      * @param s2 The second string.
-     * @return The normalized cosine distance.
+     * @return The normalized Cosine distance.
      * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
@@ -89,11 +79,11 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
     }
 
     /**
-     * Computes the cosine similarity of precomputed profiles.
+     * Computes the Cosine similarity of precomputed profiles.
      *
      * @param profile1 The profile of the first string.
      * @param profile2 The profile of the second string.
-     * @return The normalized cosine similarity.
+     * @return The normalized Cosine similarity.
      * @see NormalizedStringSimilarity
      */
     public fun similarity(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
@@ -101,11 +91,11 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k),
     }
 
     /**
-     * Computes the cosine distance of precomputed profiles.
+     * Computes the Cosine distance of precomputed profiles.
      *
      * @param profile1 The profile of the first string.
      * @param profile2 The profile of the second string.
-     * @return The normalized cosine distance.
+     * @return The normalized Cosine distance.
      * @see NormalizedStringDistance
      */
     public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {

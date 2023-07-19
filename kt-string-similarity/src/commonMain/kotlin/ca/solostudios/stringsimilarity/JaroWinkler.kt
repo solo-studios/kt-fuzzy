@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 07:22 p.m.
+ * Last modified on 18-07-2023 09:31 p.m.
  *
  * MIT License
  *
@@ -35,32 +35,41 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * The Jaro–Winkler distance metric is designed and best suited for short
+ * The Jaro–Winkler distance is designed and best suited for short
  * strings such as person names, and to detect typos; it is (roughly) a
  * variation of Damerau-Levenshtein, where the substitution of 2 close
  * characters is considered less important then the substitution of 2 characters
  * that a far from each other.
+ *
  * Jaro-Winkler was developed in the area of record linkage (duplicate
- * detection) (Winkler, 1990). It returns a value in the interval [0.0, 1.0].
- * The distance is computed as 1 - Jaro-Winkler similarity.
- * @param threshold Returns the current value of the threshold used for adding the Winkler
- * bonus. The default value is 0.7.
- * @author Thibault Debatty
+ * detection) (Winkler, 1990). It returns a value in the range \(&#91;0, 1]\).
+ *
+ * The distance is computed as \(1 - \text{similarity}\).
+ *
+ * @param threshold The threshold value used for adding the Winkler bonus.
+ * @author Thibault Debatty, solonovamax
+ * @see NormalizedStringDistance
+ * @see NormalizedStringSimilarity
  */
 public class JaroWinkler(
-    public val threshold: Double = DEFAULT_THRESHOLD,
-) : NormalizedStringSimilarity,
-    NormalizedStringDistance {
     /**
-     * Compute Jaro-Winkler similarity.
+     * The threshold value used for adding the Winkler bonus.
+     */
+    public val threshold: Double = DEFAULT_THRESHOLD,
+) : NormalizedStringDistance, NormalizedStringSimilarity {
+    /**
+     * Computes the Jaro-Winkler similarity of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The Jaro-Winkler similarity in the range [0, 1]
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Jaro-Winkler similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2)
             return 1.0
+        if (s1.isEmpty() || s2.isEmpty())
+            return 0.0
 
         val mtp = matches(s1, s2)
         val m = mtp.matches.toDouble()
@@ -77,11 +86,12 @@ public class JaroWinkler(
     }
 
     /**
-     * Return 1 - similarity.
+     * Computes the Jaro-Winkler distance of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1 - similarity.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Jaro-Winkler distance.
+     * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
