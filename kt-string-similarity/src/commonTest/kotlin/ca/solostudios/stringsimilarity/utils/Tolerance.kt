@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file test.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 03:47 p.m.
+ * The file Tolerance.kt is part of kotlin-fuzzy
+ * Last modified on 19-07-2023 04:37 p.m.
  *
  * MIT License
  *
