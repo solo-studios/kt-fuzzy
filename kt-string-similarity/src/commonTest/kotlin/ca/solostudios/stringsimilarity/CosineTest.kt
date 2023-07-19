@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file CosineTest.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:12 p.m.
+ * Last modified on 19-07-2023 03:45 p.m.
  *
  * MIT License
  *
@@ -27,17 +27,11 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 
-/**
- *
- * @author Thibault Debatty
- */
-@OptIn(ExperimentalSimilarity::class)
 class CosineTest : FunSpec({
     val cosine = Cosine()
     val cosineSmallK = Cosine(3)

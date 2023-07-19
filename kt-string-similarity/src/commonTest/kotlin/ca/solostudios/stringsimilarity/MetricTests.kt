@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file MetricTests.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:20 p.m.
+ * Last modified on 19-07-2023 04:37 p.m.
  *
  * MIT License
  *
@@ -34,6 +34,7 @@ import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.funSpec
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.doubles.shouldBeLessThanOrEqual
+import io.kotest.matchers.doubles.shouldBeZero
 import io.kotest.matchers.doubles.shouldNotBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.property.checkAll
@@ -51,7 +52,7 @@ fun metricDistanceTests(metricDistance: MetricStringDistance) = funSpec {
 
     test("Metric distance should respect the identity axiom") {
         checkAll<String> { a ->
-            metricDistance.distance(a, a) shouldBe (0.0 plusOrMinus DEFAULT_TOLERANCE)
+            metricDistance.distance(a, a).shouldBeZero()
         }
     }
 

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinklerTest.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:00 p.m.
+ * Last modified on 19-07-2023 03:45 p.m.
  *
  * MIT License
  *
@@ -30,10 +30,6 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
 class JaroWinklerTest : FunSpec({
     val jaroWinkler = JaroWinkler()
 

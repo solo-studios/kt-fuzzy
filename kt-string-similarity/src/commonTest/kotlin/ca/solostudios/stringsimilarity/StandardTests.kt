@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StandardTests.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:18 p.m.
+ * Last modified on 19-07-2023 04:37 p.m.
  *
  * MIT License
  *
@@ -31,9 +31,10 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import io.kotest.core.spec.style.funSpec
-import io.kotest.matchers.doubles.shouldBeExactly
-import io.kotest.matchers.doubles.shouldNotBeExactly
+import io.kotest.matchers.doubles.shouldBeZero
 import io.kotest.matchers.doubles.shouldNotBeLessThan
+import io.kotest.matchers.doubles.shouldNotBeZero
+import io.kotest.property.assume
 import io.kotest.property.checkAll
 
 fun similarityTests(similarity: StringSimilarity) = funSpec {
@@ -43,9 +44,10 @@ fun similarityTests(similarity: StringSimilarity) = funSpec {
         }
     }
 
-    test("Similarity should not be 0 for identical strings") {
+    test("Similarity should not be 0 for identical and non-empty strings") {
         checkAll<String> { a ->
-            similarity.similarity(a, a) shouldNotBeExactly 0.0
+            assume(a.isNotEmpty())
+            similarity.similarity(a, a).shouldNotBeZero()
         }
     }
 }
@@ -59,7 +61,7 @@ fun distanceTests(distance: StringDistance) = funSpec {
 
     test("Distance should be 0 for identical strings") {
         checkAll<String> { a ->
-            distance.distance(a, a) shouldBeExactly 0.0
+            distance.distance(a, a).shouldBeZero()
         }
     }
 }

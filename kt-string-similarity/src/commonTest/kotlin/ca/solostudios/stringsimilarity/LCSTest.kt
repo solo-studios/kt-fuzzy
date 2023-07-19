@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCSTest.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:39 p.m.
+ * Last modified on 19-07-2023 04:34 p.m.
  *
  * MIT License
  *
@@ -27,23 +27,47 @@
  */
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
-class LCSTest {
-    /**
-     * Test of distance method, of class LongestCommonSubsequence.
-     */
-    @Test
-    fun testDistance() {
-        println("distance")
-        val instance = LCS()
-        // LCS = GA or GC => distance = 4 (remove 3 letters and add 1)
-        assertEquals(4.0, instance.distance("AGCAT", "GAC"), 0.0)
-        assertEquals(1.0, instance.distance("AGCAT", "AGCT"), 0.0)
-    }
-}
+class LCSTest : FunSpec({
+    val lcs = LCS()
+
+    include(metricDistanceTests(lcs))
+    include(distanceTests(lcs))
+    include(similarityTests(lcs))
+
+    val precomputedDistances = listOf(
+        FuzzyTestData("AGCAT", "GAC", 4.0),
+        FuzzyTestData("AGCAT", "AGCT", 1.0),
+        FuzzyTestData("ABCDE", "ABCDF", 2.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 2.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 4.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 26.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 27.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 33.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 31.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 23.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 14.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 22.0),
+    )
+    val precomputedSimilarities = listOf(
+        FuzzyTestData("AGCAT", "GAC", 2.0),
+        FuzzyTestData("AGCAT", "AGCT", 4.0),
+        FuzzyTestData("ABCDE", "ABCDF", 4.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 5.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 4.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 5.0),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 2.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 2.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 5.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 3.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 2.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 2.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.0),
+    )
+
+    include(precomputedSimilarityTests(precomputedSimilarities, lcs))
+    include(precomputedDistanceTests(precomputedDistances, lcs))
+})
