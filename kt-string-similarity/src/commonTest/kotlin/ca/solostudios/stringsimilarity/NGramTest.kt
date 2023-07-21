@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGramTest.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 06:57 p.m.
+ * Last modified on 21-07-2023 06:06 p.m.
  *
  * MIT License
  *
@@ -27,29 +27,27 @@
  */
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
 /**
  *
  * @author Thibault Debatty
  */
-class NGramTest {
-    /**
-     * Test of distance method, of class NGram.
-     */
-    @Test
-    fun testDistance() {
-        println("distance")
-        val s0 = "ABABABAB"
-        val s1 = "ABCABCABCABC"
-        val s2 = "POIULKJH"
-        val ngram = NGram()
-        println(ngram.distance(s0, s1))
-        println(ngram.distance(s0, s2))
-        assertTrue(ngram.distance(s0, s1) < ngram.distance(s0, s2))
-        assertEquals(0.0, ngram.distance("SIJK", "SIJK"), 0.0)
-        assertEquals(0.0, ngram.distance("S", "S"), 0.0)
-    }
-}
+class NGramTest : FunSpec({
+    val ngram = NGram()
+
+    include(normalizedDistanceTests(ngram))
+    include(normalizedSimilarityTests(ngram))
+
+    val precomputed = listOf(
+        FuzzyTestData("ABABABAB", "ABCABCABCABC", 0.45833),
+        FuzzyTestData("ABABABAB", "POIULKJH", 1.0),
+        FuzzyTestData("SIJK", "SIJK", 0.0),
+        FuzzyTestData("S", "S", 0.0),
+    )
+
+    include(precomputedDistanceTests(precomputed, ngram))
+    // TODO: 2023-07-21 Add similarity tests
+    // include(precomputedSimilarityTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, normalizedLevenshtein))
+})

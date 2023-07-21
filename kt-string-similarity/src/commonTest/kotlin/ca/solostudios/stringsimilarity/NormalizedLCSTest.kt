@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLCSTest.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:39 p.m.
+ * Last modified on 21-07-2023 05:54 p.m.
  *
  * MIT License
  *
@@ -28,22 +28,32 @@
 
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
-class NormalizedLCSTest {
-    @Test
-    fun testDistance() {
-        val normalizedLCS = NormalizedLCS()
+class NormalizedLCSTest : FunSpec({
+    val normalizedLCS = NormalizedLCS()
 
-        // LCS: "ABCDEF" => length = 6
-        // longest = "ABCDEFHJKL" => length = 10
-        // => 1 - 6/10 = 0.4
-        assertEquals(normalizedLCS.distance("ABCDEFG", "ABCDEFHJKL"), 0.4, absoluteTolerance = 0.001) // prints 0.4
+    include(metricDistanceTests(normalizedLCS))
+    include(normalizedDistanceTests(normalizedLCS))
+    include(normalizedSimilarityTests(normalizedLCS))
 
-        // LCS: "ABDF" => length = 4
-        // longest = "ABDEF" => length = 5
-        // => 1 - 4 / 5 = 0.2
-        assertEquals(normalizedLCS.distance("ABDEF", "ABDIF"), 0.2, absoluteTolerance = 0.001) // prints 0.2
-    }
-}
+    val precomputed = listOf(
+        FuzzyTestData("AGCAT", "GAC", 0.66666),
+        FuzzyTestData("AGCAT", "AGCT", 0.2),
+        FuzzyTestData("ABCDE", "ABCDF", 0.33333),
+        FuzzyTestData("ABCDEF", "ABDCEF", 0.28571),
+        FuzzyTestData("ABCDEF", "BACDFE", 0.5),
+        FuzzyTestData("ABCDEF", "ABCDE", 0.16666),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 0.92857),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 0.93103),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 0.86842),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 0.91176),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 0.92),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 0.875),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 1.0),
+    )
+
+    include(precomputedDistanceTests(precomputed, normalizedLCS))
+    include(precomputedSimilarityTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, normalizedLCS))
+})

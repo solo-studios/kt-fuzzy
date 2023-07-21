@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:43 p.m.
+ * Last modified on 21-07-2023 05:56 p.m.
  *
  * MIT License
  *
@@ -38,13 +38,17 @@ import kotlin.math.sqrt
  * characters). In this n-dimensional space, the similarity between the two
  * strings is the Cosine of their respective vectors.
  *
- * The similarity between the two strings is the Cosine of the angle between
- * these two vectors representation. It is computed as
+ * The Cosine similarity between strings \(X\) and \(Y\) is
+ * the Cosine of the angle between the two strings as vectors. It is computed as:
  * \(\frac{\vec{v_1} \cdot \vec{v_2}}{\lVert\vec{v_1}\rVert \times \lVert\vec{v_2}\rVert}\).
+ * Where, \(\vec{v_1}\) and \(\vec{v_2}\) are the vector representation of string
+ * \(X\) and \(Y\), respectively.
  *
- * The Cosine distance is computed as \(1 - \text{Cosine similarity}\).
+ * The distance is computed as
+ * \(1 - similarity(\vec{v_1}, \vec{v_2})\).
  *
  * @author Thibault Debatty, solonovamax
+ *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
  */

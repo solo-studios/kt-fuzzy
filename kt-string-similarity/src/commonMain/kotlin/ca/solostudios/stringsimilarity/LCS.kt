@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCS.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 04:34 p.m.
+ * Last modified on 21-07-2023 05:56 p.m.
  *
  * MIT License
  *
@@ -42,7 +42,7 @@ import kotlin.math.max
  *
  * It is used by the diff utility, by Git for reconciling multiple changes, etc.
  *
- * The LCS edit distance between Strings \(X\) and \(Y\) is:
+ * The LCS edit distance between strings \(X\) and \(Y\) is:
  * \(\lvert X \rvert + \lvert Y \rvert - 2 \times \lvert LCS(X, Y) \rvert\)
  * - \(\text{min} = 0\)
  * - \(\text{max} = \lvert X \rvert + \lvert Y \rvert\).
@@ -51,13 +51,17 @@ import kotlin.math.max
  * deletion is allowed (no substitution), or when the cost of the substitution
  * is the double of the cost of an insertion or deletion.
  *
- * The similarity is computed as \(\lvert LCS(X, Y) \rvert\).
+ * The similarity is computed as
+ * \(\frac{max(\lvert X \rvert, \lvert Y \rvert) - distance(X, Y)}{2}\).
  *
- * ! This class currently implements the dynamic programming approach, which has
- * a space requirement \(O(m \times n)\) !
+ * **Note: Because this class currently implements the dynamic programming approach,
+ * it has a space requirement \(O(m \times n)\)**
  *
  * @author Thibault Debatty, solonovamax
+ *
+ * @see MetricStringDistance
  * @see StringDistance
+ * @see StringSimilarity
  */
 public class LCS : MetricStringDistance, StringDistance, StringSimilarity {
     /**
@@ -66,6 +70,7 @@ public class LCS : MetricStringDistance, StringDistance, StringSimilarity {
      * @param s1 The first string.
      * @param s2 The second string.
      * @return The Longest Common Subsequence distance.
+     * @see MetricStringDistance
      * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
@@ -86,12 +91,7 @@ public class LCS : MetricStringDistance, StringDistance, StringSimilarity {
      * @see StringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2)
-            return maxLength(s1, s2).toDouble()
-        if (s1.isEmpty() || s2.isEmpty())
-            return 0.0
-
-        return lcsLength(s1, s2).toDouble()
+        return (s1.length + s2.length - distance(s1, s2)) / 2
     }
 
     /**

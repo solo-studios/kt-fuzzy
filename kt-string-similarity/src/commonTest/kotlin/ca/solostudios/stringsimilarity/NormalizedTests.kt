@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedTests.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 04:37 p.m.
+ * Last modified on 21-07-2023 05:54 p.m.
  *
  * MIT License
  *
@@ -40,13 +40,13 @@ import io.kotest.property.checkAll
 fun normalizedSimilarityTests(similarity: NormalizedStringSimilarity) = funSpec {
     include(similarityTests(similarity))
 
-    context("Normalized similarity should be 1 for identical strings") {
+    test("Normalized similarity should be 1 for identical strings") {
         checkAll<String> { a ->
             similarity.similarity(a, a) shouldBeExactly 1.0
         }
     }
 
-    context("Normalized similarity should not be greater than 1 or less than 1") {
+    test("Normalized similarity should not be greater than 1 or less than 1") {
         checkAll<String, String> { a, b ->
             similarity.similarity(a, b) shouldNotBeGreaterThan 1.0
             similarity.similarity(a, b) shouldNotBeLessThan 0.0
@@ -57,13 +57,13 @@ fun normalizedSimilarityTests(similarity: NormalizedStringSimilarity) = funSpec 
 fun normalizedDistanceTests(distance: NormalizedStringDistance) = funSpec {
     include(distanceTests(distance))
 
-    context("Normalized distance should be 0 for identical strings") {
+    test("Normalized distance should be 0 for identical strings") {
         checkAll<String> { a ->
             distance.distance(a, a).shouldBeZero()
         }
     }
 
-    context("Normalized distance should not be greater than 1 or less than 1") {
+    test("Normalized distance should not be greater than 1 or less than 1") {
         checkAll<String, String> { a, b ->
             distance.distance(a, b) shouldNotBeGreaterThan 1.0
             distance.distance(a, b) shouldNotBeLessThan 0.0

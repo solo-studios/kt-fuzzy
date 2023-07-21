@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file WeightedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:26 p.m.
+ * Last modified on 21-07-2023 04:30 p.m.
  *
  * MIT License
  *
@@ -43,7 +43,7 @@ import kotlin.math.min
 public class WeightedLevenshtein(
     public val charSubstitutionWeight: (Char, Char) -> Double,
     public val charInsertionDeletionWeight: (Char) -> Weights = { Weights(1.0, 1.0) },
-) : StringDistance {
+) : StringDistance { // Evil
 
     override fun distance(s1: String, s2: String): Double = distance(s1, s2, limit = Double.MAX_VALUE)
 
@@ -83,8 +83,7 @@ public class WeightedLevenshtein(
         }
 
         for (element in s1) {
-            val s1i = element
-            val deletionCost = charInsertionDeletionWeight(s1i).deletionWeight
+            val deletionCost = charInsertionDeletionWeight(element).deletionWeight
 
             // calculate v1 (current row distances) from the previous row v0
             // first element of v1 is A[i+1][0]
@@ -97,8 +96,8 @@ public class WeightedLevenshtein(
             for (j in s2.indices) {
                 val s2j = s2[j]
                 var cost = 0.0
-                if (s1i != s2j) {
-                    cost = charSubstitutionWeight(s1i, s2j)
+                if (element != s2j) {
+                    cost = charSubstitutionWeight(element, s2j)
                 }
                 val insertionCost = charInsertionDeletionWeight(s2j).insertionWeight
 

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGram.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:32 p.m.
+ * Last modified on 21-07-2023 06:11 p.m.
  *
  * MIT License
  *
@@ -46,6 +46,7 @@ import kotlin.math.min
  * [N-Gram Similarity and Distance](http://webdocs.cs.ualberta.ca/~kondrak/papers/spire05.pdf)
  *
  * @author Thibault Debatty, solonovamax
+ *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
  */
@@ -59,6 +60,8 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
      * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
+        // wtf does this do?
+        // clean this shit up
         if (s1 == s2)
             return 0.0
         if (s1.isEmpty() || s2.isEmpty())

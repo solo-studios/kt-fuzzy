@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 09:33 p.m.
+ * Last modified on 21-07-2023 05:55 p.m.
  *
  * MIT License
  *
@@ -29,7 +29,6 @@ package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
-import kotlin.math.max
 import kotlin.test.assertEquals
 
 /**
@@ -39,8 +38,9 @@ import kotlin.test.assertEquals
 class LevenshteinTest : FunSpec({
     val levenshtein = Levenshtein()
 
-    // include(similarityTests(levenshtein))
+    include(metricDistanceTests(levenshtein))
     include(distanceTests(levenshtein))
+    include(similarityTests(levenshtein))
 
     val precomputed = listOf(
         FuzzyTestData("My string", "My tring", 1.0),
@@ -57,14 +57,14 @@ class LevenshteinTest : FunSpec({
     include(precomputedDistanceTests(precomputed, levenshtein))
     include(
         precomputedSimilarityTests(
-            precomputed.map { it.copy(similarity = max(it.first.length, it.second.length) - it.similarity) },
+            precomputed.map { it.copy(similarity = ((it.first.length + it.second.length) - it.similarity) / 2) },
             levenshtein
         )
     )
 
-    context("Levenshtein should return the correct distance when limits are applied") {
-        assertEquals(2.0, Levenshtein(4).distance("My string", "M string2"), 0.0)
-        assertEquals(2.0, Levenshtein(2).distance("My string", "M string2"), 0.0)
-        assertEquals(1.0, Levenshtein(1).distance("My string", "M string2"), 0.0)
+    test("Levenshtein should return the correct distance when limits are applied") {
+        assertEquals(2.0, Levenshtein(4.0).distance("My string", "M string2"), 0.0)
+        assertEquals(2.0, Levenshtein(2.0).distance("My string", "M string2"), 0.0)
+        assertEquals(1.0, Levenshtein(1.0).distance("My string", "M string2"), 0.0)
     }
 })

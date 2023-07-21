@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Levenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:30 p.m.
+ * Last modified on 21-07-2023 06:00 p.m.
  *
  * MIT License
  *
@@ -31,8 +31,7 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import ca.solostudios.stringsimilarity.util.maxLength
-import kotlin.math.min
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
  * The Levenshtein distance, or edit distance, between two words is the
@@ -50,28 +49,53 @@ import kotlin.math.min
  *   between two strings is no greater than the sum Levenshtein distances from
  *   a third string), so it is a [metric distance][MetricStringDistance].
  *
- * The similarity is \(max(\lvert X \rvert, \lvert Y \rvert) - distance(X, Y)\).
+ * The similarity is computed as
+ * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
  *
  * Implementation uses dynamic programming (Wagner–Fischer algorithm), with
  * only 2 rows of data. The space requirement is thus \(O(m)\) and the algorithm
  * runs in \(O(m \times n)\).
  *
  * @param limit The maximum result to compute before stopping.
+ * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ *
  * @author Thibault Debatty, solonovamax
+ *
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
  */
-public open class Levenshtein(
+public class Levenshtein(
     /**
      * The maximum result to compute before stopping. This
      * means that the calculation can terminate early if you
      * only care about strings with a certain similarity.
-     * Set this to Integer.MAX_VALUE if you want to run the
+     * Set this to [Double.MAX_VALUE] if you want to run the
      * calculation to completion in every case.
      */
-    public val limit: Int = Int.MAX_VALUE,
+    public val limit: Double = Double.MAX_VALUE,
+    /**
+     * The weight of an insertion. Represented as \(w_i\).
+     */
+    public val insertionWeight: Double = 1.0,
+    /**
+     * The weight of a deletion. Represented as \(w_d\).
+     */
+    public val deletionWeight: Double = 1.0,
+    /**
+     * The weight of a substitution. Represented as \(w_s\).
+     */
+    public val substitutionWeight: Double = 1.0,
 ) : MetricStringDistance, StringDistance, StringSimilarity {
+    init {
+        // 1E10 is a reasonable upper limit
+        require(insertionWeight > 0 && insertionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+    }
+
     /**
      * Computes the Levenshtein distance of two strings.
      *
@@ -84,49 +108,38 @@ public open class Levenshtein(
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
             return 0.0
-        if (s1.isEmpty() || s2.isEmpty())
-            return maxLength(s1, s2).toDouble() // return the length of the non-empty one
+        if (s1.isEmpty())
+            return s2.length * insertionWeight
+        if (s2.isEmpty())
+            return s1.length * deletionWeight
 
-        // create two work vectors of integer distances
+        val (shorter, longer) = minMaxByLength(s1, s2)
 
-        // initialize v0 (the previous row of distances)
-        // this row is A[0][i]: edit distance for an empty s
-        // the distance is just the number of characters to delete from t
-        var v0 = IntArray(s2.length + 1) { it }
-        var v1 = IntArray(s2.length + 1)
-        var vtemp: IntArray
+        var v0 = DoubleArray(longer.length + 1) { it * deletionWeight }
+        var v1 = DoubleArray(longer.length + 1)
 
-        s1.forEachIndexed { i, c1 ->
-            // calculate v1 (current row distances) from the previous row v0
-            // first element of v1 is A[i+1][0]
-            //   edit distance is delete (i+1) chars from s to match empty t
-            v1[0] = i + 1
-            var minv1 = v1[0]
+        shorter.forEachIndexed { i, c1 ->
+            v1[0] = (i + 1) * deletionWeight
 
-            // use formula to fill in the rest of the row
-            s2.forEachIndexed { j, c2 ->
-                val cost = if (c1 == c2) 0 else 1
+            var currentMin = v1[0]
+            longer.forEachIndexed { j, c2 ->
+                val deletionCost = v0[j + 1] + deletionWeight
+                val insertionCost = v1[j] + insertionWeight
+                val substitutionCost = if (c1 == c2) 0.0 else substitutionWeight
 
-                v1[j + 1] = min(
-                    v1[j] + 1,  // Cost of insertion
-                    min(
-                        v0[j + 1] + 1,  // Cost of remove
-                        v0[j] + cost, // Cost of substitution
-                    )
-                )
-                minv1 = min(minv1, v1[j + 1])
+                v1[j + 1] = minOf(deletionCost, insertionCost, v0[j] + substitutionCost)
+                currentMin = minOf(v1[j + 1], currentMin)
             }
 
-            if (minv1 >= limit)
-                return limit.toDouble()
+            if (currentMin >= limit)
+                return limit
 
-            // Flip references to current and previous row
-            vtemp = v0
+            val tmp = v0
             v0 = v1
-            v1 = vtemp
+            v1 = tmp
         }
 
-        return v0[s2.length].toDouble()
+        return v0[longer.length]
     }
 
     /**
@@ -138,6 +151,6 @@ public open class Levenshtein(
      * @see StringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
-        return (maxLength(s1, s2) - distance(s1, s2))
+        return ((insertionWeight * s1.length + deletionWeight * s2.length) - distance(s1, s2)) / 2
     }
 }

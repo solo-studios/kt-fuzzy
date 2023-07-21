@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:40 p.m.
+ * Last modified on 21-07-2023 06:01 p.m.
  *
  * MIT License
  *
@@ -30,26 +30,62 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
-import ca.solostudios.stringsimilarity.util.maxLength
 
 /**
- * This distance is computed as Levenshtein distance divided by the length of
- * the longest string. The resulting value is always in the range \(&#91;0, 1]\),
- * but it is not a [metric][MetricStringDistance] anymore! The similarity is computed as 1 - normalized
- * distance.
+ * A normalized metric based the Levenshtein distance, as defined by
+ * L. Yujian and L. Bo, "A Normalized Levenshtein Distance Metric",
+ * in IEEE Transactions on Pattern Analysis and Machine Intelligence,
+ * vol. 29, no. 6, pp. 1091-1095, June 2007, doi: 10.1109/TPAMI.2007.1078.
+ * <sup>[&#91;sci-hub&#93;](https://sci-hub.st/https://ieeexplore.ieee.org/document/4160958)</sup>
  *
  * The normalized Levenshtein distance between Strings \(X\) and \(Y\) is:
- * \(\frac{\lvert Levenshtein(X, Y) \rvert}{max(\lvert X \rvert, \vert Y \rvert)}\).
+ * \(\frac{2 \times distance_{levenshtein}(X, Y)}{w_d \lvert X \rvert + w_i \lvert Y \rvert + distance_{levenshtein}(X, Y)}\).
+ *
+ * The similarity is computed as
+ * \(1 - distance(X, Y)\).
  *
  * @param limit The maximum result to compute before stopping, before normalization.
+ * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ *
  * @author Thibault Debatty, solonovamax
+ *
  * @see Levenshtein
+ * @see MetricStringDistance
+ * @see NormalizedStringDistance
+ * @see NormalizedStringSimilarity
  */
 public class NormalizedLevenshtein(
-    limit: Int = Int.MAX_VALUE,
-) : NormalizedStringDistance,
-    NormalizedStringSimilarity {
-    private val levenshtein: Levenshtein = Levenshtein(limit)
+    /**
+     * The maximum result to compute before stopping. This
+     * means that the calculation can terminate early if you
+     * only care about strings with a certain similarity.
+     * Set this to [Double.MAX_VALUE] if you want to run the
+     * calculation to completion in every case.
+     */
+    public val limit: Double = Double.MAX_VALUE,
+    /**
+     * The weight of an insertion. Represented as \(w_i\).
+     */
+    public val insertionWeight: Double = 1.0,
+    /**
+     * The weight of a deletion. Represented as \(w_d\).
+     */
+    public val deletionWeight: Double = 1.0,
+    /**
+     * The weight of a substitution. Represented as \(w_s\).
+     */
+    public val substitutionWeight: Double = 1.0,
+) : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
+    init {
+        // 1E10 is a reasonable upper limit
+        require(insertionWeight > 0 && insertionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+    }
+
+    private val levenshtein: Levenshtein = Levenshtein(limit, deletionWeight, insertionWeight, substitutionWeight)
 
     /**
      * Computes the normalized Levenshtein distance of two strings.
@@ -57,6 +93,7 @@ public class NormalizedLevenshtein(
      * @param s1 The first string.
      * @param s2 The second string.
      * @return The normalized Levenshtein distance.
+     * @see MetricStringDistance
      * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
@@ -65,7 +102,8 @@ public class NormalizedLevenshtein(
         if (s1.isEmpty() || s2.isEmpty())
             return 1.0
 
-        return levenshtein.distance(s1, s2) / maxLength(s1, s2)
+        val levenshteinDistance = levenshtein.distance(s1, s2)
+        return (2 * levenshteinDistance) / (deletionWeight * s1.length + insertionWeight * s2.length + levenshteinDistance)
     }
 
     /**
@@ -74,6 +112,7 @@ public class NormalizedLevenshtein(
      * @param s1 The first string.
      * @param s2 The second string.
      * @return The normalized Levenshtein similarity.
+     * @see MetricStringDistance
      * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {

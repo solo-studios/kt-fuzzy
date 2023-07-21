@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:05 p.m.
+ * Last modified on 21-07-2023 05:56 p.m.
  *
  * MIT License
  *
@@ -28,6 +28,8 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import kotlin.math.min
 
 /**
@@ -42,10 +44,16 @@ import kotlin.math.min
  * This is not to be confused with the optimal string alignment distance, which
  * is an extension where no substring can be edited more than once.
  *
+ * The similarity is computed as
+ * \(\frac{\lvert X \rvert + \lvert Y \rvert - distance(X, Y)}{2}\).
+ *
  * @author Thibault Debatty, solonovamax
+ *
  * @see MetricStringDistance
+ * @see StringDistance
+ * @see StringSimilarity
  */
-public class DamerauLevenshtein : MetricStringDistance {
+public class DamerauLevenshtein : MetricStringDistance, StringDistance, StringSimilarity {
     /**
      * Computes the Damerau-Levenshtein distance metric of two strings.
      *
@@ -53,6 +61,7 @@ public class DamerauLevenshtein : MetricStringDistance {
      * @param s2 The second string.
      * @return The Damerau-Levenshtein distance.
      * @see MetricStringDistance
+     * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
@@ -108,6 +117,18 @@ public class DamerauLevenshtein : MetricStringDistance {
             da[s1[i - 1]] = i
         }
         return h[s1.length + 1][s2.length + 1].toDouble()
+    }
+
+    /**
+     * Computes the Longest Common Subsequence similarity of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The Longest Common Subsequence similarity.
+     * @see StringSimilarity
+     */
+    override fun similarity(s1: String, s2: String): Double {
+        return (s1.length + s2.length - distance(s1, s2)) / 2
     }
 
     private companion object {

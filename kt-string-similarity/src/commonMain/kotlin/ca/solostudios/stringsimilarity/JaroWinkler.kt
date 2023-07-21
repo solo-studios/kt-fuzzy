@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:31 p.m.
+ * Last modified on 21-07-2023 06:12 p.m.
  *
  * MIT License
  *
@@ -44,10 +44,13 @@ import kotlin.math.min
  * Jaro-Winkler was developed in the area of record linkage (duplicate
  * detection) (Winkler, 1990). It returns a value in the range \(&#91;0, 1]\).
  *
- * The distance is computed as \(1 - \text{similarity}\).
+ * The distance is computed as
+ * \(1 - similarity(X, Y)\).
  *
  * @param threshold The threshold value used for adding the Winkler bonus.
+ *
  * @author Thibault Debatty, solonovamax
+ *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
  */

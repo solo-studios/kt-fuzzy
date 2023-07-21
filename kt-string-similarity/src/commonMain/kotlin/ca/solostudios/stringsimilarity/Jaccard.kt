@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jaccard.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:30 p.m.
+ * Last modified on 21-07-2023 05:56 p.m.
  *
  * MIT License
  *
@@ -34,13 +34,15 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 /**
  * Each input string is converted into a set of n-grams, the Jaccard index is
  * then computed as \(\frac{\lVert V_1 \cap V_2 \rVert}{\lVert V_1 \cup V_2 \rVert}\).
- * Like Q-Gram distance, the input strings are first converted into sets of
- * n-grams (sequences of n characters, also called k-shingles), but this time
+ * Like Q-Gram distance, the input strings \(X\) and \(Y\) are first converted into sets of
+ * n-grams \(V_1\) and \(V_2\) (sequences of n characters, also called k-shingles), but this time
  * the cardinality of each n-gram is not taken into account.
  *
- * The distance is computed as \(1 - \text{similarity}\).
+ * The distance is computed as
+ * \(1 - similarity(X, Y)\).
  *
  * @author Thibault Debatty, solonovamax
+ *
  * @see MetricStringDistance
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
@@ -71,8 +73,8 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k), MetricStringDistance
      * @param s1 The first string.
      * @param s2 The second string.
      * @return The normalized Jaccard distance.
-     * @see NormalizedStringDistance
      * @see MetricStringDistance
+     * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
@@ -102,6 +104,7 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k), MetricStringDistance
      * @param profile1 The profile of the first string.
      * @param profile2 The profile of the second string.
      * @return The normalized Jaccard distance.
+     * @see MetricStringDistance
      * @see NormalizedStringDistance
      */
     public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {

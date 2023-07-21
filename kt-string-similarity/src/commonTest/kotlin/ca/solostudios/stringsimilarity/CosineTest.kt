@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file CosineTest.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 03:45 p.m.
+ * Last modified on 21-07-2023 03:48 p.m.
  *
  * MIT License
  *
@@ -27,6 +27,7 @@
  */
 package ca.solostudios.stringsimilarity
 
+import ca.solostudios.stringsimilarity.utils.DEFAULT_TOLERANCE
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.doubles.plusOrMinus
@@ -47,11 +48,11 @@ class CosineTest : FunSpec({
     include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, cosine))
 
     test("should be 0 for strings smaller than k") {
-        cosineSmallK.similarity("AB", "ABCE") shouldBe (0.0 plusOrMinus 0.00001)
+        cosineSmallK.similarity("AB", "ABCE") shouldBe (0.0 plusOrMinus DEFAULT_TOLERANCE)
     }
 
     test("should be 1 for strings smaller than k") {
-        cosineSmallK.distance("AB", "ABCE") shouldBe (1.0 plusOrMinus 0.00001)
+        cosineSmallK.distance("AB", "ABCE") shouldBe (1.0 plusOrMinus DEFAULT_TOLERANCE)
     }
 
     /*
