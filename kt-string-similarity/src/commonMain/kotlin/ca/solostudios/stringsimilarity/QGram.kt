@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGram.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:26 p.m.
+ * Last modified on 22-07-2023 04:43 p.m.
  *
  * MIT License
  *
@@ -45,7 +45,6 @@ import kotlin.math.abs
  */
 public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
                                          StringDistance {
-
     /**
      * The distance between two strings is defined as the L1 norm of the
      * difference of their profiles (the number of occurence of each k-shingle).
@@ -72,25 +71,17 @@ public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
      * @return
      */
     public fun distance(
-            profile1: Map<String, Int>,
-            profile2: Map<String, Int>
-                       ): Double {
+        profile1: Map<String, Int>,
+        profile2: Map<String, Int>,
+    ): Double {
         val union = mutableSetOf<String>()
         union.addAll(profile1.keys)
         union.addAll(profile2.keys)
 
         var agg = 0
         for (key in union) {
-            var v1 = 0
-            var v2 = 0
-            val iv1 = profile1[key]
-            if (iv1 != null) {
-                v1 = iv1
-            }
-            val iv2 = profile2[key]
-            if (iv2 != null) {
-                v2 = iv2
-            }
+            val v1 = profile1[key] ?: 0
+            val v2 = profile2[key] ?: 0
             agg += abs(v1 - v2)
         }
         return agg.toDouble()

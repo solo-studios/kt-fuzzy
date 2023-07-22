@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 06:01 p.m.
+ * Last modified on 22-07-2023 04:39 p.m.
  *
  * MIT License
  *
@@ -112,7 +112,6 @@ public class NormalizedLevenshtein(
      * @param s1 The first string.
      * @param s2 The second string.
      * @return The normalized Levenshtein similarity.
-     * @see MetricStringDistance
      * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {

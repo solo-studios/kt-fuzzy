@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file OptimalStringAlignment.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:46 p.m.
+ * Last modified on 22-07-2023 04:40 p.m.
  *
  * MIT License
  *
@@ -28,6 +28,8 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import ca.solostudios.stringsimilarity.util.maxLength
 import kotlin.math.min
 
 /**
@@ -39,47 +41,46 @@ import kotlin.math.min
  * strings equal under the condition that no substring is edited more than once,
  * whereas Damerau-Levenshtein presents no such restriction.
  *
+ * Computes the distance between strings: the minimum number of operations
+ * needed to transform one string into the other (insertion, deletion,
+ * substitution of a single character, or a transposition of two adjacent
+ * characters) while no substring is edited more than once.
+ *
+ * The similarity is computed as
+ * \(\frac{max(\lvert X \rvert, \lvert Y \rvert) - distance(X, Y)}{2}\).
+ *
  * @author Michail Bogdanos, solonovamax
  */
-public class OptimalStringAlignment : StringDistance {
+// TODO: 2023-07-22 Add configurable weights for insertion, deletion, substitution, and transposition.
+public class OptimalStringAlignment : StringDistance, StringSimilarity {
     /**
-     * Compute the distance between strings: the minimum number of operations
-     * needed to transform one string into the other (insertion, deletion,
-     * substitution of a single character, or a transposition of two adjacent
-     * characters) while no substring is edited more than once.
+     * Computes the Optimal String Alignment distance of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return the OSA distance
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The Optimal String Alignment distance.
+     * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
-
-        if (s1 == s2) {
+        if (s1 == s2)
             return 0.0
-        }
-        val n = s1.length
-        val m = s2.length
-        if (n == 0) {
-            return m.toDouble()
-        }
-        if (m == 0) {
-            return n.toDouble()
-        }
+        if (s1.isEmpty() || s2.isEmpty())
+            return maxLength(s1, s2).toDouble() // return the length of the non-empty one
 
         // Create the distance matrix H[0 .. s1.length+1][0 .. s2.length+1]
-        val d = Array(n + 2) { IntArray(m + 2) }
+        val d = Array(s1.length + 1) { IntArray(s2.length + 1) }
 
         // initialize top row and leftmost column
-        for (i in 0..n) {
+        for (i in 0..s1.length) {
             d[i][0] = i
         }
-        for (j in 0..m) {
+        for (j in 0..s2.length) {
             d[0][j] = j
         }
 
         // fill the distance matrix
-        for (i in 1..n) {
-            for (j in 1..m) {
+        for (i in 1..s1.length) {
+            for (j in 1..s2.length) {
 
                 // if s1[i - 1] = s2[j - 1] then cost = 0, else cost = 1
                 val cost = if (s1[i - 1] == s2[j - 1]) 0 else 1
@@ -96,6 +97,18 @@ public class OptimalStringAlignment : StringDistance {
                 }
             }
         }
-        return d[n][m].toDouble()
+        return d[s1.length][s2.length].toDouble()
+    }
+
+    /**
+     * Computes the Optimal String Alignment similarity of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The Optimal String Alignment similarity.
+     * @see StringSimilarity
+     */
+    override fun similarity(s1: String, s2: String): Double {
+        return (s1.length + s2.length - distance(s1, s2)) / 2
     }
 }
