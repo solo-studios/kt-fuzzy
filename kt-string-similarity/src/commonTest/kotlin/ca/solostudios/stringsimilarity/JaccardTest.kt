@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaccardTest.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 03:45 p.m.
+ * Last modified on 22-07-2023 04:21 p.m.
  *
  * MIT License
  *
@@ -34,8 +34,8 @@ class JaccardTest : FunSpec({
     val jaccard = Jaccard(2)
 
     include(metricDistanceTests(jaccard))
+    include(normalizedDistanceTests(jaccard, false))
     include(normalizedSimilarityTests(jaccard))
-    include(normalizedDistanceTests(jaccard))
 
     val precomputed = listOf(
         FuzzyTestData("ABCDE", "ABCDF", 0.6),

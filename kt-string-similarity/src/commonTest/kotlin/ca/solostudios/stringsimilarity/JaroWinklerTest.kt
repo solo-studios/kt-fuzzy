@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinklerTest.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 03:45 p.m.
+ * Last modified on 22-07-2023 04:21 p.m.
  *
  * MIT License
  *
@@ -33,8 +33,8 @@ import io.kotest.core.spec.style.FunSpec
 class JaroWinklerTest : FunSpec({
     val jaroWinkler = JaroWinkler()
 
-    include(normalizedSimilarityTests(jaroWinkler))
     include(normalizedDistanceTests(jaroWinkler))
+    include(normalizedSimilarityTests(jaroWinkler))
 
     val precomputed = listOf(
         FuzzyTestData("My string", "My tsring", 0.97407),

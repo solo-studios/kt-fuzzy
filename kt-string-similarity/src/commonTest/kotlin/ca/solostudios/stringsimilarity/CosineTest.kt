@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file CosineTest.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 03:48 p.m.
+ * Last modified on 22-07-2023 04:21 p.m.
  *
  * MIT License
  *
@@ -37,8 +37,8 @@ class CosineTest : FunSpec({
     val cosine = Cosine()
     val cosineSmallK = Cosine(3)
 
-    include(normalizedSimilarityTests(cosine))
     include(normalizedDistanceTests(cosine))
+    include(normalizedSimilarityTests(cosine))
 
     val precomputed = listOf(
         FuzzyTestData("ABC", "ABCE", 0.7071)

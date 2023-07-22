@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedTests.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 05:54 p.m.
+ * Last modified on 22-07-2023 04:20 p.m.
  *
  * MIT License
  *
@@ -54,8 +54,9 @@ fun normalizedSimilarityTests(similarity: NormalizedStringSimilarity) = funSpec 
     }
 }
 
-fun normalizedDistanceTests(distance: NormalizedStringDistance) = funSpec {
-    include(distanceTests(distance))
+fun normalizedDistanceTests(distance: NormalizedStringDistance, includeStandard: Boolean = true) = funSpec {
+    if (includeStandard)
+        include(distanceTests(distance))
 
     test("Normalized distance should be 0 for identical strings") {
         checkAll<String> { a ->

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLCSTest.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 05:54 p.m.
+ * Last modified on 22-07-2023 04:21 p.m.
  *
  * MIT License
  *
@@ -35,7 +35,7 @@ class NormalizedLCSTest : FunSpec({
     val normalizedLCS = NormalizedLCS()
 
     include(metricDistanceTests(normalizedLCS))
-    include(normalizedDistanceTests(normalizedLCS))
+    include(normalizedDistanceTests(normalizedLCS, false))
     include(normalizedSimilarityTests(normalizedLCS))
 
     val precomputed = listOf(

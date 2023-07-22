@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 05:55 p.m.
+ * Last modified on 22-07-2023 04:22 p.m.
  *
  * MIT License
  *
@@ -39,7 +39,6 @@ class LevenshteinTest : FunSpec({
     val levenshtein = Levenshtein()
 
     include(metricDistanceTests(levenshtein))
-    include(distanceTests(levenshtein))
     include(similarityTests(levenshtein))
 
     val precomputed = listOf(
