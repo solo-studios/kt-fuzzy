@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file FuzzyKtTest.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 05:08 p.m.
+ * Last modified on 22-07-2023 05:11 p.m.
  *
  * MIT License
  *
@@ -36,12 +36,12 @@ class FuzzyKtTest {
     fun testRatio() {
         val ratioTests =
                 listOf( // s1, s2, expected
-                        Triple("this is a test", "this is a test!", 0.9333333333333333),
-                        Triple("fuzzy wuzzy was a bear", "wuzzy fuzzy was a bear", 0.9090909090909091),
-                        Triple("abcd", "abcd", 1.0),
-                        Triple("mysmilarstring", "myawfullysimilarstirng", 0.5454545454545454),
-                        Triple("mysmilarstring", "mysimilarstring", 0.9333333333333333)
-                      )
+                    Triple("this is a test", "this is a test!", 0.9333333333333333),
+                    Triple("fuzzy wuzzy was a bear", "wuzzy fuzzy was a bear", 0.9130434782608696),
+                    Triple("abcd", "abcd", 1.0),
+                    Triple("mysmilarstring", "myawfullysimilarstirng", 0.5652173913043479),
+                    Triple("mysmilarstring", "mysimilarstring", 0.9333333333333333)
+                )
         for ((s1, s2, expected) in ratioTests) {
             assertEquals(expected = expected, actual = FuzzyKt.ratio(s1, s2), absoluteTolerance = 0.001)
         }
