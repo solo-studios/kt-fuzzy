@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:55 p.m.
+ * The file kt-fuzzy.versioning.gradle.kts is part of kotlin-fuzzy
+ * Last modified on 22-07-2023 05:03 p.m.
  *
  * MIT License
  *
@@ -26,42 +26,20 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
-
 plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
+    // alias(libs.plugins.axion.release)
+    id("pl.allegro.tech.build.axion-release")
 }
 
-group = "ca.solo-studios"
-version = "0.1.0"
-description = """
-    A dependency-less Kotlin Multiplatform library for fuzzy string matching
-""".trimIndent()
-
-repositories {
-    mavenCentral()
-}
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-
-                api(projects.ktStringSimilarity)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test) // temporary
-            }
-        }
+scmVersion {
+    tag {
+        // println("prefix = ${project.name.toStringOrEmpty().replace("-", "")}")
+        // prefix.set(project.name.toStringOrEmpty().replace("-", ""))
+        prefix.set(project.name)
+        versionSeparator = "-"
     }
 }
+
+project.version = scmVersion.version
+
+println("The version is $version")

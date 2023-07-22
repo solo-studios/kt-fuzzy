@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 08-07-2023 07:56 p.m.
+ * Last modified on 22-07-2023 04:51 p.m.
  *
  * MIT License
  *
@@ -60,6 +60,8 @@ dependencies {
 
     implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.kotlin))
     implementation(gradlePlugin("org.jetbrains.kotlin.multiplatform", libs.versions.kotlin))
+
+    implementation(gradlePlugin("pl.allegro.tech.build.axion-release", libs.versions.axion.release))
 
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
