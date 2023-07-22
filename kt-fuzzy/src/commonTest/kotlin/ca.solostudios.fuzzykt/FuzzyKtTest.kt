@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file FuzzyKtTest.kt is part of kt-fuzzy
- * Last modified on 27-10-2021 06:01 p.m.
+ * The file FuzzyKtTest.kt is part of kotlin-fuzzy
+ * Last modified on 22-07-2023 05:08 p.m.
  *
  * MIT License
  *
@@ -46,23 +46,23 @@ class FuzzyKtTest {
             assertEquals(expected = expected, actual = FuzzyKt.ratio(s1, s2), absoluteTolerance = 0.001)
         }
     }
-    
+
     @Test
     fun testPartialRatio() {
         val partialRatioTests =
                 listOf( // s1, s2, expected
-                        Triple("this is a test", "this is a test!", 1.0),
-                        Triple("fuzzy wuzzy was a bear", "wuzzy fuzzy was a bear", 0.9090909090909091),
-                        Triple("abcd", "abcd", 1.0),
-                        Triple("mysmilarstring", "myawfullysimilarstirng", 0.2142857142857143),
-                        Triple("mysmilarstring", "mysimilarstring", 0.8571428571428572),
-                        Triple("similar", "somewhresimlrbetweenthisstring", 0.4285714285714286)
-                      )
+                    Triple("this is a test", "this is a test!", 1.0),
+                    Triple("fuzzy wuzzy was a bear", "wuzzy fuzzy was a bear", 0.9130434782608696),
+                    Triple("abcd", "abcd", 1.0),
+                    Triple("mysmilarstring", "myawfullysimilarstirng", 0.4358974358974359),
+                    Triple("mysmilarstring", "mysimilarstring", 0.8666666666666667),
+                    Triple("similar", "somewhresimlrbetweenthisstring", 0.5555555555555556)
+                )
         for ((s1, s2, expected) in partialRatioTests) {
             assertEquals(expected = expected, actual = FuzzyKt.partialRatio(s1, s2), absoluteTolerance = 0.001)
         }
     }
-    
+
     @Test
     fun testLongestCommonSubstring() {
         val substringTests =
@@ -73,7 +73,7 @@ class FuzzyKtTest {
                         Triple("aaaa", "a", 0 to 1),
                         Triple("aabbaaa", "aaa", 4 to 7)
                       )
-        
+
         for ((s1, s2, expected) in substringTests) {
             assertEquals(expected = expected, actual = FuzzyKt.longestCommonSubstring(s1, s2))
         }
