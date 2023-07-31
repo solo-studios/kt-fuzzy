@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Utilities.kt is part of kotlin-fuzzy
- * Last modified on 07-07-2023 05:01 p.m.
+ * Last modified on 31-07-2023 03:51 p.m.
  *
  * MIT License
  *
@@ -26,22 +26,31 @@
  * SOFTWARE.
  */
 
+import gradle.kotlin.dsl.accessors._1c03891aad1347593c8797d531001286.ext
+import groovyjarjarantlr.preprocessor.Hierarchy
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
+import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.internal.impldep.org.apache.commons.lang.StringUtils
 import org.gradle.kotlin.dsl.the
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinTargetHierarchyDsl
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+import org.jetbrains.kotlin.gradle.targets.js.ir.JsIrBinary
 import java.util.Locale
 
 fun String.capitalize(): String = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
 fun Any?.toStringOrEmpty() = this as? String ?: this?.toString() ?: ""
 
-val Project.nameFormatted: String
-    get() = project.name.split("-").joinToString(separator = " ") { word ->
-        if (word == "kt")
-            "Kotlin"
-        else
-            word.capitalize()
-    }
+fun String.formatAsName(): String {
+    return this.split("-").map {
+        it.takeIf { it != "kt" } ?: "Kotlin"
+    }.joinToString(separator = " ") { it.capitalize() }
+}
 
 val Project.isSnapshot: Boolean
     get() = version.toString().endsWith("-SNAPSHOT")
@@ -50,14 +59,111 @@ val Project.isSnapshot: Boolean
 val Project.libs: LibrariesForLibs
     get() = the<LibrariesForLibs>()
 
-object Repository {
-    val projectUser = "solo-studios"
-    val projectRepo = "kt-fuzzy"
-    val projectBaseUri = "github.com/$projectUser/$projectRepo"
-    val projectUrl = "https://$projectBaseUri"
+data class Repository(
+    val projectUser: String,
+    val projectRepo: String,
+    val projectHost: String = "github.com",
+) {
+    val projectBaseUri: String
+        get() = "$projectHost/$projectUser/$projectRepo"
+    val projectUrl: String
+        get() = "https://$projectBaseUri"
 }
+
+var Project.repository: Repository
+    get() = project.ext["repo"] as Repository
+    set(value) {
+        project.ext["repo"] = value
+    }
 
 /**
  * Project info class for the `processDokkaIncludes` task.
  */
 data class ProjectInfo(val group: String, val module: String, val version: String)
+
+/*
+ Magic shit
+ */
+fun KotlinJsTargetDsl.configureCommonJs() {
+    compilations.configureEach {
+        kotlinOptions.configureCommonJsOptions()
+
+        binaries.withType<JsIrBinary>().configureEach {
+            linkTask.configure {
+                kotlinOptions.configureCommonJsOptions()
+            }
+        }
+    }
+}
+
+/*-------------------------------------------------------------------+
+ |                                                                   |
+ |      Implementations of useCommonJs(), useEsModules(), and        |
+ | generateTypeScriptDefinitions() that use lazy task configuration. |
+ |                                                                   |
+ +-------------------------------------------------------------------*/
+
+fun KotlinJsTargetDsl.configureEsModules() {
+    compilations.configureEach {
+        kotlinOptions.configureEsModulesOptions()
+
+        binaries.withType<JsIrBinary>().configureEach {
+            linkTask.configure {
+                kotlinOptions.configureEsModulesOptions()
+            }
+        }
+    }
+}
+
+fun KotlinJsTargetDsl.configureGenerateTypeScriptDefinitions() {
+    compilations.configureEach {
+        binaries.withType<JsIrBinary>().configureEach {
+            generateTs = true
+            linkTask.configure {
+                compilerOptions.freeCompilerArgs.add(CompilerFlags.GENERATE_D_TS)
+            }
+        }
+    }
+}
+
+private fun KotlinJsOptions.configureCommonJsOptions() {
+    moduleKind = "commonjs"
+    sourceMap = true
+    sourceMapEmbedSources = "never"
+}
+
+private fun KotlinJsOptions.configureEsModulesOptions() {
+    moduleKind = "es"
+    sourceMap = true
+    sourceMapEmbedSources = "never"
+}
+
+@ExperimentalKotlinGradlePluginApi
+fun KotlinMultiplatformExtension.targetHierarchy(configure: KotlinTargetHierarchyDsl.() -> Unit) {
+    targetHierarchy.configure()
+}
+
+/**
+ * [org.jetbrains.kotlin.gradle.targets.js.ir.ENTRY_IR_MODULE]
+ */
+internal object CompilerFlags {
+    internal const val ENTRY_IR_MODULE = "-Xinclude"
+
+    internal const val DISABLE_PRE_IR = "-Xir-only"
+    internal const val ENABLE_DCE = "-Xir-dce"
+
+    internal const val GENERATE_D_TS = "-Xgenerate-dts"
+
+    internal const val PRODUCE_JS = "-Xir-produce-js"
+    internal const val PRODUCE_UNZIPPED_KLIB = "-Xir-produce-klib-dir"
+    internal const val PRODUCE_ZIPPED_KLIB = "-Xir-produce-klib-file"
+
+    internal const val MINIMIZED_MEMBER_NAMES = "-Xir-minimized-member-names"
+
+    internal const val KLIB_MODULE_NAME = "-Xir-module-name"
+
+    internal const val PER_MODULE = "-Xir-per-module"
+    internal const val PER_MODULE_OUTPUT_NAME = "-Xir-per-module-output-name"
+
+    internal const val WASM_BACKEND = "-Xwasm"
+}

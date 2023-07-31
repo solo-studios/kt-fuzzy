@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-07-2023 02:01 a.m.
+ * Last modified on 31-07-2023 01:29 p.m.
  *
  * MIT License
  *
@@ -34,12 +34,12 @@ plugins {
 afterEvaluate {
     publishing {
         publications.withType<MavenPublication>().configureEach {
-            val projectName = project.nameFormatted
+            val projectName = project.name.formatAsName()
             val projectGroup = project.group.toStringOrEmpty()
             val projectVersion = project.version.toStringOrEmpty()
             val projectDescription = project.description.toStringOrEmpty()
-            val projectUrl = Repository.projectUrl
-            val projectBaseUri = Repository.projectBaseUri
+            val projectUrl = rootProject.repository.projectUrl
+            val projectBaseUri = rootProject.repository.projectBaseUri
 
             val licenseName = "MIT"
             val licenseUrl = "https://mit-license.org/"

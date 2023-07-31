@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 17-07-2023 05:52 p.m.
+ * Last modified on 31-07-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -26,35 +26,9 @@
  * SOFTWARE.
  */
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-/*
- * kotlin-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
- *
- * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 16-07-2023 04:24 p.m.
- *
- * MIT License
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     kotlin("multiplatform")
@@ -62,14 +36,6 @@ plugins {
 
 kotlin {
     explicitApi()
-
-    sourceSets {
-        configureEach {
-            languageSettings {
-                optIn("-opt-in=kotlin.RequiresOptIn")
-            }
-        }
-    }
 
     targets.configureEach {
         compilations.configureEach {
@@ -80,10 +46,7 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    targetHierarchy.default {
-
-    }
+    targetHierarchy.default()
 
 
     jvm {
@@ -95,8 +58,10 @@ kotlin {
     // Why is kotlin/js broken? I don't fucking know!
     // For some reason it shows errors when importing a library I definitely added as a dependency!
     js(IR) {
-        useCommonJs()
-        generateTypeScriptDefinitions()
+        configureCommonJs()
+        configureEsModules()
+
+        configureGenerateTypeScriptDefinitions()
 
         nodejs()
         browser()

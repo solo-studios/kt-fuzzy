@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.versioning.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 05:03 p.m.
+ * Last modified on 22-07-2023 05:10 p.m.
  *
  * MIT License
  *
@@ -35,11 +35,9 @@ scmVersion {
     tag {
         // println("prefix = ${project.name.toStringOrEmpty().replace("-", "")}")
         // prefix.set(project.name.toStringOrEmpty().replace("-", ""))
-        prefix.set(project.name)
+        prefix = project.name
         versionSeparator = "-"
     }
 }
 
 project.version = scmVersion.version
-
-println("The version is $version")

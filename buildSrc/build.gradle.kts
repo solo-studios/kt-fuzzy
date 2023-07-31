@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:51 p.m.
+ * Last modified on 22-07-2023 05:12 p.m.
  *
  * MIT License
  *
@@ -43,7 +43,7 @@ java {
 
 kotlin {
     target {
-        compilations.all {
+        compilations.configureEach {
             kotlinOptions {
                 jvmTarget = JavaVersion.VERSION_1_8.toString()
                 languageVersion = "1.8"

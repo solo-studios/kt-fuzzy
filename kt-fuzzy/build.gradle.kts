@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:55 p.m.
+ * Last modified on 22-07-2023 05:12 p.m.
  *
  * MIT License
  *
@@ -39,7 +39,6 @@ plugins {
 }
 
 group = "ca.solo-studios"
-version = "0.1.0"
 description = """
     A dependency-less Kotlin Multiplatform library for fuzzy string matching
 """.trimIndent()

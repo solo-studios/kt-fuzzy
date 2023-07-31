@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:55 p.m.
+ * Last modified on 31-07-2023 04:32 p.m.
  *
  * MIT License
  *
@@ -39,7 +39,6 @@ plugins {
 }
 
 group = "ca.solo-studios"
-version = "2.0.0"
 description = """
     Various string similarity and distance measures for Kotlin Multiplatform
 """.trimIndent()
