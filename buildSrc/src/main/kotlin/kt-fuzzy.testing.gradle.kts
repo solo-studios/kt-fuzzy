@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 17-07-2023 02:31 p.m.
+ * Last modified on 31-07-2023 05:48 p.m.
  *
  * MIT License
  *
@@ -44,20 +44,18 @@ kotlin {
                 implementation(libs.kotest.framework.datatest)
                 implementation(libs.kotest.assertions)
                 implementation(libs.kotest.property)
-                // implementation(kotlin("test"))
-                // implementation(kotlin("test-annotations-common"))
-                // implementation(kotlin("test-common"))
             }
         }
 
         val jvmTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-runner-junit5:5.6.2")
+                implementation(libs.kotest.runner.junit5)
             }
         }
     }
 
     js(IR) {
+        // I think tests are broken for kotlin 1.9.0, as the js test task doesn't seem to run lol
         nodejs {
             configureTests()
         }
@@ -68,9 +66,9 @@ kotlin {
 }
 
 fun KotlinJsSubTargetDsl.configureTests() {
-    testTask {
+    testTask(Action {
         useMocha()
-    }
+    })
 }
 
 tasks {

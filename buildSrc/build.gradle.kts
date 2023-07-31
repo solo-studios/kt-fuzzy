@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 05:12 p.m.
+ * Last modified on 31-07-2023 05:48 p.m.
  *
  * MIT License
  *
@@ -37,15 +37,15 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {
     target {
         compilations.configureEach {
             kotlinOptions {
-                jvmTarget = JavaVersion.VERSION_1_8.toString()
+                jvmTarget = JavaVersion.VERSION_17.toString()
                 languageVersion = "1.8"
                 apiVersion = "1.8"
             }
@@ -58,7 +58,7 @@ dependencies {
 
     implementation(gradlePlugin("io.kotest.multiplatform", libs.versions.kotest))
 
-    implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.kotlin))
+    implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.dokka))
     implementation(gradlePlugin("org.jetbrains.kotlin.multiplatform", libs.versions.kotlin))
 
     implementation(gradlePlugin("pl.allegro.tech.build.axion-release", libs.versions.axion.release))

@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Utilities.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 03:51 p.m.
+ * Last modified on 31-07-2023 05:48 p.m.
  *
  * MIT License
  *
@@ -26,12 +26,9 @@
  * SOFTWARE.
  */
 
-import gradle.kotlin.dsl.accessors._1c03891aad1347593c8797d531001286.ext
-import groovyjarjarantlr.preprocessor.Hierarchy
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
-import org.gradle.configurationcache.extensions.capitalized
-import org.gradle.internal.impldep.org.apache.commons.lang.StringUtils
+import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
@@ -71,9 +68,9 @@ data class Repository(
 }
 
 var Project.repository: Repository
-    get() = project.ext["repo"] as Repository
+    get() = project.extra["repo"] as Repository
     set(value) {
-        project.ext["repo"] = value
+        project.extra["repo"] = value
     }
 
 /**

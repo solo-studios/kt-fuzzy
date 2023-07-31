@@ -1,14 +1,15 @@
 [versions]
-kotlin = "1.8.20"
+kotlin = "1.9.0"
+dokka = "1.8.20"
 #junit-jupiter = "5.9.1"
-axion-release = "1.14.3"
+axion-release = "1.15.4"
 #kotlinter = "3.13.0"
 kotest = "5.6.2"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 
-dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
 
@@ -24,8 +25,8 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
-dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "kotlin" }
-dokka-mathjax-plugin = { group = "org.jetbrains.dokka", name = "mathjax-plugin", version.ref = "kotlin" }
+dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "dokka" }
+dokka-mathjax-plugin = { group = "org.jetbrains.dokka", name = "mathjax-plugin", version.ref = "dokka" }
 
 ## Kotest
 ### A flexible and elegant multi-platform test framework for Kotlin
@@ -33,6 +34,7 @@ kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine
 kotest-framework-datatest = { group = "io.kotest", name = "kotest-framework-datatest", version.ref = "kotest" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 ## JUnit
 ### Unit testing framework for Java
