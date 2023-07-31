@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file ExperimentalSimilarity.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 12:31 p.m.
+ * The file ExperimentalStringMeasurement.kt is part of kotlin-fuzzy
+ * Last modified on 31-07-2023 06:15 p.m.
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
 package ca.solostudios.stringsimilarity.annotations
 
 /**
- * Denotes an experimental API for string similarity/distance.
+ * Denotes an experimental API for string measurements.
  */
 @RequiresOptIn(message = "This API is experimental. It may be unstable or not behave properly.")
 @Target(
@@ -46,4 +46,4 @@ package ca.solostudios.stringsimilarity.annotations
 )
 @MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
-public annotation class ExperimentalSimilarity
+public annotation class ExperimentalStringMeasurement

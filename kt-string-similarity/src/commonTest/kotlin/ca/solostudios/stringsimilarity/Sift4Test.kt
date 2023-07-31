@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4Test.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 07:04 p.m.
+ * Last modified on 31-07-2023 06:14 p.m.
  *
  * MIT License
  *
@@ -27,7 +27,7 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
+import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasurement
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -40,7 +40,7 @@ class Sift4Test {
      * Test of distance method, of class Sift4.
      */
     @Test
-    @OptIn(ExperimentalSimilarity::class)
+    @OptIn(ExperimentalStringMeasurement::class)
     fun testDistance() {
         val sift4Offset5 = Sift4(maxOffset = 5)
         assertEquals(

@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedWeightedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:42 p.m.
+ * Last modified on 31-07-2023 06:14 p.m.
  *
  * MIT License
  *
@@ -28,7 +28,7 @@
 
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.annotations.ExperimentalSimilarity
+import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasurement
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import kotlin.math.max
 
@@ -45,7 +45,7 @@ import kotlin.math.max
  * @param charInsertionDeletionWeight The strategy to determine character insertion/deletion weights.
  * @author Thibault Debatty, solonovamax
  */
-@ExperimentalSimilarity
+@ExperimentalStringMeasurement
 public class NormalizedWeightedLevenshtein(
     charSubstitutionWeight: (Char, Char) -> Double,
     charInsertionDeletionWeight: (Char) -> WeightedLevenshtein.Weights = { WeightedLevenshtein.Weights(1.0, 1.0) },
