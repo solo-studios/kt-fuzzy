@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file ExperimentalSimilarity.kt is part of kotlin-fuzzy
- * Last modified on 08-07-2023 12:53 a.m.
+ * Last modified on 31-07-2023 12:31 p.m.
  *
  * MIT License
  *
@@ -32,6 +32,18 @@ package ca.solostudios.stringsimilarity.annotations
  * Denotes an experimental API for string similarity/distance.
  */
 @RequiresOptIn(message = "This API is experimental. It may be unstable or not behave properly.")
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.ANNOTATION_CLASS,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.FIELD,
+    AnnotationTarget.VALUE_PARAMETER,
+    AnnotationTarget.CONSTRUCTOR,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.TYPEALIAS,
+)
+@MustBeDocumented
 @Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
 public annotation class ExperimentalSimilarity

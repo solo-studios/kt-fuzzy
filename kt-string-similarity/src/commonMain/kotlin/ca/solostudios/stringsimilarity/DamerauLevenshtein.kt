@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 05:56 p.m.
+ * Last modified on 31-07-2023 04:08 p.m.
  *
  * MIT License
  *
@@ -131,7 +131,9 @@ public class DamerauLevenshtein : MetricStringDistance, StringDistance, StringSi
         return (s1.length + s2.length - distance(s1, s2)) / 2
     }
 
+    @Suppress("NOTHING_TO_INLINE", "KotlinRedundantDiagnosticSuppress")
     private companion object {
-        private inline fun min(a: Int, b: Int, c: Int, d: Int): Int = min(a, min(b, min(c, d)))
+        // We have this mainly so we can avoid the for-each loop that comes from using the minOf function with varargs
+        private inline fun min(a: Int, b: Int, c: Int, d: Int): Int = min(min(a, b), min(c, d))
     }
 }
