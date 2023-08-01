@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 04:08 p.m.
+ * Last modified on 01-08-2023 01:41 a.m.
  *
  * MIT License
  *
@@ -30,7 +30,9 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import kotlin.math.min
+import ca.solostudios.stringsimilarity.util.maxLength
+import ca.solostudios.stringsimilarity.util.min
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
  * Implementation of Damerau-Levenshtein distance with transposition (also
@@ -45,7 +47,12 @@ import kotlin.math.min
  * is an extension where no substring can be edited more than once.
  *
  * The similarity is computed as
- * \(\frac{\lvert X \rvert + \lvert Y \rvert - distance(X, Y)}{2}\).
+ * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
+ *
+ * @param limit The maximum result to compute before stopping.
+ * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  *
  * @author Thibault Debatty, solonovamax
  *
@@ -53,7 +60,39 @@ import kotlin.math.min
  * @see StringDistance
  * @see StringSimilarity
  */
-public class DamerauLevenshtein : MetricStringDistance, StringDistance, StringSimilarity {
+public class DamerauLevenshtein(
+    /**
+     * The maximum result to compute before stopping. This
+     * means that the calculation can terminate early if you
+     * only care about strings with a certain similarity.
+     * Set this to [Double.MAX_VALUE] if you want to run the
+     * calculation to completion in every case.
+     */
+    public val limit: Double = Double.MAX_VALUE,
+    /**
+     * The weight of an insertion. Represented as \(w_i\).
+     */
+    public val insertionWeight: Double = 1.0,
+    /**
+     * The weight of a deletion. Represented as \(w_d\).
+     */
+    public val deletionWeight: Double = 1.0,
+    /**
+     * The weight of a substitution. Represented as \(w_s\).
+     */
+    public val substitutionWeight: Double = 1.0,
+    /**
+     * The weight of a transposition. Represented as \(w_t\).
+     */
+    public val transpositionWeight: Double = 1.0,
+) : MetricStringDistance, StringDistance, StringSimilarity {
+    init {
+        // 1E10 is a reasonable upper limit
+        require(insertionWeight > 0 && insertionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+        require(deletionWeight > 0 && deletionWeight < 1E10)
+    }
+
     /**
      * Computes the Damerau-Levenshtein distance metric of two strings.
      *
@@ -66,57 +105,57 @@ public class DamerauLevenshtein : MetricStringDistance, StringDistance, StringSi
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
             return 0.0
+        if (s1.isEmpty() || s2.isEmpty())
+            return maxLength(s1, s2).toDouble() // return the length of the non-empty one
 
-        // INFinite distance is the max possible distance
-        val inf = s1.length + s2.length
+        val (shorter, longer) = minMaxByLength(s1, s2)
 
-        // Create and initialize the character array indices
-        val da = mutableMapOf<Char, Int>()
+        val maxDistance = (shorter.length + longer.length).toDouble()
 
-        for (element in s1) {
-            da[element] = 0
-        }
-        for (element in s2) {
-            da[element] = 0
-        }
+        // This has a 1-wide side zone for initial values
+        val costMatrix = Array(longer.length + 2) { DoubleArray(shorter.length + 2) }
 
-        // Create the distance matrix H[0 .. s1.length+1][0 .. s2.length+1]
-        val h = Array(s1.length + 2) { IntArray(s2.length + 2) }
+        // we could instead use an array of size Char.MAX_VALUE, but that would *probably* use more space
+        val lastRowId = mutableMapOf<Char, Int>()
 
         // initialize the left and top edges of H
-        for (i in 0..s1.length) {
-            h[i + 1][0] = inf
-            h[i + 1][1] = i
+        for (i in 0..longer.length) {
+            costMatrix[i + 1][0] = maxDistance
+            costMatrix[i + 1][1] = i.toDouble()
         }
-        for (j in 0..s2.length) {
-            h[0][j + 1] = inf
-            h[1][j + 1] = j
+        for (j in 0..shorter.length) {
+            costMatrix[0][j + 1] = maxDistance
+            costMatrix[1][j + 1] = j.toDouble()
         }
 
-        // fill in the distance matrix H
-        // look at each character in s1
-        for (i in 1..s1.length) {
-            var db = 0
+        longer.forEachIndexed { i, c1 ->
+            var currentMin = costMatrix[i + 1][1]
+            var lastColId = 0
+            shorter.forEachIndexed { j, c2 ->
+                val deletionCost = costMatrix[i + 1][j + 2] + deletionWeight
+                val insertionCost = costMatrix[i + 2][j + 1] + insertionWeight
+                val substitutionCost = costMatrix[i + 1][j + 1] + (if (c1 == c2) 0.0 else substitutionWeight)
 
-            // look at each character in b
-            for (j in 1..s2.length) {
-                val i1 = da[s2[j - 1]]!!
-                val j1 = db
-                var cost = 1
-                if (s1[i - 1] == s2[j - 1]) {
-                    cost = 0
-                    db = j
-                }
-                h[i + 1][j + 1] = min(
-                    h[i][j] + cost,  // substitution
-                    h[i + 1][j] + 1,  // insertion
-                    h[i][j + 1] + 1,  // deletion
-                    h[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1)
-                )
+                // What are l and k? idfk.
+                val k = lastRowId[c2] ?: 0
+                val l = lastColId
+                val transpositionCost = costMatrix[k][l] + ((i - k) + 1 + (j - lastColId)) * transpositionWeight
+
+                if (c1 == c2)
+                    lastColId = j + 1
+
+                costMatrix[i + 2][j + 2] = min(deletionCost, insertionCost, substitutionCost, transpositionCost)
+
+                currentMin = minOf(costMatrix[i + 1][j + 1], currentMin)
             }
-            da[s1[i - 1]] = i
+
+            if (currentMin >= limit)
+                return limit
+
+            lastRowId[c1] = i + 1
         }
-        return h[s1.length + 1][s2.length + 1].toDouble()
+
+        return costMatrix[longer.length + 1][shorter.length + 1]
     }
 
     /**
@@ -128,12 +167,6 @@ public class DamerauLevenshtein : MetricStringDistance, StringDistance, StringSi
      * @see StringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
-        return (s1.length + s2.length - distance(s1, s2)) / 2
-    }
-
-    @Suppress("NOTHING_TO_INLINE", "KotlinRedundantDiagnosticSuppress")
-    private companion object {
-        // We have this mainly so we can avoid the for-each loop that comes from using the minOf function with varargs
-        private inline fun min(a: Int, b: Int, c: Int, d: Int): Int = min(min(a, b), min(c, d))
+        return ((insertionWeight * s1.length + deletionWeight * s2.length) - distance(s1, s2)) / 2
     }
 }
