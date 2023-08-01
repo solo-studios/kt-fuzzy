@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGram.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 06:11 p.m.
+ * Last modified on 31-07-2023 10:48 p.m.
  *
  * MIT License
  *
@@ -30,16 +30,15 @@ package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
-import ca.solostudios.stringsimilarity.util.minLength
-import kotlin.math.max
-import kotlin.math.min
+import ca.solostudios.stringsimilarity.util.countIndexed
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
  * N-Gram Similarity as defined by Kondrak, "N-Gram Similarity and Distance",
  * String Processing and Information Retrieval, Lecture Notes in Computer
  * Science Volume 3772, 2005, pp 115-126.
  *
- * The algorithm uses affixing with special character '\n' to increase the
+ * The algorithm uses affixing with special character '\0' to increase the
  * weight of first characters. The normalization is achieved by dividing the
  * total similarity score the original length of the longest word.
  *
@@ -67,90 +66,80 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
         if (s1.isEmpty() || s2.isEmpty())
             return 1.0
 
-        val special = '\n'
-        val sl = s1.length
-        val tl = s2.length
+        val special = 0.toChar()
 
-        var cost = 0
-        if (sl < n || tl < n) {
-            var i = 0
-            val ni = minLength(s1, s2)
+        val (shorter, longer) = minMaxByLength(s1, s2)
 
-            while (i < ni) {
-                if (s1[i] == s2[i]) {
-                    cost++
+        when {
+            shorter.length < n || longer.length < n -> {
+                val cost = shorter.countIndexed { i, c1 ->
+                    c1 == longer[i]
                 }
-                i++
+                return cost.toDouble() / longer.length
             }
-            return cost.toDouble() / max(sl, tl)
-        }
-        val sa = CharArray(sl + n - 1)
-        var p: DoubleArray // 'previous' cost array, horizontally
-        var d: DoubleArray // cost array, horizontally
-        var d2: DoubleArray // placeholder to assist in swapping p and d
 
-        // construct sa with prefix
-        for (i in sa.indices) {
-            if (i < n - 1) {
-                sa[i] = special // add prefix
-            } else {
-                sa[i] = s1[i - n + 1]
-            }
-        }
-        p = DoubleArray(sl + 1)
-        d = DoubleArray(sl + 1)
+            else -> {
+                val slice = CharArray(shorter.length + n - 1)
+                var previousCost = DoubleArray(shorter.length + 1) { it.toDouble() } // 'previous' cost array, horizontally
+                var currentCost = DoubleArray(shorter.length + 1) // cost array, horizontally
 
-        // indexes into strings s and t
-        var i: Int // iterates through source
-        var tJ = CharArray(n) // jth n-gram of t
-        i = 0
-        while (i <= sl) {
-            p[i] = i.toDouble()
-            i++
-        }
-        var j = 1 // iterates through target
-        while (j <= tl) {
-            // construct t_j n-gram
-            if (j < n) {
-                for (ti in 0 until n - j) {
-                    tJ[ti] = special // add prefix
-                }
-                for (ti in n - j until n) {
-                    tJ[ti] = s2[ti - (n - j)]
-                }
-            } else {
-                tJ = s2.substring(j - n, j).toCharArray()
-            }
-            d[0] = j.toDouble()
-            i = 1
-            while (i <= sl) {
-                cost = 0
-                var tn = n
-                // compare sa to t_j
-                for (ni in 0 until n) {
-                    if (sa[i - 1 + ni] != tJ[ni]) {
-                        cost++
-                    } else if (sa[i - 1 + ni] == special) {
-                        // discount matches on prefix
-                        tn--
+                // construct sa with prefix
+                for (i in slice.indices) {
+                    if (i < n - 1) {
+                        slice[i] = special // add prefix
+                    } else {
+                        slice[i] = shorter[i - n + 1]
                     }
                 }
-                val ec = cost.toDouble() / tn
-                // minimum of cell to the left+1, to the top+1,
-                // diagonally left and up +cost
-                d[i] = min(min(d[i - 1] + 1, p[i] + 1), p[i - 1] + ec)
-                i++
-            }
-            // copy current distance counts to 'previous row' distance counts
-            d2 = p
-            p = d
-            d = d2
-            j++
-        }
 
-        // our last action in the above loop was to switch d and p, so p now
-        // actually has the most recent cost counts
-        return p[sl] / max(tl, sl)
+                // indexes into strings s and t
+                var tJ = CharArray(n + 1) // jth n-gram of t
+
+                for (j in longer.indices) {
+                    // construct t_j n-gram
+                    if (j + 1 < n) {
+                        // add prefix
+                        for (ti in 0 until n - j - 1)
+                            tJ[ti] = special
+                        for (ti in n - (j + 1) until n)
+                            tJ[ti] = longer[ti - (n - j - 1)]
+                    } else {
+                        tJ = longer.substring(j + 1 - n, j + 1).toCharArray()
+                    }
+
+                    currentCost[0] = (j + 1).toDouble()
+                    for (i in shorter.indices) {
+                        var cost = 0
+                        var tn = n
+                        // compare slice to t_j
+                        repeat(n) { ni ->
+                            if (slice[i + ni] != tJ[ni]) {
+                                cost++
+                            } else if (slice[i + ni] == special) { // discount matches on prefix
+                                tn--
+                            }
+                        }
+
+                        // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
+                        currentCost[i + 1] = minOf(currentCost[i] + 1, previousCost[i + 1] + 1, previousCost[i] + cost.toDouble() / tn)
+                    }
+
+                    // copy current distance counts to 'previous row' distance counts
+                    val tmp = currentCost
+                    currentCost = previousCost
+                    previousCost = tmp
+                }
+
+                // our last action in the above loop was to switch d and p, so p now
+                // actually has the most recent cost counts
+                return previousCost[shorter.length] / longer.length
+            }
+        }
+    }
+
+    public inline fun <T> T.also(block: (T) -> Unit): T {
+        block(this)
+        return this
     }
 
     /**

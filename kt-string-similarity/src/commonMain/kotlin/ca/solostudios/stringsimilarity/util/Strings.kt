@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NGramTest.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 10:27 p.m.
+ * The file Strings.kt is part of kotlin-fuzzy
+ * Last modified on 31-07-2023 10:38 p.m.
  *
  * MIT License
  *
@@ -25,33 +25,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
-import io.kotest.core.spec.style.FunSpec
+package ca.solostudios.stringsimilarity.util
 
 /**
+ * Returns the number of characters matching the given [predicate].
  *
- * @author Thibault Debatty
+ * @receiver The number of characters that match the [predicate].
+ * @see count
  */
-class NGramTest : FunSpec({
-    val ngram = NGram(3)
+internal inline fun CharSequence.countIndexed(predicate: (index: Int, char: Char) -> Boolean): Int {
+    var count = 0
+    var index = 0
+    for (element in this)
+        if (predicate(index++, element))
+            ++count
 
-    include(normalizedDistanceTests(ngram))
-    include(normalizedSimilarityTests(ngram))
-
-    val precomputed = listOf(
-        FuzzyTestData("university", "univearsitty", 0.75),
-        FuzzyTestData("university", "university", 1.0),
-        FuzzyTestData("hello", "jello", 0.633333),
-        FuzzyTestData("hello", "heloll", 0.666667),
-        FuzzyTestData("hello", "saint", 0.0000),
-        FuzzyTestData("hello", "", 0.0000),
-        FuzzyTestData("ABABABAB", "POIULKJH", 0.0),
-        FuzzyTestData("SIJK", "SIJK", 1.0),
-        FuzzyTestData("S", "S", 1.0),
-    )
-
-    include(precomputedSimilarityTests(precomputed, ngram))
-    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, ngram))
-})
+    return count
+}
