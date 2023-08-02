@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StandardTests.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 04:37 p.m.
+ * Last modified on 01-08-2023 08:26 p.m.
  *
  * MIT License
  *
@@ -31,13 +31,26 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import io.kotest.core.spec.style.funSpec
+import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.doubles.shouldBeZero
 import io.kotest.matchers.doubles.shouldNotBeLessThan
 import io.kotest.matchers.doubles.shouldNotBeZero
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.string
 import io.kotest.property.assume
 import io.kotest.property.checkAll
 
 fun similarityTests(similarity: StringSimilarity) = funSpec {
+    test("Similarity should be zero if one string is empty") {
+        checkAll(Arb.string()) { a ->
+            assume(a.isNotEmpty())
+
+            // Test both forwards and backwards
+            similarity.similarity(a, "").shouldBeZero()
+            similarity.similarity("", a).shouldBeZero()
+        }
+    }
+
     test("Similarity should not be less than 0") {
         checkAll<String, String> { a, b ->
             similarity.similarity(a, b) shouldNotBeLessThan 0.0
@@ -53,6 +66,16 @@ fun similarityTests(similarity: StringSimilarity) = funSpec {
 }
 
 fun distanceTests(distance: StringDistance) = funSpec {
+    test("Distance should be greater than zero if one string is empty") {
+        checkAll(Arb.string()) { a ->
+            assume(a.isNotEmpty())
+
+            // Test both forwards and backwards
+            distance.distance(a, "") shouldBeGreaterThan 0.0
+            distance.distance("", a) shouldBeGreaterThan 0.0
+        }
+    }
+
     test("Distance should not have distance less than 0") {
         checkAll<String, String> { a, b ->
             distance.distance(a, b) shouldNotBeLessThan 0.0
