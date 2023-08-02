@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 02-08-2023 12:35 a.m.
  *
  * MIT License
  *
@@ -27,7 +27,7 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasurement
+import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import kotlin.math.abs
 import kotlin.math.max
@@ -43,7 +43,7 @@ import kotlin.math.round
  *
  * @author Thibault Debatty, solonovamax
  */
-@ExperimentalStringMeasurement
+@ExperimentalStringMeasure
 public class Sift4(
     /**
      * Set the maximum distance to search for character transposition.
@@ -168,7 +168,7 @@ public class Sift4(
     /**
      * Default Sift4 dice instance
      */
-    @ExperimentalStringMeasurement
+    @ExperimentalStringMeasure
     public companion object : StringDistance {
         private val defaultMeasure = Sift4()
 
