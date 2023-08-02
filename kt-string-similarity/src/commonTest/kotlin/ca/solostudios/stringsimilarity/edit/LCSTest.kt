@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCSTest.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:22 p.m.
+ * Last modified on 01-08-2023 11:29 p.m.
  *
  * MIT License
  *
@@ -25,8 +25,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
+import ca.solostudios.stringsimilarity.metricDistanceTests
+import ca.solostudios.stringsimilarity.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.precomputedSimilarityTests
+import ca.solostudios.stringsimilarity.similarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
@@ -36,7 +40,7 @@ class LCSTest : FunSpec({
     include(metricDistanceTests(lcs))
     include(similarityTests(lcs))
 
-    val precomputedDistances = listOf(
+    val precomputed = listOf(
         FuzzyTestData("AGCAT", "GAC", 4.0),
         FuzzyTestData("AGCAT", "AGCT", 1.0),
         FuzzyTestData("ABCDE", "ABCDF", 2.0),
@@ -51,22 +55,12 @@ class LCSTest : FunSpec({
         FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 14.0),
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 22.0),
     )
-    val precomputedSimilarities = listOf(
-        FuzzyTestData("AGCAT", "GAC", 2.0),
-        FuzzyTestData("AGCAT", "AGCT", 4.0),
-        FuzzyTestData("ABCDE", "ABCDF", 4.0),
-        FuzzyTestData("ABCDEF", "ABDCEF", 5.0),
-        FuzzyTestData("ABCDEF", "BACDFE", 4.0),
-        FuzzyTestData("ABCDEF", "ABCDE", 5.0),
-        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 2.0),
-        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 2.0),
-        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 5.0),
-        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 3.0),
-        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 2.0),
-        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 2.0),
-        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.0),
-    )
 
-    include(precomputedSimilarityTests(precomputedSimilarities, lcs))
-    include(precomputedDistanceTests(precomputedDistances, lcs))
+    include(precomputedDistanceTests(precomputed, lcs))
+    include(
+        precomputedSimilarityTests(
+            precomputed.map { it.copy(similarity = ((it.first.length + it.second.length) - it.similarity) / 2) },
+            lcs
+        )
+    )
 })

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file StringMatcher.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 06:16 p.m.
+ * Last modified on 01-08-2023 11:36 p.m.
  *
  * MIT License
  *
@@ -29,6 +29,12 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasurement
+import ca.solostudios.stringsimilarity.edit.DamerauLevenshtein
+import ca.solostudios.stringsimilarity.edit.LCS
+import ca.solostudios.stringsimilarity.edit.Levenshtein
+import ca.solostudios.stringsimilarity.edit.NormalizedLCS
+import ca.solostudios.stringsimilarity.edit.NormalizedLevenshtein
+import ca.solostudios.stringsimilarity.edit.OptimalStringAlignment
 
 public object StringMatcher {
     public val cosine: Cosine = Cosine()
@@ -59,6 +65,4 @@ public object StringMatcher {
     public val sift4: Sift4 = Sift4()
 
     public val sorensenDice: SorensenDice = SorensenDice()
-
-    public val weightedLevenshtein: WeightedLevenshtein = WeightedLevenshtein({ _, _ -> 1.0 })
 }

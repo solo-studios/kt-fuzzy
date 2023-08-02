@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 01-08-2023 01:41 a.m.
+ * Last modified on 02-08-2023 12:19 a.m.
  *
  * MIT License
  *
@@ -25,14 +25,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import ca.solostudios.stringsimilarity.util.maxLength
 import ca.solostudios.stringsimilarity.util.min
-import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
  * Implementation of Damerau-Levenshtein distance with transposition (also
@@ -49,76 +48,34 @@ import ca.solostudios.stringsimilarity.util.minMaxByLength
  * The similarity is computed as
  * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
  *
- * @param limit The maximum result to compute before stopping.
+ * **Note: Because this class currently implements the dynamic programming approach,
+ * it has a space requirement \(O(m \times n)\)**
+ *
  * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param transpositionWeight The weight of a substitution. Represented as \(w_t\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  *
- * @author Thibault Debatty, solonovamax
- *
+ * @see StringEditMeasure
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public class DamerauLevenshtein(
-    /**
-     * The maximum result to compute before stopping. This
-     * means that the calculation can terminate early if you
-     * only care about strings with a certain similarity.
-     * Set this to [Double.MAX_VALUE] if you want to run the
-     * calculation to completion in every case.
-     */
-    public val limit: Double = Double.MAX_VALUE,
-    /**
-     * The weight of an insertion. Represented as \(w_i\).
-     */
-    public val insertionWeight: Double = 1.0,
-    /**
-     * The weight of a deletion. Represented as \(w_d\).
-     */
-    public val deletionWeight: Double = 1.0,
-    /**
-     * The weight of a substitution. Represented as \(w_s\).
-     */
-    public val substitutionWeight: Double = 1.0,
-    /**
-     * The weight of a transposition. Represented as \(w_t\).
-     */
-    public val transpositionWeight: Double = 1.0,
-) : MetricStringDistance, StringDistance, StringSimilarity {
-    init {
-        // 1E10 is a reasonable upper limit
-        require(insertionWeight > 0 && insertionWeight < 1E10)
-        require(deletionWeight > 0 && deletionWeight < 1E10)
-        require(deletionWeight > 0 && deletionWeight < 1E10)
-    }
-
-    /**
-     * Computes the Damerau-Levenshtein distance metric of two strings.
-     *
-     * @param s1 The first string.
-     * @param s2 The second string.
-     * @return The Damerau-Levenshtein distance.
-     * @see MetricStringDistance
-     * @see StringDistance
-     */
-    override fun distance(s1: String, s2: String): Double {
-        if (s1 == s2)
-            return 0.0
-        if (s1.isEmpty() || s2.isEmpty())
-            return maxLength(s1, s2).toDouble() // return the length of the non-empty one
-
-        val (shorter, longer) = minMaxByLength(s1, s2)
-
+    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+    substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+    transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+) : AbstractStringEditMeasure(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight) {
+    override fun initializeCostMatrix(shorter: String, longer: String): Array<DoubleArray> {
         val maxDistance = (shorter.length + longer.length).toDouble()
 
         // This has a 1-wide side zone for initial values
         val costMatrix = Array(longer.length + 2) { DoubleArray(shorter.length + 2) }
 
-        // we could instead use an array of size Char.MAX_VALUE, but that would *probably* use more space
-        val lastRowId = mutableMapOf<Char, Int>()
-
-        // initialize the left and top edges of H
+        // initialize the left and top edges of costMatrix
         for (i in 0..longer.length) {
             costMatrix[i + 1][0] = maxDistance
             costMatrix[i + 1][1] = i.toDouble()
@@ -127,6 +84,12 @@ public class DamerauLevenshtein(
             costMatrix[0][j + 1] = maxDistance
             costMatrix[1][j + 1] = j.toDouble()
         }
+        return costMatrix
+    }
+
+    override fun fillCostMatrix(costMatrix: Array<DoubleArray>, shorter: String, longer: String) {
+        // we could instead use an array of size Char.MAX_VALUE, but that would *probably* use more space
+        val lastRowId = mutableMapOf<Char, Int>()
 
         longer.forEachIndexed { i, c1 ->
             var currentMin = costMatrix[i + 1][1]
@@ -149,24 +112,7 @@ public class DamerauLevenshtein(
                 currentMin = minOf(costMatrix[i + 1][j + 1], currentMin)
             }
 
-            if (currentMin >= limit)
-                return limit
-
             lastRowId[c1] = i + 1
         }
-
-        return costMatrix[longer.length + 1][shorter.length + 1]
-    }
-
-    /**
-     * Computes the Longest Common Subsequence similarity of two strings.
-     *
-     * @param s1 The first string.
-     * @param s2 The second string.
-     * @return The Longest Common Subsequence similarity.
-     * @see StringSimilarity
-     */
-    override fun similarity(s1: String, s2: String): Double {
-        return ((insertionWeight * s1.length + deletionWeight * s2.length) - distance(s1, s2)) / 2
     }
 }

@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedLevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:21 p.m.
+ * The file NormalizedDamerauLevenshteinTest.kt is part of kotlin-fuzzy
+ * Last modified on 02-08-2023 12:13 a.m.
  *
  * MIT License
  *
@@ -25,25 +25,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package ca.solostudios.stringsimilarity.edit
 
-package ca.solostudios.stringsimilarity
-
+import ca.solostudios.stringsimilarity.metricDistanceTests
+import ca.solostudios.stringsimilarity.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.precomputedSimilarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
-class NormalizedLevenshteinTest : FunSpec({
-    val normalizedLevenshtein = NormalizedLevenshtein()
+class NormalizedDamerauLevenshteinTest : FunSpec({
+    val normalizedDamerauLevenshtein = NormalizedDamerauLevenshtein()
 
-    include(metricDistanceTests(normalizedLevenshtein))
-    include(normalizedDistanceTests(normalizedLevenshtein, false))
-    include(normalizedSimilarityTests(normalizedLevenshtein))
+    include(metricDistanceTests(normalizedDamerauLevenshtein))
+    include(normalizedDistanceTests(normalizedDamerauLevenshtein, false))
+    include(normalizedSimilarityTests(normalizedDamerauLevenshtein))
 
     val precomputed = listOf(
         FuzzyTestData("AGCAT", "GAC", 0.54545),
         FuzzyTestData("AGCAT", "AGCT", 0.2),
         FuzzyTestData("ABCDE", "ABCDF", 0.18181),
-        FuzzyTestData("ABCDEF", "ABDCEF", 0.28571),
-        FuzzyTestData("ABCDEF", "BACDFE", 0.5),
+        FuzzyTestData("ABCDEF", "ABDCEF", 0.15384),
+        FuzzyTestData("ABCDEF", "BACDFE", 0.28571),
         FuzzyTestData("ABCDEF", "ABCDE", 0.16666),
         FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 0.69565),
         FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 0.73469),
@@ -54,6 +58,11 @@ class NormalizedLevenshteinTest : FunSpec({
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.70588),
     )
 
-    include(precomputedDistanceTests(precomputed, normalizedLevenshtein))
-    include(precomputedSimilarityTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, normalizedLevenshtein))
+    include(precomputedDistanceTests(precomputed, normalizedDamerauLevenshtein))
+    include(
+        precomputedSimilarityTests(
+            precomputed.map { it.copy(similarity = 1 - it.similarity) },
+            normalizedDamerauLevenshtein
+        )
+    )
 })

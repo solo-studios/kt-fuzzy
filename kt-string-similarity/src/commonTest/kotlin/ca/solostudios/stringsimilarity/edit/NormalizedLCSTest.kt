@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLCSTest.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:21 p.m.
+ * Last modified on 01-08-2023 09:43 p.m.
  *
  * MIT License
  *
@@ -26,8 +26,13 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
+import ca.solostudios.stringsimilarity.metricDistanceTests
+import ca.solostudios.stringsimilarity.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.precomputedSimilarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 

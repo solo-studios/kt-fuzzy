@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 03:45 p.m.
+ * Last modified on 01-08-2023 11:30 p.m.
  *
  * MIT License
  *
@@ -25,14 +25,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
+import ca.solostudios.stringsimilarity.metricDistanceTests
+import ca.solostudios.stringsimilarity.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.precomputedSimilarityTests
+import ca.solostudios.stringsimilarity.similarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
 class DamerauLevenshteinTest : FunSpec({
     val damerauLevenshtein = DamerauLevenshtein()
+
     include(metricDistanceTests(damerauLevenshtein))
+    include(similarityTests(damerauLevenshtein))
 
     val precomputed = listOf(
         FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
@@ -48,4 +54,11 @@ class DamerauLevenshteinTest : FunSpec({
     )
 
     include(precomputedDistanceTests(precomputed, damerauLevenshtein))
+    include(
+        precomputedSimilarityTests(
+            precomputed.map { it.copy(similarity = ((it.first.length + it.second.length) - it.similarity) / 2) },
+            damerauLevenshtein
+        )
+    )
+
 })

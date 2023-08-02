@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file LevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:22 p.m.
+ * The file OptimalStringAlignmentTest.kt is part of kotlin-fuzzy
+ * Last modified on 01-08-2023 11:49 p.m.
  *
  * MIT License
  *
@@ -25,26 +25,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
+import ca.solostudios.stringsimilarity.metricDistanceTests
+import ca.solostudios.stringsimilarity.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.precomputedSimilarityTests
+import ca.solostudios.stringsimilarity.similarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
-import kotlin.test.assertEquals
 
 /**
  *
- * @author Thibault Debatty
+ * @author Michail Bogdanos
  */
-class LevenshteinTest : FunSpec({
-    val levenshtein = Levenshtein()
+class OptimalStringAlignmentTest : FunSpec({
+    val optimalStringAlignment = OptimalStringAlignment()
 
-    include(metricDistanceTests(levenshtein))
-    include(similarityTests(levenshtein))
+    include(metricDistanceTests(optimalStringAlignment))
+    include(similarityTests(optimalStringAlignment))
 
     val precomputed = listOf(
-        FuzzyTestData("My string", "My tring", 1.0),
-        FuzzyTestData("My string", "M string2", 2.0),
-        FuzzyTestData("My string", "My \$tring", 1.0),
+        FuzzyTestData("AGCAT", "GAC", 3.0),
+        FuzzyTestData("AGCAT", "AGCT", 1.0),
+        FuzzyTestData("ABCDE", "ABCDF", 1.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 2.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
         FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
         FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 18.0),
         FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 21.0),
@@ -53,17 +59,26 @@ class LevenshteinTest : FunSpec({
         FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 10.0),
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
     )
-    include(precomputedDistanceTests(precomputed, levenshtein))
+    include(precomputedDistanceTests(precomputed, optimalStringAlignment))
     include(
         precomputedSimilarityTests(
             precomputed.map { it.copy(similarity = ((it.first.length + it.second.length) - it.similarity) / 2) },
-            levenshtein
+            optimalStringAlignment
         )
     )
 
-    test("Levenshtein should return the correct distance when limits are applied") {
-        assertEquals(2.0, Levenshtein(4.0).distance("My string", "M string2"), 0.0)
-        assertEquals(2.0, Levenshtein(2.0).distance("My string", "M string2"), 0.0)
-        assertEquals(1.0, Levenshtein(1.0).distance("My string", "M string2"), 0.0)
-    }
+    // // equality
+    // assertEquals(0.0, instance.distance("ABDCEF", "ABDCEF"), 0.0)
+    //
+    // // single operation
+    // assertEquals(1.0, instance.distance("ABDCFE", "ABDCEF"), 0.0)
+    // assertEquals(1.0, instance.distance("BBDCEF", "ABDCEF"), 0.0)
+    // assertEquals(1.0, instance.distance("BDCEF", "ABDCEF"), 0.0)
+    // assertEquals(1.0, instance.distance("ABDCEF", "ADCEF"), 0.0)
+    //
+    // // other
+    // assertEquals(3.0, instance.distance("CA", "ABC"), 0.0)
+    // assertEquals(2.0, instance.distance("BAC", "CAB"), 0.0)
+    // assertEquals(4.0, instance.distance("abcde", "awxyz"), 0.0)
+    // assertEquals(5.0, instance.distance("abcde", "vwxyz"), 0.0)
 })

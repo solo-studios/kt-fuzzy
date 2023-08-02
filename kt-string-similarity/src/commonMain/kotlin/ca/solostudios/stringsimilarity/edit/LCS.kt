@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCS.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 05:56 p.m.
+ * Last modified on 02-08-2023 12:06 a.m.
  *
  * MIT License
  *
@@ -26,13 +26,12 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity
+package ca.solostudios.stringsimilarity.edit
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import ca.solostudios.stringsimilarity.util.maxLength
-import kotlin.math.max
 
 /**
  * The Longest Common Subsequence (LCS) problem consists in finding the longest
@@ -52,87 +51,39 @@ import kotlin.math.max
  * is the double of the cost of an insertion or deletion.
  *
  * The similarity is computed as
- * \(\frac{max(\lvert X \rvert, \lvert Y \rvert) - distance(X, Y)}{2}\).
+ * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
  *
  * **Note: Because this class currently implements the dynamic programming approach,
  * it has a space requirement \(O(m \times n)\)**
  *
- * @author Thibault Debatty, solonovamax
+ * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+ * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  *
+ * @see StringEditMeasure
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
+ *
+ * @author Thibault Debatty, solonovamax
  */
-public class LCS : MetricStringDistance, StringDistance, StringSimilarity {
-    /**
-     * Computes the Longest Common Subsequence distance of two strings.
-     *
-     * @param s1 The first string.
-     * @param s2 The second string.
-     * @return The Longest Common Subsequence distance.
-     * @see MetricStringDistance
-     * @see StringDistance
-     */
-    override fun distance(s1: String, s2: String): Double {
-        if (s1 == s2)
-            return 0.0
-        if (s1.isEmpty() || s2.isEmpty())
-            return maxLength(s1, s2).toDouble() // return the length of the non-empty one
+public class LCS(
+    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
+) : AbstractStringEditMeasure(
+    insertionWeight = insertionWeight,
+    deletionWeight = deletionWeight,
+) {
+    override fun fillCostMatrix(costMatrix: Array<DoubleArray>, shorter: String, longer: String) {
+        longer.forEachIndexed { i, c1 ->
+            shorter.forEachIndexed { j, c2 ->
+                val deletionCost = costMatrix[i][j + 1] + deletionWeight
+                val insertionCost = costMatrix[i + 1][j] + insertionWeight
 
-        return (s1.length + s2.length - 2 * lcsLength(s1, s2).toDouble())
-    }
-
-    /**
-     * Computes the Longest Common Subsequence similarity of two strings.
-     *
-     * @param s1 The first string.
-     * @param s2 The second string.
-     * @return The Longest Common Subsequence similarity.
-     * @see StringSimilarity
-     */
-    override fun similarity(s1: String, s2: String): Double {
-        return (s1.length + s2.length - distance(s1, s2)) / 2
-    }
-
-    /**
-     * Return the length of the Longest Common Subsequence (LCS) between strings [s1] and [s2].
-     *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The length of \(LCS(s1, s2)\).
-     */
-    public fun lcsLength(s1: String, s2: String): Int {
-        /* https://en.wikipedia.org/wiki/Longest_common_subsequence
-        function LCSLength(X[1..m], Y[1..n])
-            C = array(0..m, 0..n)
-
-            for i := 0..m
-                C[i,0] = 0
-
-            for j := 0..n
-                C[0,j] = 0
-
-            for i := 1..m
-                for j := 1..n
-                    if X[i] = Y[j]
-                        C[i,j] := C[i-1,j-1] + 1
-                    else
-                        C[i,j] := max(C[i,j-1], C[i-1,j])
-            return C[m,n]
-         */
-
-        val s1Length = s1.length
-        val s2Length = s2.length
-
-        val c = Array(s1Length + 1) { IntArray(s2Length + 1) }
-        for (i in 1..s1Length) {
-            for (j in 1..s2Length) {
-                c[i][j] = if (s1[i - 1] == s2[j - 1])
-                    c[i - 1][j - 1] + 1
+                costMatrix[i + 1][j + 1] = if (c1 == c2)
+                    costMatrix[i][j]
                 else
-                    max(c[i][j - 1], c[i - 1][j])
+                    minOf(deletionCost, insertionCost)
             }
         }
-        return c[s1Length][s2Length]
     }
 }

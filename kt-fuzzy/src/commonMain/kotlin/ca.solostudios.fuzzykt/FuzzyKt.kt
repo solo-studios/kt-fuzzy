@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2021 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file FuzzyKt.kt is part of kt-fuzzy
- * Last modified on 27-10-2021 08:03 p.m.
+ * The file FuzzyKt.kt is part of kotlin-fuzzy
+ * Last modified on 01-08-2023 10:18 p.m.
  *
  * MIT License
  *
@@ -28,7 +28,7 @@
 
 package ca.solostudios.fuzzykt
 
-import ca.solostudios.stringsimilarity.NormalizedLevenshtein
+import ca.solostudios.stringsimilarity.edit.NormalizedLevenshtein
 import kotlin.math.min
 
 public object FuzzyKt {
