@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file MetricTests.kt is part of kotlin-fuzzy
- * Last modified on 19-07-2023 04:37 p.m.
+ * Last modified on 02-08-2023 06:33 p.m.
  *
  * MIT License
  *
@@ -39,8 +39,9 @@ import io.kotest.matchers.doubles.shouldNotBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.property.checkAll
 
-fun metricDistanceTests(metricDistance: MetricStringDistance) = funSpec {
-    include(distanceTests(metricDistance))
+fun metricDistanceTests(metricDistance: MetricStringDistance, includeStandard: Boolean = true) = funSpec {
+    if (includeStandard)
+        include(distanceTests(metricDistance))
 
     test("Metric distance should respect the symmetry axiom") {
         checkAll<String, String> { a, b ->

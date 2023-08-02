@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedTests.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:20 p.m.
+ * Last modified on 02-08-2023 06:33 p.m.
  *
  * MIT License
  *
@@ -37,8 +37,9 @@ import io.kotest.matchers.doubles.shouldNotBeGreaterThan
 import io.kotest.matchers.doubles.shouldNotBeLessThan
 import io.kotest.property.checkAll
 
-fun normalizedSimilarityTests(similarity: NormalizedStringSimilarity) = funSpec {
-    include(similarityTests(similarity))
+fun normalizedSimilarityTests(similarity: NormalizedStringSimilarity, includeStandard: Boolean = true) = funSpec {
+    if (includeStandard)
+        include(similarityTests(similarity))
 
     test("Normalized similarity should be 1 for identical strings") {
         checkAll<String> { a ->
