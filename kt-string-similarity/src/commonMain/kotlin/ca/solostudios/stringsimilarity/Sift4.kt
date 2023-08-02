@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 06:14 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -45,12 +45,12 @@ import kotlin.math.round
  */
 @ExperimentalStringMeasurement
 public class Sift4(
-        /**
-         * Set the maximum distance to search for character transposition.
-         * Compute cost of algorithm is `O(n * maxOffset)`
-         */
-        private val maxOffset: Int = DEFAULT_MAX_OFFSET
-                  ) : StringDistance {
+    /**
+     * Set the maximum distance to search for character transposition.
+     * Compute cost of algorithm is `O(n * maxOffset)`
+     */
+    private val maxOffset: Int = DEFAULT_MAX_OFFSET,
+) : StringDistance {
 
     /**
      * Sift4 - a general purpose string distance algorithm inspired by
@@ -165,7 +165,15 @@ public class Sift4(
         return round(((max(l1, l2) - lcss + trans).toDouble()))
     }
 
-    private companion object {
+    /**
+     * Default Sift4 dice instance
+     */
+    @ExperimentalStringMeasurement
+    public companion object : StringDistance {
+        private val defaultMeasure = Sift4()
+
         private const val DEFAULT_MAX_OFFSET = 10
+
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
     }
 }

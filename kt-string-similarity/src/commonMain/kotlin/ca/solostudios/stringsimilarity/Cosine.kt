@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 04:07 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -47,10 +47,10 @@ import kotlin.math.sqrt
  * The distance is computed as
  * \(1 - similarity(\vec{v_1}, \vec{v_2})\).
  *
- * @author Thibault Debatty, solonovamax
- *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDistance, NormalizedStringSimilarity {
     /**
@@ -106,7 +106,14 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDista
         return 1.0 - similarity(profile1, profile2)
     }
 
-    private companion object {
+    /**
+     * Default Cosine instance
+     */
+    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = Cosine()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
+
         /**
          * Computes the \(L^2\) norm.
          *
@@ -115,7 +122,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDista
          * @param profile
          * @return The \(L^2) norm
          */
-        fun norm(profile: Map<String, Int>): Double {
+        private fun norm(profile: Map<String, Int>): Double {
             var agg = 0.0
             for ((_, value) in profile) {
                 agg += value * value
@@ -123,7 +130,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDista
             return sqrt(agg)
         }
 
-        fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        private fun dotProduct(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
             // Loop over the smallest map
             val (smallProfile, largeProfile) = minMaxOf(profile1, profile2, compareBy { it.size })
 

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:19 a.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -114,5 +114,14 @@ public class DamerauLevenshtein(
 
             lastRowId[c1] = i + 1
         }
+    }
+
+    /**
+     * Default Damerau-Levenshtein instance
+     */
+    public companion object : MetricStringDistance, StringDistance, StringSimilarity {
+        private val defaultMeasure = DamerauLevenshtein()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

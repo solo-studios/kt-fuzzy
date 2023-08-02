@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file JaroWinkler.kt is part of kotlin-fuzzy
- * Last modified on 21-07-2023 06:12 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -49,10 +49,10 @@ import kotlin.math.min
  *
  * @param threshold The threshold value used for adding the Winkler bonus.
  *
- * @author Thibault Debatty, solonovamax
- *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public class JaroWinkler(
     /**
@@ -83,7 +83,10 @@ public class JaroWinkler(
         val jaroSimilarity = ((m / s1.length) + (m / s2.length) + (m - mtp.transpositions) / m) / 3
 
         return if (jaroSimilarity > threshold)
-            jaroSimilarity + min(JW_COEFFICIENT, 1.0 / mtp.longestLength) * mtp.commonPrefixLength * (1 - jaroSimilarity)
+            jaroSimilarity + min(
+                JW_COEFFICIENT,
+                1.0 / mtp.longestLength
+            ) * mtp.commonPrefixLength * (1 - jaroSimilarity)
         else
             jaroSimilarity
     }
@@ -144,8 +147,16 @@ public class JaroWinkler(
         val longestLength: Int,
     )
 
-    private companion object {
+    /**
+     * Default Jaro-Winkler instance
+     */
+    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = JaroWinkler()
+
         private const val DEFAULT_THRESHOLD = 0.7
         private const val JW_COEFFICIENT = 0.1
+
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

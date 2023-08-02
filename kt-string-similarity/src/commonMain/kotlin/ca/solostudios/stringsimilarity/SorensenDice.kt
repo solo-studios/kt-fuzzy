@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file SorensenDice.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:26 p.m.
+ * Last modified on 02-08-2023 12:35 a.m.
  *
  * MIT License
  *
@@ -44,9 +44,7 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  *
  * @author Thibault Debatty, solonovamax
  */
-public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k),
-                                                NormalizedStringDistance,
-                                                NormalizedStringSimilarity {
+public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDistance, NormalizedStringSimilarity {
     /**
      * Similarity is computed as 2 * |A inter B| / (|A| + |B|).
      *
@@ -82,5 +80,14 @@ public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k),
      */
     override fun distance(s1: String, s2: String): Double {
         return 1 - similarity(s1, s2)
+    }
+
+    /**
+     * Default Sorensen Dice instance
+     */
+    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = SorensenDice()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

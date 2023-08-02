@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:07 a.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -28,7 +28,9 @@
 package ca.solostudios.stringsimilarity.edit
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
+import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringEditMeasure
+import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
@@ -71,4 +73,13 @@ public class NormalizedLevenshtein(
     insertionWeight = insertionWeight,
     deletionWeight = deletionWeight,
     substitutionWeight = substitutionWeight,
-)
+) {
+    /**
+     * Default Normalized Levenshtein instance
+     */
+    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = NormalizedLevenshtein()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
+    }
+}

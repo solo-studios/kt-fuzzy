@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file ShingleBased.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:28 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -45,10 +45,16 @@ package ca.solostudios.stringsimilarity
  * documents like e-mails, \(k = 5\) is a recommended value. For large documents,
  * such as research articles, \(k = 9\) is considered a safe choice.
  * @param k The length of k-shingles.
+ *
  * @throws IllegalArgumentException if \(k \leqslant 0\)
+ *
  * @author Thibault Debatty, solonovamax
  */
 public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
+    init {
+        require(k > 0) { "k must be positive!" }
+    }
+
     /**
      * Compute and return the profile of s, as defined by Ukkonen "Approximate
      * string-matching with q-grams and maximal matches".
@@ -76,9 +82,5 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
          * Pattern for finding multiple following spaces.
          */
         private val SPACE_REGEX: Regex = Regex("\\s+")
-    }
-
-    init {
-        require(k > 0) { "k must be positive!" }
     }
 }

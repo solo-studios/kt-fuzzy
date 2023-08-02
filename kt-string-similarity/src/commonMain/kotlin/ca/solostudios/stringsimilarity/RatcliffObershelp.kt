@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file RatcliffObershelp.kt is part of kotlin-fuzzy
- * Last modified on 18-07-2023 09:26 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -40,17 +40,15 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  * The Ratcliff/Obershelp distance is computed as 1 - Ratcliff/Obershelp
  * similarity.
  *
- * @author [Ligi](https://github.com/dxpux), solonovamax
- * Ported to java from .net by denmase
+ * @author [Ligi](https://github.com/dxpux), solonovamax, Ported to java from .net by denmase
  */
-public class RatcliffObershelp : NormalizedStringSimilarity,
-                                 NormalizedStringDistance {
+public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDistance {
     /**
      * Compute the Ratcliff-Obershelp similarity between strings.
      *
      * @param s1 The first string to compare.
      * @param s2 The second string to compare.
-     * @return The RatcliffObershelp similarity in the range [0, 1]
+     * @return The Ratcliff-Obershelp similarity in the range [0, 1]
      * @throws NullPointerException if s1 or s2 is null.
      */
     override fun similarity(s1: String, s2: String): Double {
@@ -77,7 +75,15 @@ public class RatcliffObershelp : NormalizedStringSimilarity,
         return 1.0 - similarity(s1, s2)
     }
 
-    private companion object {
+    /**
+     * Default Ratcliff-Obershelp dice instance
+     */
+    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = RatcliffObershelp()
+
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
+
         private fun getMatchList(s1: String, s2: String): List<String> {
             val list = mutableListOf<String>()
             val match = frontMaxMatch(s1, s2)
@@ -99,7 +105,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity,
             var longest = 0
             var longestsubstring = ""
             for (i in s1.indices) {
-                for (j in i + 1 .. s1.length) {
+                for (j in i + 1..s1.length) {
                     val substring = s1.substring(i, j)
                     if (s2.contains(substring) && substring.length > longest) {
                         longest = substring.length

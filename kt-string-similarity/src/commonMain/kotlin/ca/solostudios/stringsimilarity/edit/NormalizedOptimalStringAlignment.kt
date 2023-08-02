@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NormalizedOptimalStringAlignment.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:15 a.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -29,7 +29,9 @@
 package ca.solostudios.stringsimilarity.edit
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
+import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringEditMeasure
+import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
@@ -75,4 +77,13 @@ public class NormalizedOptimalStringAlignment(
     deletionWeight,
     substitutionWeight,
     transpositionWeight
-)
+) {
+    /**
+     * Default Normalized Optimal String Alignment instance
+     */
+    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = NormalizedOptimalStringAlignment()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
+    }
+}

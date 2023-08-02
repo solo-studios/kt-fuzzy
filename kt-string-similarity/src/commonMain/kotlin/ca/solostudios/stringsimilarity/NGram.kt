@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGram.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 10:48 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -44,10 +44,10 @@ import ca.solostudios.stringsimilarity.util.minMaxByLength
  *
  * [N-Gram Similarity and Distance](http://webdocs.cs.ualberta.ca/~kondrak/papers/spire05.pdf)
  *
- * @author Thibault Debatty, solonovamax
- *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
+ *
+ * @author Thibault Debatty, solonovamax
  */
 public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, NormalizedStringSimilarity {
     /**
@@ -80,7 +80,8 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
 
             else -> {
                 val slice = CharArray(shorter.length + n - 1)
-                var previousCost = DoubleArray(shorter.length + 1) { it.toDouble() } // 'previous' cost array, horizontally
+                var previousCost =
+                    DoubleArray(shorter.length + 1) { it.toDouble() } // 'previous' cost array, horizontally
                 var currentCost = DoubleArray(shorter.length + 1) // cost array, horizontally
 
                 // construct sa with prefix
@@ -121,7 +122,8 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
                         }
 
                         // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
-                        currentCost[i + 1] = minOf(currentCost[i] + 1, previousCost[i + 1] + 1, previousCost[i] + cost.toDouble() / tn)
+                        currentCost[i + 1] =
+                            minOf(currentCost[i] + 1, previousCost[i + 1] + 1, previousCost[i] + cost.toDouble() / tn)
                     }
 
                     // copy current distance counts to 'previous row' distance counts
@@ -154,7 +156,15 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
         return 1.0 - distance(s1, s2)
     }
 
-    private companion object {
+    /**
+     * Default NGram instance
+     */
+    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
+        private val defaultMeasure = NGram()
+
         private const val DEFAULT_N = 2
+
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
+        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGram.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:43 p.m.
+ * Last modified on 02-08-2023 12:34 a.m.
  *
  * MIT License
  *
@@ -40,11 +40,12 @@ import kotlin.math.abs
  * Levenshtein distance, but can be computed in O(m + n), where Levenshtein
  * requires O(m.n).
  * @param k The length of k-shingles.
- * @throws IllegalArgumentException if k is &lt;= 0
+ *
+ * @throws IllegalArgumentException if \(k \leqslant 0\)
+ *
  * @author Thibault Debatty, solonovamax
  */
-public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
-                                         StringDistance {
+public class QGram(k: Int = DEFAULT_K) : ShingleBased(k), StringDistance {
     /**
      * The distance between two strings is defined as the L1 norm of the
      * difference of their profiles (the number of occurence of each k-shingle).
@@ -85,5 +86,13 @@ public class QGram(k: Int = DEFAULT_K) : ShingleBased(k),
             agg += abs(v1 - v2)
         }
         return agg.toDouble()
+    }
+
+    /**
+     * Default QGram dice instance
+     */
+    public companion object : StringDistance {
+        private val defaultMeasure = QGram()
+        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
     }
 }
