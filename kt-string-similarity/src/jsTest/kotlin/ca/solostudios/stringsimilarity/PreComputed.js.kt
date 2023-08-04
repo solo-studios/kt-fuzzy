@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file PreComputedJvm.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:16 p.m.
+ * The file PreComputed.js.kt is part of kotlin-fuzzy
+ * Last modified on 21-07-2023 02:52 p.m.
  *
  * MIT License
  *
@@ -30,8 +30,9 @@ package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.utils.DEFAULT_TOLERANCE
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.scopes.FunSpecRootScope
-import io.kotest.datatest.withData
+import io.kotest.datatest.getStableIdentifier
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 
@@ -41,8 +42,10 @@ actual fun FunSpecRootScope.testPrecomputed(
     similarityFunction: (String, String) -> Double,
 ) {
     context(context) {
-        withData(precomputed) {
-            similarityFunction(it.first, it.second) shouldBe (it.similarity plusOrMinus DEFAULT_TOLERANCE)
+        precomputed.forEach {
+            withClue({ getStableIdentifier(it) }) {
+                similarityFunction(it.first, it.second) shouldBe (it.similarity plusOrMinus DEFAULT_TOLERANCE)
+            }
         }
     }
 }
