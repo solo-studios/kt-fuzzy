@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 01:29 p.m.
+ * Last modified on 07-08-2023 06:56 p.m.
  *
  * MIT License
  *
@@ -54,7 +54,7 @@ tasks {
         from(dokkaDirectories.map { it.resolve("includes") })
 
         doFirst {
-            val projectInfo = ProjectInfo(project.group.toStringOrEmpty(), project.name, project.toStringOrEmpty())
+            val projectInfo = ProjectInfo(project.group.toStringOrEmpty(), project.name, project.version.toStringOrEmpty())
             expand("project" to projectInfo)
         }
 

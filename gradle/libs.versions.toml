@@ -5,15 +5,19 @@ dokka = "1.8.20"
 axion-release = "1.15.4"
 #kotlinter = "3.13.0"
 kotest = "5.6.2"
+kotlinx-benchmark = "0.4.9"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
 
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
+
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 
 #kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter" }
 
@@ -24,6 +28,8 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
 
 dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref = "dokka" }
 dokka-mathjax-plugin = { group = "org.jetbrains.dokka", name = "mathjax-plugin", version.ref = "dokka" }

@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 05:48 p.m.
+ * Last modified on 08-08-2023 11:01 p.m.
  *
  * MIT License
  *
@@ -56,17 +56,21 @@ kotlin {
 dependencies {
     implementation(libs.dokka.base)
 
-    implementation(gradlePlugin("io.kotest.multiplatform", libs.versions.kotest))
+    implementation(gradlePlugin(libs.plugins.kotest.multiplatform, libs.versions.kotest))
 
-    implementation(gradlePlugin("org.jetbrains.dokka", libs.versions.dokka))
-    implementation(gradlePlugin("org.jetbrains.kotlin.multiplatform", libs.versions.kotlin))
+    implementation(gradlePlugin(libs.plugins.dokka, libs.versions.dokka))
+    implementation(gradlePlugin(libs.plugins.kotlin.multiplatform, libs.versions.kotlin))
+    implementation(gradlePlugin(libs.plugins.kotlin.plugin.allopen, libs.versions.kotlin))
 
-    implementation(gradlePlugin("pl.allegro.tech.build.axion-release", libs.versions.axion.release))
+    implementation(gradlePlugin(libs.plugins.axion.release, libs.versions.axion.release))
+
+    implementation(gradlePlugin(libs.plugins.kotlinx.benchmark, libs.versions.kotlinx.benchmark))
 
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
-fun gradlePlugin(id: String, version: Provider<String>): String {
-    return "$id:$id.gradle.plugin:${version.get()}"
+fun gradlePlugin(id: Provider<PluginDependency>, version: Provider<String>): String {
+    val pluginId = id.get().pluginId
+    return "$pluginId:$pluginId.gradle.plugin:${version.get()}"
 }

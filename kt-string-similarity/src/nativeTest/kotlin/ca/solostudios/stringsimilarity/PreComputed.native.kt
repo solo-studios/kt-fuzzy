@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file PreComputedNative.kt is part of kotlin-fuzzy
- * Last modified on 17-07-2023 06:16 p.m.
+ * The file PreComputed.native.kt is part of kotlin-fuzzy
+ * Last modified on 04-08-2023 04:08 p.m.
  *
  * MIT License
  *

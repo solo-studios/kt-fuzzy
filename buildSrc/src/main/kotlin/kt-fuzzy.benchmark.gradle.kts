@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 04:32 p.m.
+ * The file kt-fuzzy.benchmark.gradle.kts is part of kotlin-fuzzy
+ * Last modified on 09-08-2023 07:24 p.m.
  *
  * MIT License
  *
@@ -28,37 +28,58 @@
 
 @file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
+import kotlinx.benchmark.gradle.JvmBenchmarkTarget
+
 plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
+    kotlin("multiplatform")
+    kotlin("plugin.allopen")
+
+    id("org.jetbrains.kotlinx.benchmark")
 }
 
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
-repositories {
-    mavenCentral()
+allOpen {
+    annotation("org.openjdk.jmh.annotations.State") // Make jmh happy
 }
 
 kotlin {
+    jvm {
+        compilations.create("benchmarks")
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.kotlin.stdlib)
             }
         }
-        val commonTest by getting {
+        val commonBenchmarks by creating {
+            dependsOn(commonMain)
             dependencies {
-                implementation(libs.kotlin.test) // temporary
+                implementation(libs.kotlinx.benchmark.runtime)
             }
+        }
+        val jvmMain by getting {}
+        val jvmBenchmarks by getting {
+            dependsOn(commonBenchmarks)
+            dependsOn(jvmMain)
+        }
+    }
+}
+
+
+benchmark {
+    configurations {
+        named("main") {
+            reportFormat = "json"
+            warmups = 5
+            iterations = 5
+            iterationTime = 5
+            iterationTimeUnit = "s"
+        }
+    }
+    targets {
+        register("jvmBenchmarks") {
+            this as JvmBenchmarkTarget
+            jmhVersion = "1.37"
         }
     }
 }
