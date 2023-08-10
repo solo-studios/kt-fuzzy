@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file SorensenDice.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:35 a.m.
+ * Last modified on 09-08-2023 11:14 p.m.
  *
  * MIT License
  *
@@ -53,20 +53,15 @@ public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStrin
      * @return The computed Sorensen-Dice similarity.
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
+            return 0.0
+        if (s1.isEmpty() || s2.isEmpty())
             return 1.0
-        }
+
         val profile1 = profile(s1)
         val profile2 = profile(s2)
-        val union: MutableSet<String> = HashSet()
-        union.addAll(profile1.keys)
-        union.addAll(profile2.keys)
-        var inter = 0
-        for (key in union) {
-            if (profile1.containsKey(key) && profile2.containsKey(key)) {
-                inter++
-            }
-        }
+
+        val inter = (profile1.keys intersect profile2.keys).size
         return 2.0 * inter / (profile1.size + profile2.size)
     }
 

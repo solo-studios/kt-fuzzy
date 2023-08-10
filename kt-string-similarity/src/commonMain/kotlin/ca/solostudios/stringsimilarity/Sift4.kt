@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 11:01 p.m.
+ * Last modified on 09-08-2023 11:13 p.m.
  *
  * MIT License
  *
@@ -93,7 +93,7 @@ public class Sift4(
 
             if (c1 == c2) {
                 localCommonSubstringLength++
-                var isTrans = false
+                var transposition = false
                 // see if current match is a transposition
                 var i = 0
                 while (i < offsets.size) {
@@ -102,8 +102,8 @@ public class Sift4(
                         // when two matches cross, the one considered a
                         // transposition is the one with the largest difference
                         // in offsets
-                        isTrans = abs(cursor2 - cursor1) >= abs(offset.cursor2 - offset.cursor1)
-                        if (isTrans) {
+                        transposition = abs(cursor2 - cursor1) >= abs(offset.cursor2 - offset.cursor1)
+                        if (transposition) {
                             transpositionCount++
                         } else {
                             if (!offset.transposition) {
@@ -120,7 +120,7 @@ public class Sift4(
                         }
                     }
                 }
-                offsets.add(Offset(cursor1, cursor2, isTrans))
+                offsets.add(Offset(cursor1, cursor2, transposition))
             } else {
                 largestCommonSubstringLength += localCommonSubstringLength
                 localCommonSubstringLength = 0
