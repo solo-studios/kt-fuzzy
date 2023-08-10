@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 11:13 p.m.
+ * Last modified on 10-08-2023 05:47 p.m.
  *
  * MIT License
  *
@@ -86,12 +86,8 @@ public class Sift4(
         // offset pair array, for computing the transpositions
         val offsets = mutableListOf<Offset>()
 
-        // wtf is this doing
         while (cursor1 < s1.length && cursor2 < s2.length) {
-            val c1 = s1[cursor1]
-            val c2 = s2[cursor2]
-
-            if (c1 == c2) {
+            if (s1[cursor1] == s2[cursor2]) {
                 localCommonSubstringLength++
                 var transposition = false
                 // see if current match is a transposition
@@ -134,12 +130,12 @@ public class Sift4(
                 // so that we can have only one code block handling matches
                 var i = 0
                 while (i < maxOffset && (cursor1 + i < s1.length || cursor2 + i < s2.length)) {
-                    if (cursor1 + i < s1.length && s1[cursor1 + i] == c2) {
+                    if (cursor1 + i < s1.length && s1[cursor1 + i] == s2[cursor2]) {
                         cursor1 += i - 1
                         cursor2--
                         break
                     }
-                    if (cursor2 + i < s2.length && c1 == s2[cursor2 + i]) {
+                    if (cursor2 + i < s2.length && s1[cursor1] == s2[cursor2 + i]) {
                         cursor1--
                         cursor2 += i - 1
                         break
@@ -149,7 +145,6 @@ public class Sift4(
             }
             cursor1++
             cursor2++
-
             // this covers the case where the last match is on the last token
             // in list, so that it can compute transpositions correctly
             if (cursor1 >= s1.length || cursor2 >= s2.length) {
