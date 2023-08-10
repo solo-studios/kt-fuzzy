@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file AbstractNormalizedStringEditMeasure.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:09 a.m.
+ * Last modified on 09-08-2023 12:51 a.m.
  *
  * MIT License
  *
@@ -49,7 +49,8 @@ public abstract class AbstractNormalizedStringEditMeasure(
         if (s1.isEmpty() || s2.isEmpty())
             return 1.0
 
-        return (2 * editMeasure.distance(s1, s2)) / (s1.length + s2.length + editMeasure.distance(s1, s2))
+        val distance = editMeasure.distance(s1, s2)
+        return (2 * distance) / (s1.length + s2.length + distance)
     }
 
     final override fun similarity(s1: String, s2: String): Double {

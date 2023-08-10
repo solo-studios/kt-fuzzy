@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file RatcliffObershelp.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 09-08-2023 10:48 p.m.
  *
  * MIT License
  *
@@ -52,15 +52,13 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
      * @throws NullPointerException if s1 or s2 is null.
      */
     override fun similarity(s1: String, s2: String): Double {
-        if (s1 == s2) {
+        if (s1 == s2)
+            return 0.0
+        if (s1.isEmpty() || s2.isEmpty())
             return 1.0
-        }
+
         val matches = getMatchList(s1, s2)
-        var sum_of_matches = 0
-        for (match in matches) {
-            sum_of_matches += match.length
-        }
-        return 2.0 * sum_of_matches / (s1.length + s2.length)
+        return 2.0 * matches / (s1.length + s2.length)
     }
 
     /**
@@ -84,36 +82,34 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
         override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
         override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
 
-        private fun getMatchList(s1: String, s2: String): List<String> {
-            val list = mutableListOf<String>()
+        private fun getMatchList(s1: String, s2: String): Int {
             val match = frontMaxMatch(s1, s2)
-            if (match.isNotEmpty()) {
-                val frontsource = s1.substring(0, s1.indexOf(match))
-                val fronttarget = s2.substring(0, s2.indexOf(match))
-                val frontqueue = getMatchList(frontsource, fronttarget)
-                val endsource = s1.substring(s1.indexOf(match) + match.length)
-                val endtarget = s2.substring(s2.indexOf(match) + match.length)
-                val endqueue = getMatchList(endsource, endtarget)
-                list.add(match)
-                list.addAll(frontqueue)
-                list.addAll(endqueue)
+            return when {
+                match.isEmpty() -> 0
+                else -> {
+                    val frontSource = s1.substring(0, s1.indexOf(match))
+                    val frontTarget = s2.substring(0, s2.indexOf(match))
+                    val endSource = s1.substring(s1.indexOf(match) + match.length)
+                    val endTarget = s2.substring(s2.indexOf(match) + match.length)
+
+                    return getMatchList(frontSource, frontTarget) + match.length + getMatchList(endSource, endTarget)
+                }
             }
-            return list
         }
 
         private fun frontMaxMatch(s1: String, s2: String): String {
-            var longest = 0
-            var longestsubstring = ""
+            var longestLength = 0
+            var longest = ""
             for (i in s1.indices) {
                 for (j in i + 1..s1.length) {
                     val substring = s1.substring(i, j)
-                    if (s2.contains(substring) && substring.length > longest) {
-                        longest = substring.length
-                        longestsubstring = substring
+                    if (substring.length > longestLength && s2.contains(substring)) {
+                        longestLength = substring.length
+                        longest = substring
                     }
                 }
             }
-            return longestsubstring
+            return longest
         }
     }
 }

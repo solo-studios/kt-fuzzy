@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGram.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 09-08-2023 11:10 p.m.
  *
  * MIT License
  *
@@ -59,8 +59,6 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
      * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
-        // wtf does this do?
-        // clean this shit up
         if (s1 == s2)
             return 0.0
         if (s1.isEmpty() || s2.isEmpty())
@@ -79,57 +77,52 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
             }
 
             else -> {
-                val slice = CharArray(shorter.length + n - 1)
-                var previousCost =
-                    DoubleArray(shorter.length + 1) { it.toDouble() } // 'previous' cost array, horizontally
+                // 'previous' cost array, horizontally
+                var previousCost = DoubleArray(shorter.length + 1) { it.toDouble() }
                 var currentCost = DoubleArray(shorter.length + 1) // cost array, horizontally
 
-                // construct sa with prefix
-                for (i in slice.indices) {
-                    if (i < n - 1) {
-                        slice[i] = special // add prefix
-                    } else {
-                        slice[i] = shorter[i - n + 1]
-                    }
+                val longerCharArray = longer.toCharArray()
+                val slice = CharArray(shorter.length + n - 1) { i ->
+                    if (i < n - 1) special else shorter[i - n + 1]
                 }
-
-                // indexes into strings s and t
-                var tJ = CharArray(n + 1) // jth n-gram of t
 
                 for (j in longer.indices) {
                     // construct t_j n-gram
+                    val tJ = CharArray(n + 1) // jth n-gram of t
                     if (j + 1 < n) {
                         // add prefix
-                        for (ti in 0 until n - j - 1)
+                        repeat(n - (j + 1)) { ti ->
                             tJ[ti] = special
+                        }
                         for (ti in n - (j + 1) until n)
-                            tJ[ti] = longer[ti - (n - j - 1)]
+                            tJ[ti] = longer[ti - (n - (j + 1))]
                     } else {
-                        tJ = longer.substring(j + 1 - n, j + 1).toCharArray()
+                        longerCharArray.copyInto(tJ, 0, j + 1 - n, j + 1)
                     }
 
                     currentCost[0] = (j + 1).toDouble()
+
                     for (i in shorter.indices) {
                         var cost = 0
                         var tn = n
                         // compare slice to t_j
                         repeat(n) { ni ->
-                            if (slice[i + ni] != tJ[ni]) {
+                            if (slice[i + ni] != tJ[ni])
                                 cost++
-                            } else if (slice[i + ni] == special) { // discount matches on prefix
-                                tn--
-                            }
+                            else if (slice[i + ni] == special)
+                                tn-- // discount matches on prefix
                         }
 
                         // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
-                        currentCost[i + 1] =
-                            minOf(currentCost[i] + 1, previousCost[i + 1] + 1, previousCost[i] + cost.toDouble() / tn)
+                        currentCost[i + 1] = minOf(
+                            currentCost[i] + 1, // left + 1
+                            previousCost[i + 1] + 1, // top + 1
+                            previousCost[i] + cost.toDouble() / tn, // diagonally left and up + cost
+                        )
                     }
 
                     // copy current distance counts to 'previous row' distance counts
-                    val tmp = currentCost
-                    currentCost = previousCost
-                    previousCost = tmp
+                    previousCost = currentCost.also { currentCost = previousCost }
                 }
 
                 // our last action in the above loop was to switch d and p, so p now
@@ -137,11 +130,6 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
                 return previousCost[shorter.length] / longer.length
             }
         }
-    }
-
-    public inline fun <T> T.also(block: (T) -> Unit): T {
-        block(this)
-        return this
     }
 
     /**
