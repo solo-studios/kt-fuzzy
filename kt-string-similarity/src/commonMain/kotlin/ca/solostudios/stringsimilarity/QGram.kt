@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGram.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 11:02 p.m.
+ * Last modified on 09-08-2023 11:20 p.m.
  *
  * MIT License
  *
@@ -58,10 +58,11 @@ public class QGram(k: Int = DEFAULT_K) : ShingleBased(k), StringDistance {
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
             return 0.0
-        if (s1.isEmpty())
-            return s2.length.toDouble()
-        if (s2.isEmpty())
-            return s1.length.toDouble()
+        // Do NOT do this. It will break the QGram implementation.
+        // if (s1.isEmpty())
+        //     return s2.length.toDouble()
+        // if (s2.isEmpty())
+        //     return s1.length.toDouble()
 
         val profile1 = profile(s1)
         val profile2 = profile(s2)
