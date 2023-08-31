@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 05:48 p.m.
+ * Last modified on 31-08-2023 04:53 p.m.
  *
  * MIT License
  *
@@ -40,10 +40,7 @@ kotlin {
     sourceSets {
         val commonTest by getting {
             dependencies {
-                implementation(libs.kotest.framework.engine)
-                implementation(libs.kotest.framework.datatest)
-                implementation(libs.kotest.assertions)
-                implementation(libs.kotest.property)
+                implementation(libs.bundles.kotest)
             }
         }
 
