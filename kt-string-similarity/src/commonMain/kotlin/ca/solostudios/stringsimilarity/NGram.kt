@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGram.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 11:10 p.m.
+ * Last modified on 31-08-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -31,6 +31,7 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import ca.solostudios.stringsimilarity.util.countIndexed
+import ca.solostudios.stringsimilarity.util.min
 import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
@@ -114,7 +115,7 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
                         }
 
                         // minimum of cell to the left+1, to the top+1, diagonally left and up +cost
-                        currentCost[i + 1] = minOf(
+                        currentCost[i + 1] = min(
                             currentCost[i] + 1, // left + 1
                             previousCost[i + 1] + 1, // top + 1
                             previousCost[i] + cost.toDouble() / tn, // diagonally left and up + cost

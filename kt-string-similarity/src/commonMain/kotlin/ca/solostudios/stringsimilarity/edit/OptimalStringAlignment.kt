@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file OptimalStringAlignment.kt is part of kotlin-fuzzy
- * Last modified on 30-08-2023 09:50 p.m.
+ * Last modified on 31-08-2023 04:34 p.m.
  *
  * MIT License
  *
@@ -31,6 +31,8 @@ import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import ca.solostudios.stringsimilarity.util.min
+import kotlin.math.min
 
 /**
  * Implementation of the the Optimal String Alignment (sometimes called the
@@ -74,10 +76,10 @@ public class OptimalStringAlignment(
                 val insertionCost = costMatrix[i + 1][j] + insertionWeight
                 val substitutionCost = costMatrix[i][j] + if (c1 == c2) 0.0 else substitutionWeight
 
-                costMatrix[i + 1][j + 1] = minOf(deletionCost, insertionCost, substitutionCost)
+                costMatrix[i + 1][j + 1] = min(deletionCost, insertionCost, substitutionCost)
 
                 if (i > 0 && j > 0 && c1 == shorter[j - 1] && longer[i - 1] == c2)
-                    costMatrix[i + 1][j + 1] = minOf(costMatrix[i][j], costMatrix[i - 1][j - 1] + transpositionWeight)
+                    costMatrix[i + 1][j + 1] = min(costMatrix[i][j], costMatrix[i - 1][j - 1] + transpositionWeight)
             }
         }
     }

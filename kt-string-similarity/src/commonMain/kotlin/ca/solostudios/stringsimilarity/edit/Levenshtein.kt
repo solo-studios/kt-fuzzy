@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Levenshtein.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 31-08-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -32,6 +32,7 @@ import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import ca.solostudios.stringsimilarity.util.min
 
 /**
  * The Levenshtein distance, or edit distance, between two words is the
@@ -82,7 +83,7 @@ public class Levenshtein(
                 val insertionCost = costMatrix[i + 1][j] + insertionWeight
                 val substitutionCost = costMatrix[i][j] + if (c1 == c2) 0.0 else substitutionWeight
 
-                costMatrix[i + 1][j + 1] = minOf(deletionCost, insertionCost, substitutionCost)
+                costMatrix[i + 1][j + 1] = min(deletionCost, insertionCost, substitutionCost)
             }
         }
     }

@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCS.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 31-08-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -32,6 +32,7 @@ import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import kotlin.math.min
 
 /**
  * The Longest Common Subsequence (LCS) problem consists in finding the longest
@@ -82,7 +83,7 @@ public class LCS(
                 costMatrix[i + 1][j + 1] = if (c1 == c2)
                     costMatrix[i][j]
                 else
-                    minOf(deletionCost, insertionCost)
+                    min(deletionCost, insertionCost)
             }
         }
     }

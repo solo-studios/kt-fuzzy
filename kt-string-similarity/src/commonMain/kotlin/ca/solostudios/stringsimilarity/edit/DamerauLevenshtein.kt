@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 31-08-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -32,6 +32,7 @@ import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import ca.solostudios.stringsimilarity.util.min
+import kotlin.math.min
 
 /**
  * Implementation of Damerau-Levenshtein distance with transposition (also
@@ -109,7 +110,7 @@ public class DamerauLevenshtein(
 
                 costMatrix[i + 2][j + 2] = min(deletionCost, insertionCost, substitutionCost, transpositionCost)
 
-                currentMin = minOf(costMatrix[i + 1][j + 1], currentMin)
+                currentMin = min(costMatrix[i + 1][j + 1], currentMin)
             }
 
             lastRowId[c1] = i + 1

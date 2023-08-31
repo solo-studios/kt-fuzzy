@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Comparisons.kt is part of kotlin-fuzzy
- * Last modified on 01-08-2023 01:41 a.m.
+ * Last modified on 31-08-2023 04:36 p.m.
  *
  * MIT License
  *
@@ -75,6 +75,18 @@ internal fun minLength(a: String, b: String): Int {
 
 /**
  * Returns the smallest of four values.
+ *
+ * If any value is [Double.NaN], then the result is [Double.NaN].
+ *
+ * @see kotlin.math.min
  */
-// We have this mainly so we can avoid the for-each loop that comes from using the minOf function with varargs
 internal inline fun min(a: Double, b: Double, c: Double, d: Double): Double = min(min(a, b), min(c, d))
+
+/**
+ * Returns the smallest of three values.
+ *
+ * If any value is [Double.NaN], then the result is [Double.NaN].
+ *
+ * @see kotlin.math.min
+ */
+internal inline fun min(a: Double, b: Double, c: Double): Double = min(min(a, b), c)
