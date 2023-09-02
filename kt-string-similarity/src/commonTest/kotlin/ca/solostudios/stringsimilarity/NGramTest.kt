@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file NGramTest.kt is part of kotlin-fuzzy
- * Last modified on 31-07-2023 10:27 p.m.
+ * Last modified on 01-09-2023 11:36 p.m.
  *
  * MIT License
  *
@@ -30,10 +30,6 @@ package ca.solostudios.stringsimilarity
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
 class NGramTest : FunSpec({
     val ngram = NGram(3)
 

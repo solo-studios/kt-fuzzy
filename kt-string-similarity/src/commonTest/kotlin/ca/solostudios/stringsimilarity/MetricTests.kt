@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file MetricTests.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 06:33 p.m.
+ * Last modified on 01-09-2023 11:07 p.m.
  *
  * MIT License
  *
@@ -33,10 +33,12 @@ import ca.solostudios.stringsimilarity.utils.DEFAULT_TOLERANCE
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.funSpec
 import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.doubles.shouldBeGreaterThan
 import io.kotest.matchers.doubles.shouldBeLessThanOrEqual
 import io.kotest.matchers.doubles.shouldBeZero
 import io.kotest.matchers.doubles.shouldNotBeLessThan
 import io.kotest.matchers.shouldBe
+import io.kotest.property.assume
 import io.kotest.property.checkAll
 
 fun metricDistanceTests(metricDistance: MetricStringDistance, includeStandard: Boolean = true) = funSpec {
@@ -62,6 +64,17 @@ fun metricDistanceTests(metricDistance: MetricStringDistance, includeStandard: B
             metricDistance.distance(a, b) shouldNotBeLessThan 0.0
         }
     }
+
+    test("Metric distance should respect the positivity axiom") {
+        checkAll<String, String> { a, b ->
+            assume(a != b)
+
+            // Test both forwards and backwards
+            metricDistance.distance(a, b) shouldBeGreaterThan 0.0
+            metricDistance.distance(b, a) shouldBeGreaterThan 0.0
+        }
+    }
+
 
     test("Metric distance should respect the triangle inequality") {
         checkAll<String, String, String> { a, b, c ->

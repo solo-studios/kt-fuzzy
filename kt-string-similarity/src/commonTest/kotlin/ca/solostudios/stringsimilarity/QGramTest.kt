@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGramTest.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 07:02 p.m.
+ * Last modified on 01-09-2023 11:36 p.m.
  *
  * MIT License
  *
@@ -27,41 +27,23 @@
  */
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
-class QGramTest {
-    /**
-     * Test of distance method, of class QGram.
-     */
-    @Test
-    fun testDistance() {
-        println("distance")
-        val instance = QGram(2)
-        // AB BC CD CE
-        // 1  1  1  0
-        // 1  1  0  1
-        // Total: 2
-        val result: Double = instance.distance("ABCD", "ABCE")
-        assertEquals(2.0, result, 0.0)
-        assertEquals(
-            0.0,
-            instance.distance("S", "S"),
-            0.0,
-        )
-        assertEquals(
-            0.0,
-            instance.distance("012345", "012345"),
-            0.0,
-        )
+class QGramTest : FunSpec({
+    val qGram = QGram(2)
 
-        // NOTE: not using null/empty tests in NullEmptyTests because QGram is different
-        assertEquals(0.0, instance.distance("", ""), 0.1)
-        assertEquals(2.0, instance.distance("", "foo"), 0.1)
-        assertEquals(2.0, instance.distance("foo", ""), 0.1)
-    }
-}
+    include(distanceTests(qGram))
+
+    val precomputed = listOf(
+        FuzzyTestData("01000", "001111", 5.0),
+        FuzzyTestData("ABCD", "ABCE", 2.0),
+        FuzzyTestData("S", "S", 0.0),
+        FuzzyTestData("012345", "012345", 0.0),
+        FuzzyTestData("", "", 0.0),
+        FuzzyTestData("", "foo", 2.0),
+        FuzzyTestData("foo", "", 2.0),
+    )
+
+    include(precomputedDistanceTests(precomputed, qGram))
+})

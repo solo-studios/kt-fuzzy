@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file RatcliffObershelpTest.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 07:03 p.m.
+ * Last modified on 02-09-2023 12:06 a.m.
  *
  * MIT License
  *
@@ -27,102 +27,30 @@
  */
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
 /**
  *
  * @author Agung Nugroho
  */
-class RatcliffObershelpTest {
-    /**
-     * Test of similarity method, of class RatcliffObershelp.
-     */
-    @Test
-    fun testSimilarity() {
-        println("similarity")
-        val instance = RatcliffObershelp()
+class RatcliffObershelpTest : FunSpec({
+    val ratcliffObershelp = RatcliffObershelp()
 
-        // test data from other algorithms
-        // "My string" vs "My tsring"
-        // Substrings:
-        // "ring" ==> 4, "My s" ==> 3, "s" ==> 1
-        // Ratcliff-Obershelp = 2*(sum of substrings)/(length of s1 + length of s2)
-        //                    = 2*(4 + 3 + 1) / (9 + 9)
-        //                    = 16/18
-        //                    = 0.888888
-        assertEquals(
-            0.888888,
-            instance.similarity("My string", "My tsring"),
-            0.000001,
-        )
+    include(normalizedDistanceTests(ratcliffObershelp))
+    include(normalizedSimilarityTests(ratcliffObershelp))
 
-        // test data from other algorithms
-        // "My string" vs "My tsring"
-        // Substrings:
-        // "My " ==> 3, "tri" ==> 3, "g" ==> 1
-        // Ratcliff-Obershelp = 2*(sum of substrings)/(length of s1 + length of s2)
-        //                    = 2*(3 + 3 + 1) / (9 + 9)
-        //                    = 14/18
-        //                    = 0.777778
-        assertEquals(
-            0.777778,
-            instance.similarity("My string", "My ntrisg"),
-            0.000001,
-        )
+    val precomputed = listOf(
+        FuzzyTestData("My string", "My tsring", 0.88888),
+        FuzzyTestData("My string", "My ntrisg", 0.77777),
+        FuzzyTestData("MATEMATICA", "MATHEMATICS", 0.85714),
+        FuzzyTestData("aleksander", "alexandre", 0.73684),
+        FuzzyTestData("pennsylvania", "pencilvaneya", 0.66666),
+        FuzzyTestData("WIKIMEDIA", "WIKIMANIA", 0.77777),
+        FuzzyTestData("GESTALT PATTERN MATCHING", "GESTALT PRACTICE", 0.6),
+        FuzzyTestData("GESTALT PRACTICE", "GESTALT PATTERN MATCHING", 0.65),
+    )
 
-        // test data from essay by Ilya Ilyankou
-        // "Comparison of Jaro-Winkler and Ratcliff/Obershelp algorithms
-        // in spell check"
-        // https://ilyankou.files.wordpress.com/2015/06/ib-extended-essay.pdf
-        // p13, expected result is 0.857
-        assertEquals(
-            0.857,
-            instance.similarity("MATEMATICA", "MATHEMATICS"),
-            0.001,
-        )
-
-        // test data from stringmetric
-        // https://github.com/rockymadden/stringmetric
-        // expected output is 0.7368421052631579
-        assertEquals(
-            0.736842,
-            instance.similarity("aleksander", "alexandre"),
-            0.000001,
-        )
-
-        // test data from stringmetric
-        // https://github.com/rockymadden/stringmetric
-        // expected output is 0.6666666666666666
-        assertEquals(
-            0.666666,
-            instance.similarity("pennsylvania", "pencilvaneya"),
-            0.000001,
-        )
-
-        // test data from wikipedia
-        // https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching
-        // expected output is 14/18 = 0.7777777777777778‬
-        assertEquals(
-            0.777778,
-            instance.similarity("WIKIMEDIA", "WIKIMANIA"),
-            0.000001,
-        )
-
-        // test data from wikipedia
-        // https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching
-        // expected output is 24/40 = 0.65
-        assertEquals(
-            0.6,
-            instance.similarity("GESTALT PATTERN MATCHING", "GESTALT PRACTICE"),
-            0.000001,
-        )
-    }
-
-    @Test
-    fun testDistance() {
-        // val instance = RatcliffObershelp()
-
-        // TODO: regular (non-null/empty) distance tests
-    }
-}
+    include(precomputedSimilarityTests(precomputed, ratcliffObershelp))
+    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, ratcliffObershelp))
+})
