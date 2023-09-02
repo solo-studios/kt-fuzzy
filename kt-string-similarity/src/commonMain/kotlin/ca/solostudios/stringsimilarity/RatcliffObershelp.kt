@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file RatcliffObershelp.kt is part of kotlin-fuzzy
- * Last modified on 01-09-2023 11:32 p.m.
+ * Last modified on 02-09-2023 12:13 a.m.
  *
  * MIT License
  *
@@ -31,14 +31,15 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
- * Ratcliff/Obershelp pattern recognition
- * The Ratcliff/Obershelp algorithm computes the similarity of two strings a
- * the doubled number of matching characters divided by the total number of
- * characters in the two strings. Matching characters are those in the longest
- * common subsequence plus, recursively, matching characters in the unmatched
- * region on either side of the longest common subsequence.
- * The Ratcliff/Obershelp distance is computed as 1 - Ratcliff/Obershelp
- * similarity.
+ * Implements Ratcliff/Obershelp pattern recognition, also known as Gestalt pattern matching,
+ * similarity between strings.
+ *
+ * The similarity is defined as
+ * \(D_{ro} = \frac{2K_m}{\lVert S_1 \rVert + \lVert S_2 \rVert}\).
+ * Where \(K_m\) us the number of matching characters.
+ *
+ * The distance is computed as
+ * \(1 - similarity(X, Y)\).
  *
  * @author [Ligi](https://github.com/dxpux), solonovamax, Ported to java from .net by denmase
  */
@@ -46,28 +47,28 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
     /**
      * Compute the Ratcliff-Obershelp similarity between strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The Ratcliff-Obershelp similarity in the range [0, 1]
-     * @throws NullPointerException if s1 or s2 is null.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Ratcliff-Obershelp similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2)
-            return 0.0
-        if (s1.isEmpty() || s2.isEmpty())
             return 1.0
+        if (s1.isEmpty() || s2.isEmpty())
+            return 0.0
 
-        val matches = getMatchList(s1, s2)
-        return 2.0 * matches / (s1.length + s2.length)
+        val matches = getMatchCount(s1, s2)
+        return (2.0 * matches) / (s1.length + s2.length)
     }
 
     /**
-     * Return 1 - similarity.
+     * Computes the Ratcliff-Obershelp distance of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1 - similarity
-     * @throws NullPointerException if s1 or s2 is null.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Ratcliff-Obershelp distance.
+     * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         return 1.0 - similarity(s1, s2)
@@ -82,22 +83,26 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
         override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
         override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
 
-        private fun getMatchList(s1: String, s2: String): Int {
-            val match = frontMaxMatch(s1, s2)
+        private fun getMatchCount(s1: String, s2: String): Int {
+            val anchor = findAnchor(s1, s2)
             return when {
-                match.isEmpty() -> 0
+                anchor.isEmpty() -> 0
                 else -> {
-                    val frontSource = s1.substring(0, s1.indexOf(match))
-                    val frontTarget = s2.substring(0, s2.indexOf(match))
-                    val endSource = s1.substring(s1.indexOf(match) + match.length)
-                    val endTarget = s2.substring(s2.indexOf(match) + match.length)
+                    val s1MatchIndex = s1.indexOf(anchor)
+                    val s2MatchIndex = s2.indexOf(anchor)
+                    val frontS1 = s1.take(s1MatchIndex)
+                    val frontS2 = s2.take(s2MatchIndex)
+                    val endS1 = s1.substring(s1MatchIndex + anchor.length)
+                    val endS2 = s2.substring(s2MatchIndex + anchor.length)
 
-                    return getMatchList(frontSource, frontTarget) + match.length + getMatchList(endSource, endTarget)
+                    val frontCount = getMatchCount(frontS1, frontS2)
+                    val endCount = getMatchCount(endS1, endS2)
+                    return frontCount + anchor.length + endCount
                 }
             }
         }
 
-        private fun frontMaxMatch(s1: String, s2: String): String {
+        private fun findAnchor(s1: String, s2: String): String {
             var longestLength = 0
             var longest = ""
             for (i in s1.indices) {

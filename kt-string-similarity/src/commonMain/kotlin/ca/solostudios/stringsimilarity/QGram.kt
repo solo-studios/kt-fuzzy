@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGram.kt is part of kotlin-fuzzy
- * Last modified on 01-09-2023 11:33 p.m.
+ * Last modified on 02-09-2023 12:16 a.m.
  *
  * MIT License
  *
@@ -45,7 +45,7 @@ import kotlin.math.abs
  *
  * This distance measure is pseudo-metric.
  * It is not a metric because two non-identical strings can have identical q-gram profiles,
- * resulting in \(distance(X, Y) = 0\) where \(X \new Y\).
+ * resulting in \(distance(X, Y) = 0\) where \(X \neq Y\).
  * However, it does respect the other 3 axioms.
  *
  * @param q The length of each q-gram.
