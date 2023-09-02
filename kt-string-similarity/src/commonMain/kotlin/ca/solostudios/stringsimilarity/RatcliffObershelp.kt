@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file RatcliffObershelp.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 10:48 p.m.
+ * Last modified on 01-09-2023 11:32 p.m.
  *
  * MIT License
  *
@@ -74,7 +74,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
     }
 
     /**
-     * Default Ratcliff-Obershelp dice instance
+     * Default Ratcliff-Obershelp instance
      */
     public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
         private val defaultMeasure = RatcliffObershelp()

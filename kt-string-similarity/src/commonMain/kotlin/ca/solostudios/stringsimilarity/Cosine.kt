@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Cosine.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 01-09-2023 11:08 p.m.
  *
  * MIT License
  *
@@ -49,6 +49,8 @@ import kotlin.math.sqrt
  *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity
+ *
+ * @throws IllegalArgumentException if \(k \leqslant 0\)
  *
  * @author Thibault Debatty, solonovamax
  */

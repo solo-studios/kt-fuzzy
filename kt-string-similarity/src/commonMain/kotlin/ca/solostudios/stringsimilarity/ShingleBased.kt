@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file ShingleBased.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 01-09-2023 11:08 p.m.
  *
  * MIT License
  *
@@ -44,6 +44,7 @@ package ca.solostudios.stringsimilarity
  * only 20 characters and estimate the number of k-shingles as \(20^k\). For small
  * documents like e-mails, \(k = 5\) is a recommended value. For large documents,
  * such as research articles, \(k = 9\) is considered a safe choice.
+ *
  * @param k The length of k-shingles.
  *
  * @throws IllegalArgumentException if \(k \leqslant 0\)
