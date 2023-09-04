@@ -57,10 +57,15 @@ jobs:
           distribution: "${{ env.JAVA_DISTRIBUTION }}"
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Publish MinGW artifacts
+      - name: Publish MinGW artifacts to solo studios
         run: |
           ./gradlew \
-          publishMingwX64PublicationToSoloStudiosRepository publishMingwX64PublicationToSonatypeRepository
+          publishMingwX64PublicationToSoloStudiosRepository
+      - name: Publish MinGW artifacts to Sonatype
+        #        if: startsWith(github.ref, 'refs/tags') # Only publish to sonatype if tagged
+        run: |
+          ./gradlew \
+          publishMingwX64PublicationToSonatypeRepository
 
   publish-mac:
     name: Publish macOS artifacts
@@ -80,20 +85,35 @@ jobs:
           distribution: "${{ env.JAVA_DISTRIBUTION }}"
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Publish MacOS/iOS/TvOS/WatchOS artifacts
+      - name: Publish MacOS/iOS/TvOS/WatchOS artifacts to solo studios
         run: |
           ./gradlew \
-          publishMacosX64PublicationToSoloStudiosRepository publishMacosX64PublicationToSonatypeRepository \
-          publishMacosArm64PublicationToSoloStudiosRepository publishMacosArm64PublicationToSonatypeRepository \
-          publishIosArm64PublicationToSoloStudiosRepository publishIosArm64PublicationToSonatypeRepository \
-          publishIosX64PublicationToSoloStudiosRepository publishIosX64PublicationToSonatypeRepository \
-          publishIosSimulatorArm64PublicationToSoloStudiosRepository publishIosSimulatorArm64PublicationToSonatypeRepository \
-          publishTvosX64PublicationToSoloStudiosRepository publishTvosX64PublicationToSonatypeRepository \
-          publishTvosArm64PublicationToSoloStudiosRepository publishTvosArm64PublicationToSonatypeRepository \
-          publishTvosSimulatorArm64PublicationToSoloStudiosRepository publishTvosSimulatorArm64PublicationToSonatypeRepository \
-          publishWatchosX64PublicationToSoloStudiosRepository publishWatchosX64PublicationToSonatypeRepository \
-          publishWatchosArm64PublicationToSoloStudiosRepository publishWatchosArm64PublicationToSonatypeRepository \
-          publishWatchosSimulatorArm64PublicationToSoloStudiosRepository publishWatchosSimulatorArm64PublicationToSonatypeRepository
+          publishMacosX64PublicationToSoloStudiosRepository \
+          publishMacosArm64PublicationToSoloStudiosRepository \
+          publishIosArm64PublicationToSoloStudiosRepository \
+          publishIosX64PublicationToSoloStudiosRepository \
+          publishIosSimulatorArm64PublicationToSoloStudiosRepository \
+          publishTvosX64PublicationToSoloStudiosRepository \
+          publishTvosArm64PublicationToSoloStudiosRepository \
+          publishTvosSimulatorArm64PublicationToSoloStudiosRepository \
+          publishWatchosX64PublicationToSoloStudiosRepository \
+          publishWatchosArm64PublicationToSoloStudiosRepository \
+          publishWatchosSimulatorArm64PublicationToSoloStudiosRepository
+      - name: Publish MacOS/iOS/TvOS/WatchOS artifacts to Sonatype
+        #        if: startsWith(github.ref, 'refs/tags') # Only publish to sonatype if tagged
+        run: |
+          ./gradlew \
+          publishMacosX64PublicationToSonatypeRepository \
+          publishMacosArm64PublicationToSonatypeRepository \
+          publishIosArm64PublicationToSonatypeRepository \
+          publishIosX64PublicationToSonatypeRepository \
+          publishIosSimulatorArm64PublicationToSonatypeRepository \
+          publishTvosX64PublicationToSonatypeRepository \
+          publishTvosArm64PublicationToSonatypeRepository
+          publishTvosSimulatorArm64PublicationToSonatypeRepository \
+          publishWatchosX64PublicationToSonatypeRepository \
+          publishWatchosArm64PublicationToSonatypeRepository \
+          publishWatchosSimulatorArm64PublicationToSonatypeRepository
 
   publish-linux:
     name: Publish Linux Artifacts
@@ -113,14 +133,23 @@ jobs:
           distribution: "${{ env.JAVA_DISTRIBUTION }}"
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Publish Linux/Multiplatform/JVM/JS artifacts
+      - name: Publish Linux/Multiplatform/JVM/JS artifacts to solo studios
         run: |
           ./gradlew \
-          publishLinuxX64PublicationToSoloStudiosRepository publishLinuxX64PublicationToSonatypeRepository \
-          publishLinuxArm64PublicationToSoloStudiosRepository publishLinuxArm64PublicationToSonatypeRepository \
-          publishKotlinMultiplatformPublicationToSoloStudiosRepository publishKotlinMultiplatformPublicationToSonatypeRepository \
-          publishJvmPublicationToSoloStudiosRepository publishJvmPublicationToSonatypeRepository \
-          publishJsPublicationToSoloStudiosRepository publishJsPublicationToSonatypeRepository
+          publishLinuxX64PublicationToSoloStudiosRepository \
+          publishLinuxArm64PublicationToSoloStudiosRepository \
+          publishKotlinMultiplatformPublicationToSoloStudiosRepository \
+          publishJvmPublicationToSoloStudiosRepository \
+          publishJsPublicationToSoloStudiosRepository
+      - name: Publish Linux/Multiplatform/JVM/JS artifacts to Sonatype
+        #        if: startsWith(github.ref, 'refs/tags') # Only publish to sonatype if tagged
+        run: |
+          ./gradlew \
+          publishLinuxX64PublicationToSonatypeRepository \
+          publishLinuxArm64PublicationToSonatypeRepository \
+          publishKotlinMultiplatformPublicationToSonatypeRepository \
+          publishJvmPublicationToSonatypeRepository \
+          publishJsPublicationToSonatypeRepository
 
 #  finalize:
 #    runs-on: ubuntu-latest
