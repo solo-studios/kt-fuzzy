@@ -59,13 +59,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Publish MinGW artifacts to solo studios
         run: |
-          ./gradlew \
-          publishMingwX64PublicationToSoloStudiosRepository
+          ./gradlew publishMingwX64PublicationToSoloStudiosRepository
       - name: Publish MinGW artifacts to Sonatype
         #        if: startsWith(github.ref, 'refs/tags') # Only publish to sonatype if tagged
         run: |
-          ./gradlew \
-          publishMingwX64PublicationToSonatypeRepository
+          ./gradlew publishMingwX64PublicationToSonatypeRepository
 
   publish-mac:
     name: Publish macOS artifacts
