@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 03:13 p.m.
+ * Last modified on 04-09-2023 03:37 p.m.
  *
  * MIT License
  *
@@ -86,9 +86,12 @@ afterEvaluate {
             maven {
                 name = "Sonatype"
 
-                val releasesUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") // releases repo
-                val snapshotUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") // snapshot repo
-                url = if (isSnapshot) snapshotUrl else releasesUrl
+                val repositoryId: String? by project
+                url = when {
+                    repositoryId != null -> uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
+                    isSnapshot           -> uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                    else                 -> uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                }
 
                 credentials(PasswordCredentials::class)
             }
