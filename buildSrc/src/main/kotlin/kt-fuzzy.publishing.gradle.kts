@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 01:29 p.m.
+ * Last modified on 04-09-2023 03:13 p.m.
  *
  * MIT License
  *
@@ -86,8 +86,7 @@ afterEvaluate {
             maven {
                 name = "Sonatype"
 
-                val releasesUrl =
-                        uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") // releases repo
+                val releasesUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") // releases repo
                 val snapshotUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") // snapshot repo
                 url = if (isSnapshot) snapshotUrl else releasesUrl
 
@@ -105,21 +104,18 @@ afterEvaluate {
                     create<BasicAuthentication>("basic")
                 }
             }
-
-            maven {
-                name = "test"
-                url = rootProject.buildDir.resolve("localmaven").toURI()
-            }
         }
     }
 
-    // tasks.withType<AbstractPublishToMaven>().configureEach {
-    //     dependsOn(tasks.withType<Sign>())
-    // }
-    //
-    // signing {
-    //     useGpgCmd()
-    //     sign(publishing.publications)
-    //     // sign(publishing.publications["maven"])
-    // }
+    signing {
+        // Allow specifying the key, key id, and password via environment variables.
+        val signingKey: String? by project
+        val signingKeyId: String? by project
+        val signingPassword: String? by project
+        if (signingKey != null && signingKeyId != null && signingPassword != null)
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        else
+            useGpgCmd()
+        sign(publishing.publications)
+    }
 }
