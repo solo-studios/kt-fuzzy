@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file QGram.kt is part of kotlin-fuzzy
- * Last modified on 02-09-2023 12:16 a.m.
+ * Last modified on 04-09-2023 06:16 p.m.
  *
  * MIT License
  *
@@ -33,8 +33,7 @@ import kotlin.math.abs
 
 /**
  * Q-gram distance, as defined by
- * Esko Ukkonen. Bo, "Approximate string-matching with q-grams and maximal matches",
- * in Theoretical Computer Science,
+ * Esko Ukkonen. Bo, "Approximate string-matching with q-grams and maximal matches", in Theoretical Computer Science,
  * vol. 92, no. 1, pp. 191-211, Elsevier BV, Jan. 1992, pp. 191–211, doi: 10.1016/0304-3975(92)90143-4.
  * <sup>[&#91;sci-hub&#93;](https://sci-hub.st/https://doi.org/10.1016/0304-3975(92)90143-4)</sup>
  * The distance between two strings is defined as
@@ -60,7 +59,7 @@ public class QGram(q: Int = DEFAULT_K) : ShingleBased(q), StringDistance {
      *
      * @param s1 The first string.
      * @param s2 The second string.
-     * @return The normalized Q-gram similarity.
+     * @return The Q-gram distance.
      * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
@@ -78,7 +77,7 @@ public class QGram(q: Int = DEFAULT_K) : ShingleBased(q), StringDistance {
      *
      * @param profile1 The profile of the first string.
      * @param profile2 The profile of the second string.
-     * @return The normalized Q-gram distance.
+     * @return The Q-gram distance.
      * @see StringDistance
      */
     public fun distance(

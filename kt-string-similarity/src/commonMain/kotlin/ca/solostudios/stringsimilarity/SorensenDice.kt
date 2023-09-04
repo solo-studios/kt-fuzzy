@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file SorensenDice.kt is part of kotlin-fuzzy
- * Last modified on 09-08-2023 11:14 p.m.
+ * Last modified on 04-09-2023 07:33 p.m.
  *
  * MIT License
  *
@@ -31,50 +31,77 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
- * Sorensen-Dice coefficient, aka Sørensen index, Dice's coefficient or
+ * Sørensen-Dice coefficient, aka Sørensen index, Dice's coefficient or
  * Czekanowski's binary (non-quantitative) index.
  *
  * The strings are first converted to boolean sets of k-shingles (sequences
- * of k characters), then the similarity is computed as 2 * |A inter B| /
- * (|A| + |B|). Attention: Sorensen-Dice distance (and similarity) does not
- * satisfy triangle inequality.
+ * of k characters), then the similarity is computed as
+ * \(\frac{2 \times \lVert V_1 \cap V_2 \rVert}{\lVert V_1 \rVert + \lVert V_2 \rVert}\)
  *
  * Similar to Jaccard index, but this time the similarity is computed as 2 * |V1
  * inter V2| / (|V1| + |V2|). Distance is computed as 1 - cosine similarity.
+ *
+ * The distance is computed as
+ * \(1 - similarity(X, Y)\).
  *
  * @author Thibault Debatty, solonovamax
  */
 public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDistance, NormalizedStringSimilarity {
     /**
-     * Similarity is computed as 2 * |A inter B| / (|A| + |B|).
+     * Computes the Sørensen-Dice similarity of two strings.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return The computed Sorensen-Dice similarity.
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Sørensen-Dice similarity.
+     * @see NormalizedStringSimilarity
      */
     override fun similarity(s1: String, s2: String): Double {
         if (s1 == s2)
-            return 0.0
-        if (s1.isEmpty() || s2.isEmpty())
             return 1.0
+        if (s1.isEmpty() || s2.isEmpty())
+            return 0.0
 
-        val profile1 = profile(s1)
-        val profile2 = profile(s2)
+        return similarity(profile(s1), profile(s2))
+    }
+
+    /**
+     * Computes the Sørensen-Dice distance of two strings.
+     *
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The normalized Sørensen-Dice distance.
+     * @see NormalizedStringDistance
+     */
+    override fun distance(s1: String, s2: String): Double {
+        return 1 - similarity(s1, s2)
+    }
+
+    /**
+     * Computes the Sørensen-Dice similarity of precomputed profiles.
+     *
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized Sørensen-Dice similarity.
+     * @see NormalizedStringSimilarity
+     */
+    public fun similarity(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        if (profile1.isEmpty() && profile2.isEmpty())
+            return 0.0 // if they're both empty, it causes problems
 
         val inter = (profile1.keys intersect profile2.keys).size
         return 2.0 * inter / (profile1.size + profile2.size)
     }
 
     /**
-     * Returns 1 - similarity.
+     * Computes the Sørensen-Dice distance of precomputed profiles.
      *
-     * @param s1 The first string to compare.
-     * @param s2 The second string to compare.
-     * @return 1.0 - the computed similarity
-     * @throws NullPointerException if s1 or s2 is null.
+     * @param profile1 The profile of the first string.
+     * @param profile2 The profile of the second string.
+     * @return The normalized Sørensen-Dice distance.
+     * @see NormalizedStringDistance
      */
-    override fun distance(s1: String, s2: String): Double {
-        return 1 - similarity(s1, s2)
+    public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
+        return 1.0 - similarity(profile1, profile2)
     }
 
     /**

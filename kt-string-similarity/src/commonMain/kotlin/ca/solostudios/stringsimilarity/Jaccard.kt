@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jaccard.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * Last modified on 04-09-2023 07:31 p.m.
  *
  * MIT License
  *
@@ -49,7 +49,6 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  * @author Thibault Debatty, solonovamax
  */
 public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k), MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-
     /**
      * Computes the Jaccard similarity of two strings.
      *

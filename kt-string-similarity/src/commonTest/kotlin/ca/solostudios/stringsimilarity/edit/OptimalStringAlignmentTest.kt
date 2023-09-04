@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file OptimalStringAlignmentTest.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 01:21 a.m.
+ * Last modified on 04-09-2023 05:57 p.m.
  *
  * MIT License
  *
@@ -34,10 +34,6 @@ import ca.solostudios.stringsimilarity.similarityTests
 import ca.solostudios.stringsimilarity.utils.FuzzyTestData
 import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Michail Bogdanos
- */
 class OptimalStringAlignmentTest : FunSpec({
     val optimalStringAlignment = OptimalStringAlignment()
 

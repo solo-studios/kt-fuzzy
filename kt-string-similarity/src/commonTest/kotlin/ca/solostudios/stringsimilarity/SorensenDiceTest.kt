@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file SorensenDiceTest.kt is part of kotlin-fuzzy
- * Last modified on 09-07-2023 06:57 p.m.
+ * Last modified on 04-09-2023 07:36 p.m.
  *
  * MIT License
  *
@@ -27,31 +27,31 @@
  */
 package ca.solostudios.stringsimilarity
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
-class SorensenDiceTest {
-    /**
-     * Test of similarity method, of class SorensenDice.
-     */
-    @Test
-    fun testSimilarity() {
-        println("similarity")
-        val instance = SorensenDice(2)
-        // AB BC CD DE DF FG
-        // 1  1  1  1  0  0
-        // 1  1  1  0  1  1
-        // => 2 x 3 / (4 + 5) = 6/9 = 0.6666
-        val result: Double = instance.similarity("ABCDE", "ABCDFG")
-        assertEquals(0.6666, result, 0.0001)
-    }
+class SorensenDiceTest : FunSpec({
+    val sorensenDice = SorensenDice()
 
-    @Test
-    fun testDistance() {
-        // val instance = SorensenDice()
-    }
-}
+    include(normalizedDistanceTests(sorensenDice))
+    include(normalizedSimilarityTests(sorensenDice))
+
+    val precomputed = listOf(
+        FuzzyTestData("My string", "My tsring", 0.42857142857142855),
+        FuzzyTestData("My string", "My ntrisg", 0.2857142857142857),
+        FuzzyTestData("ABCDE", "ABCDF", 0.6666666666666666),
+        FuzzyTestData("ABCDEF", "ABDCEF", 0.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 0.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 0.8571428571428571),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 0.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 0.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 0.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 0.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 0.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 0.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.0),
+    )
+
+    include(precomputedSimilarityTests(precomputed, sorensenDice))
+    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, sorensenDice))
+})

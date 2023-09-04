@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4.kt is part of kotlin-fuzzy
- * Last modified on 10-08-2023 05:47 p.m.
+ * Last modified on 04-09-2023 06:28 p.m.
  *
  * MIT License
  *
@@ -34,11 +34,13 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Sift4 - a general purpose string distance algorithm inspired by JaroWinkler
- * and Longest Common Subsequence.
- * Original JavaScript algorithm by siderite, java port by Nathan Fischer 2016.
- * [https://siderite.dev/blog/super-fast-and-accurate-string-distance.html]
- * [https://blackdoor.github.io/blog/sift4-java/]
+ * Sift4 distance, as defined by
+ * Manda, Costin, &#91;Siderite&#93;. "Super Fast and Accurate String Distance Algorithm: Sift4." Siderite’s Blog,
+ * 10 Nov. 2014, https://siderite.dev/blog/super-fast-and-accurate-string-distance.html.
+ *
+ * Note: this algorithm is asymmetric. This means that
+ * \(distance(X, Y) \not\equiv distance(Y, X)\).
+ * This is one of the artifacts of the linear nature of the algorithm.
  *
  * @author Thibault Debatty, solonovamax
  */
@@ -52,16 +54,12 @@ public class Sift4(
 ) : StringDistance {
 
     /**
-     * Sift4 - a general purpose string distance algorithm inspired by
-     * JaroWinkler and Longest Common Subsequence.
-     * Original JavaScript algorithm by siderite, java port by Nathan Fischer 2016.
+     * Computes the Sift4 distance of two strings.
      *
-     * [https://siderite.dev/blog/super-fast-and-accurate-string-distance.html]
-     * [https://blackdoor.github.io/blog/sift4-java/]
-     *
-     * @param s1
-     * @param s2
-     * @return
+     * @param s1 The first string.
+     * @param s2 The second string.
+     * @return The Sift4 distance.
+     * @see StringDistance
      */
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
@@ -71,11 +69,11 @@ public class Sift4(
         if (s2.isEmpty())
             return s1.length.toDouble()
 
-        var cursor1 = 0 // cursor for string 1
-        var cursor2 = 0 // cursor for string 2
-        var largestCommonSubstringLength = 0 // largest common subsequence
-        var localCommonSubstringLength = 0 // local common substring
-        var transpositionCount = 0 // number of transpositions ('ab' vs 'ba')
+        var cursor1 = 0
+        var cursor2 = 0
+        var largestCommonSubstringLength = 0
+        var localCommonSubstringLength = 0
+        var transpositionCount = 0
 
         /**
          * Used to store relation between same character in different positions

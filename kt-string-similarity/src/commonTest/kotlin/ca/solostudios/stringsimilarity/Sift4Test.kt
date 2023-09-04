@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Sift4Test.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:35 a.m.
+ * Last modified on 04-09-2023 07:36 p.m.
  *
  * MIT License
  *
@@ -28,38 +28,30 @@
 package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.annotations.ExperimentalStringMeasure
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import io.kotest.core.spec.style.FunSpec
 
-/**
- *
- * @author Thibault Debatty
- */
-class Sift4Test {
-    /**
-     * Test of distance method, of class Sift4.
-     */
-    @Test
-    @OptIn(ExperimentalStringMeasure::class)
-    fun testDistance() {
-        val sift4Offset5 = Sift4(maxOffset = 5)
-        assertEquals(
-            11.0,
-            sift4Offset5.distance(
-                "This is the first string",
-                "And this is another string",
-            ),
-            absoluteTolerance = 0.001,
-        )
+@OptIn(ExperimentalStringMeasure::class)
+class Sift4Test : FunSpec({
+    val sift4 = Sift4()
 
-        val sift4Offset10 = Sift4(maxOffset = 10)
-        assertEquals(
-            12.0,
-            sift4Offset10.distance(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "Amet Lorm ispum dolor sit amet, consetetur adixxxpiscing elit.",
-            ),
-            absoluteTolerance = 0.001,
-        )
-    }
-}
+    include(distanceTests(sift4))
+
+    val precomputed = listOf(
+        FuzzyTestData("My string", "My tsring", 1.0),
+        FuzzyTestData("My string", "My ntrisg", 2.0),
+        FuzzyTestData("ABCDE", "ABCDF", 1.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 2.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 17.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 18.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 17.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 21.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 9.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
+    )
+
+    include(precomputedDistanceTests(precomputed, sift4))
+})
