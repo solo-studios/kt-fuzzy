@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 03:37 p.m.
+ * Last modified on 04-09-2023 05:44 p.m.
  *
  * MIT License
  *
@@ -88,8 +88,8 @@ afterEvaluate {
 
                 val repositoryId: String? by project
                 url = when {
-                    repositoryId != null -> uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
                     isSnapshot           -> uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                    repositoryId != null -> uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
                     else                 -> uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 }
 
