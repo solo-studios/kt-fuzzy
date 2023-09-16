@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 07-08-2023 06:56 p.m.
+ * Last modified on 16-09-2023 04:49 p.m.
  *
  * MIT License
  *
@@ -26,6 +26,10 @@
  * SOFTWARE.
  */
 
+import ca.solostudios.dokkascript.plugin.DokkaScriptsConfiguration
+import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
+import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
+import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
 import java.time.Year
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
 import org.jetbrains.dokka.base.DokkaBase
@@ -40,7 +44,8 @@ plugins {
 }
 
 dependencies {
-    dokkaPlugin(libs.dokka.mathjax.plugin)
+    dokkaPlugin(libs.dokka.plugin.script)
+    dokkaPlugin(libs.dokka.plugin.style.tweaks)
 }
 
 tasks {
@@ -54,7 +59,16 @@ tasks {
         from(dokkaDirectories.map { it.resolve("includes") })
 
         doFirst {
-            val projectInfo = ProjectInfo(project.group.toStringOrEmpty(), project.name, project.version.toStringOrEmpty())
+            val projectInfo = ProjectInfo(
+                    group = project.group.toStringOrEmpty(),
+                    module = project.name,
+                    version = project.version.toStringOrEmpty(),
+                                         )
+
+            filter { line ->
+                line.replace("☐", "<input type=\"checkbox\" readonly>")
+                        .replace("☒", "<input type=\"checkbox\" readonly checked>")
+            }
             expand("project" to projectInfo)
         }
 
@@ -66,8 +80,27 @@ tasks {
         pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
             footerMessage = "© ${Year.now()} Copyright solo-studios"
             separateInheritedMembers = false
-            customStyleSheets = rootDokkaDirectory.resolve("styles").listFiles()?.toList() ?: listOf()
+            customStyleSheets = rootDokkaDirectory.resolve("styles").listFiles()?.toList().orEmpty()
+            customAssets = rootDokkaDirectory.resolve("assets").listFiles()?.toList().orEmpty()
             templatesDir = rootDokkaDirectory.resolve("templates")
+        }
+        pluginConfiguration<DokkaScriptsPlugin, DokkaScriptsConfiguration> {
+            scripts = rootDokkaDirectory.resolve("scripts").listFiles()?.toList().orEmpty()
+            remoteScripts = listOf(
+                    // MathJax
+                    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML&latest",
+                                  )
+        }
+        pluginConfiguration<DokkaStyleTweaksPlugin, DokkaStyleTweaksConfiguration> {
+            minimalScrollbar = true
+            darkPurpleHighlight = true
+            darkColorSchemeFix = true
+            improvedBlockquoteBorder = true
+            lighterBlockquoteText = true
+            sectionTabFontWeight = "500"
+            sectionTabTransition = true
+            improvedSectionTabBorder = true
+            disableCodeWrapping = true
         }
 
         moduleName = project.name

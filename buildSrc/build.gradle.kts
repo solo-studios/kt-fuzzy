@@ -3,7 +3,7 @@
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 08-08-2023 11:01 p.m.
+ * Last modified on 16-09-2023 04:38 p.m.
  *
  * MIT License
  *
@@ -34,6 +34,10 @@ repositories {
     mavenCentral()
     // for kotlin-dsl plugin
     gradlePluginPortal()
+
+    maven("https://maven.solo-studios.ca/releases/") {
+        name = "Solo Studios"
+    }
 }
 
 java {
@@ -55,6 +59,9 @@ kotlin {
 
 dependencies {
     implementation(libs.dokka.base)
+
+    implementation(libs.dokka.plugin.script)
+    implementation(libs.dokka.plugin.style.tweaks)
 
     implementation(gradlePlugin(libs.plugins.kotest.multiplatform, libs.versions.kotest))
 
