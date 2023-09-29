@@ -68,6 +68,8 @@ tasks {
             filter { line ->
                 line.replace("☐", "<input type=\"checkbox\" readonly>")
                         .replace("☒", "<input type=\"checkbox\" readonly checked>")
+                        .replace("\\[@ft-(\\w+)\\]".toRegex(), "<sup><a href=\"#footnote-\$1\">&#91;\$1&#93;</a></sup>")
+                        .replace("\\[@ref-(\\d+)\\]".toRegex(), "<sup><a href=\"#reference-\$1\">&#91;\$1&#93;</a></sup>")
             }
             expand("project" to projectInfo)
         }
@@ -101,6 +103,7 @@ tasks {
             sectionTabTransition = true
             improvedSectionTabBorder = true
             disableCodeWrapping = true
+            sidebarWidth = "340px"
         }
 
         moduleName = project.name

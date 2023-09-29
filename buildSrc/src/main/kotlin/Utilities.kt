@@ -68,9 +68,9 @@ data class Repository(
 }
 
 var Project.repository: Repository
-    get() = project.extra["repo"] as Repository
+    get() = rootProject.extra["repo"] as Repository
     set(value) {
-        project.extra["repo"] = value
+        rootProject.extra["repo"] = value
     }
 
 /**

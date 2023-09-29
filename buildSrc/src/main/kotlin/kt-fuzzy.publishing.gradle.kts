@@ -38,8 +38,8 @@ afterEvaluate {
             val projectGroup = project.group.toStringOrEmpty()
             val projectVersion = project.version.toStringOrEmpty()
             val projectDescription = project.description.toStringOrEmpty()
-            val projectUrl = rootProject.repository.projectUrl
-            val projectBaseUri = rootProject.repository.projectBaseUri
+            val projectUrl = project.repository.projectUrl
+            val projectBaseUri = project.repository.projectBaseUri
 
             val licenseName = "MIT"
             val licenseUrl = "https://mit-license.org/"

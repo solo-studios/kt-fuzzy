@@ -26,6 +26,54 @@
  * SOFTWARE.
  */
 
+/* Footnotes & References */
+.footnotes-header, .references-header {
+    margin-bottom: 0;
+    font-size: 24px;
+}
+
+.references-header {
+    margin-top: 0;
+}
+
+.footnotes, .references {
+    padding: 0 16px 0 16px;
+    border-top: 1px solid var(--border-color);
+    line-height: 1.2;
+}
+
+.footnotes {
+    font-size: 13px;
+    color: color-mix(in hsl, var(--default-font-color) 80%, var(--background-color));
+}
+
+.references {
+    font-size: 16px;
+}
+
+.footnotes li, .references li {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.footnotes > ol, .references > ol {
+    counter-reset: list;
+}
+
+.footnotes > ol > li, .references > ol > li {
+    list-style: none;
+    counter-increment: list;
+}
+
+.footnotes > ol > li::marker {
+    content: "[" counter(list, lower-alpha) "]\a0";
+}
+
+.references > ol > li::marker {
+    content: "[" counter(list) "]\a0";
+}
+
+/* Disable checkboxes */
 input[type='checkbox'][readonly] {
     pointer-events: none;
 }

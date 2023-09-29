@@ -42,7 +42,7 @@ dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref =
 dokka-mathjax-plugin = { group = "org.jetbrains.dokka", name = "mathjax-plugin", version.ref = "dokka" }
 
 dokka-plugin-script = { group = "ca.solo-studios", name = "dokka-script-plugin", version = "0.1.1" }
-dokka-plugin-style-tweaks = { group = "ca.solo-studios", name = "dokka-style-tweaks-plugin", version = "0.1.2" }
+dokka-plugin-style-tweaks = { group = "ca.solo-studios", name = "dokka-style-tweaks-plugin", version = "1.1.0" }
 
 ## Kotest
 ### A flexible and elegant multi-platform test framework for Kotlin
