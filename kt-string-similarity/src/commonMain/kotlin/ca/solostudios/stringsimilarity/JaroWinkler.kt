@@ -35,6 +35,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
+ * Implements the Jaro-Winkler distance (Winkler, 1990) between strings.
+ *
  * The Jaro–Winkler distance is designed and best suited for short
  * strings such as person names, and to detect typos; it is (roughly) a
  * variation of Damerau-Levenshtein, where the substitution of 2 close
@@ -46,6 +48,11 @@ import kotlin.math.min
  *
  * The distance is computed as
  * \(1 - similarity(X, Y)\).
+ *
+ * #### References
+ * Winkler, W. E. (1990). String comparator metrics and enhanced decision rules
+ * in the fellegi-sunter model of record linkage. *Proceedings of the Survey
+ * Research Methods Section*, 354-359. <https://eric.ed.gov/?id=ED325505>
  *
  * @param threshold The threshold value used for adding the Winkler bonus.
  *

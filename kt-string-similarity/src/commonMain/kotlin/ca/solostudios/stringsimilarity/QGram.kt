@@ -32,10 +32,8 @@ import ca.solostudios.stringsimilarity.interfaces.StringDistance
 import kotlin.math.abs
 
 /**
- * Q-gram distance, as defined by
- * Esko Ukkonen. Bo, "Approximate string-matching with q-grams and maximal matches", in Theoretical Computer Science,
- * vol. 92, no. 1, pp. 191-211, Elsevier BV, Jan. 1992, pp. 191–211, doi: 10.1016/0304-3975(92)90143-4.
- * <sup>[&#91;sci-hub&#93;](https://sci-hub.st/https://doi.org/10.1016/0304-3975(92)90143-4)</sup>
+ * Implements the Q-gram distance (Ukkonen, 1992) between strings.
+ *
  * The distance between two strings is defined as
  * the number of occurrences of different q-grams in each string:
  * \(\sum_{i=1}^n \lVert \vec{v1_i} - \vec{v2_i} \rVert\).
@@ -47,9 +45,14 @@ import kotlin.math.abs
  * resulting in \(distance(X, Y) = 0\) where \(X \neq Y\).
  * However, it does respect the other 3 axioms.
  *
+ * #### References
+ * Ukkonen, E. (1992-01). Approximate string matching with q-grams and maximal
+ * matches. *Theoretical Computer Science*, *92*(1), 191–211.
+ * <https://doi.org/10.1016/0304-3975(92)90143-4><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1016/0304-3975(92)90143-4)</sup>
+ *
  * @param q The length of each q-gram.
  *
- * @throws IllegalArgumentException if \(k \leqslant 0\)
+ * @throws IllegalArgumentException if \(q \leqslant 0\)
  *
  * @author Thibault Debatty, solonovamax
  */

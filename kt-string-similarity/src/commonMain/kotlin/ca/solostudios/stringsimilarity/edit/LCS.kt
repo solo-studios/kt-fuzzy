@@ -35,7 +35,7 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import kotlin.math.min
 
 /**
- * The Longest Common Subsequence (LCS) problem consists in finding the longest
+ * Implements the Longest Common Subsequence (LCS) problem consists in finding the longest
  * subsequence common to two (or more) sequences. It differs from problems of
  * finding common substrings: unlike substrings, subsequences are not required
  * to occupy consecutive positions within the original sequences.

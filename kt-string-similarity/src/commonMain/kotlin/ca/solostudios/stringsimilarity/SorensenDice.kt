@@ -31,8 +31,8 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
- * Sørensen-Dice coefficient, aka Sørensen index, Dice's coefficient or
- * Czekanowski's binary (non-quantitative) index.
+ * Implements the Sørensen-Dice coefficient, also known as Sørensen index (Sørensen, 1948), Dice's coefficient, or
+ * Czekanowski's binary (non-quantitative) index between strings.
  *
  * The strings are first converted to boolean sets of k-shingles (sequences
  * of k characters), then the similarity is computed as
@@ -43,6 +43,12 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  *
  * The distance is computed as
  * \(1 - similarity(X, Y)\).
+ *
+ * #### References
+ * Sørensen, T. J. (1948). A method of establishing group of equal amplitude in plant
+ * sociobiology based on similarity of species content and its application to
+ * analyses of the vegetation on danish commons.
+ * *Kongelige Danske Videnskabernes Selskab.*
  *
  * @author Thibault Debatty, solonovamax
  */

@@ -32,6 +32,8 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
+ * Implements the Jaccard index, also known as the Jaccard similarity coefficient (Jaccard, 1912).
+ *
  * Each input string is converted into a set of n-grams, the Jaccard index is
  * then computed as \(\frac{\lVert V_1 \cap V_2 \rVert}{\lVert V_1 \cup V_2 \rVert}\).
  * Like Q-Gram distance, the input strings \(X\) and \(Y\) are first converted into sets of
@@ -40,6 +42,11 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  *
  * The distance is computed as
  * \(1 - similarity(X, Y)\).
+ *
+ * #### References
+ * Jaccard, P. (1912-02). The distribution of the flora in the alpine zone.
+ * *New Phytologist*, *11*(2), 37–50.
+ * <https://doi.org/10.1111/j.1469-8137.1912.tb05611.x><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1111/j.1469-8137.1912.tb05611.x)</sup>
  *
  * @see MetricStringDistance
  * @see NormalizedStringDistance

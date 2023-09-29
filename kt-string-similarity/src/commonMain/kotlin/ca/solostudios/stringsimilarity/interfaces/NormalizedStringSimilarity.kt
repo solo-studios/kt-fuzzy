@@ -35,16 +35,25 @@ package ca.solostudios.stringsimilarity.interfaces
  * - `1` indicates that both strings are equivalent. Equivalent strings are not necessarily identical.
  * - If two strings are identical, then it should always return `1`.
  *
- * As stated in
- * [Computation of Normalized Edit Distance and Applications](https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf)
- * <sup>[&#91;archive.org&#93;](https://web.archive.org/web/20220303061601/https://www.csie.ntu.edu.tw/~b93076/Computation%20of%20Normalized%20Edit%20Distance%20and%20Applications.pdf)</sup>,
+ * The normalized similarity of any normalized string measure can always be computed as is computed as
+ * \(1 - distance(X, Y)\).
  *
+ * As stated in "Computation of Normalized Edit Distance and Applications",
  * > Given two strings \(x\) and \(y\) over a finite alphabet,
  * > the normalized edit distance between \(x\) and \(y\), \(d(x,y)\)
  * > is defined as the minimum of \(W(p)/L(p)\),
  * > here \(p\) is an editing path between \(x\) and \(y\), \(W(p)\)
  * > is the sum of the weights of the elementary edit operations of \(p\),
  * > and \(L(p)\) is the number of these operations (length of \(p\)).
+ * > (Marzal & Vidal, 1993)
+ *
+ * #### References
+ * Marzal, A., & Vidal, E. (1993-09). Computation of normalized edit distance and
+ * applications. *IEEE Transactions on Pattern Analysis and Machine Intelligence*,
+ * *15*(9), 926–932.
+ * <https://doi.org/10.1109/34.232078><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1109/34.232078)</sup>
+ *
+ * @see NormalizedStringDistance
  *
  * @author Thibault Debatty, solonovamax
  */

@@ -45,6 +45,11 @@ package ca.solostudios.stringsimilarity
  * documents like e-mails, \(k = 5\) is a recommended value. For large documents,
  * such as research articles, \(k = 9\) is considered a safe choice.
  *
+ * #### References
+ * Ukkonen, E. (1992-01). Approximate string matching with q-grams and maximal
+ * matches. *Theoretical Computer Science*, *92*(1), 191–211.
+ * <https://doi.org/10.1016/0304-3975(92)90143-4><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1016/0304-3975(92)90143-4)</sup>
+ *
  * @param k The length of k-shingles.
  *
  * @throws IllegalArgumentException if \(k \leqslant 0\)
@@ -57,12 +62,12 @@ public abstract class ShingleBased(public val k: Int = DEFAULT_K) {
     }
 
     /**
-     * Compute and return the profile of s, as defined by Ukkonen "Approximate
-     * string-matching with q-grams and maximal matches".
-     * https://www.cs.helsinki.fi/u/ukkonen/TCS92.pdf The profile is the number
+     * Compute and return the profile of s, as defined by Ukkonen (Ukkonen 1992).
+     * The profile is the number
      * of occurrences of k-shingles, and is used to compute q-gram similarity,
-     * Jaccard index, etc. Pay attention: the memory requirement of the profile
-     * can be up to k * size of the string
+     * Jaccard index, etc.
+     * Pay attention: the memory requirement of the profile
+     * can be up to \(k \times \text{size of the string}\)
      *
      * @param string
      * @return the profile of this string, as an unmodifiable Map

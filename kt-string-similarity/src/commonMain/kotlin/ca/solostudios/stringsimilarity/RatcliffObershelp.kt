@@ -31,7 +31,7 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 
 /**
- * Implements Ratcliff/Obershelp pattern recognition, also known as Gestalt pattern matching,
+ * Implements Ratcliff/Obershelp pattern recognition (Ratcliff & Metzener, 1988), also known as Gestalt pattern matching,
  * similarity between strings.
  *
  * The similarity is defined as
@@ -40,6 +40,11 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  *
  * The distance is computed as
  * \(1 - similarity(X, Y)\).
+ *
+ * #### References
+ * Ratcliff, J., & Metzener, D. E. (1988-07-01). Pattern matching: The gestalt ap-
+ * proach. *Dr. Dobb’s Journal*, *13*(7), 46. https://www.drdobbs.com/database/
+ * pattern-matching-the-gestalt-approach/184407970?pgno=5
  *
  * @author [Ligi](https://github.com/dxpux), solonovamax, Ported to java from .net by denmase
  */

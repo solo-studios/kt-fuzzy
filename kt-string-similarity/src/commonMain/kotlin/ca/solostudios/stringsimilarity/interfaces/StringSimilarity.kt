@@ -35,6 +35,8 @@ package ca.solostudios.stringsimilarity.interfaces
  * - `0` indicates that neither string have anything in common.
  * - If two strings are identical and non-empty, then it should never return `0`.
  *
+ * @see StringDistance
+ *
  * @author Thibault Debatty, solonovamax
  */
 public interface StringSimilarity {

@@ -32,7 +32,7 @@ package ca.solostudios.stringsimilarity.interfaces
  * String edit measure returns a similarity or distance,
  * relative to the number of edits that must be performed to a string.
  *
- * The similarity is computed as
+ * The similarity between strings \(X\) and \(Y\) is:
  * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
  *
  * @see MetricStringDistance

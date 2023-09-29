@@ -35,8 +35,8 @@ import ca.solostudios.stringsimilarity.util.min
 import kotlin.math.min
 
 /**
- * Implementation of Damerau-Levenshtein distance with transposition (also
- * sometimes calls unrestricted Damerau-Levenshtein distance).
+ * Implements the Damerau-Levenshtein distance (Damerau, 1964) with transposition
+ * (also sometimes calls unrestricted Damerau-Levenshtein distance).
  * It is the minimum number of operations needed to transform one string into
  * the other, where an operation is defined as an insertion, deletion, or
  * substitution of a single character, or a transposition of two adjacent
@@ -51,6 +51,11 @@ import kotlin.math.min
  *
  * **Note: Because this class currently implements the dynamic programming approach,
  * it has a space requirement \(O(m \times n)\)**
+ *
+ * #### References
+ * Damerau, F. J. (1964-03). A technique for computer detection and correction of
+ * spelling errors. *Communications of the ACM*, *7*(3), 171-176.
+ * <https://doi.org/10.1145/363958.363994><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1145/363958.363994)</sup>
  *
  * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).

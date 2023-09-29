@@ -35,7 +35,7 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 import ca.solostudios.stringsimilarity.util.min
 
 /**
- * The Levenshtein distance, or edit distance, between two words is the
+ * Implements the Levenshtein distance (Levenshtein, 1966), or edit distance, between two words is the
  * minimum number of single-character edits (insertions, deletions, or
  * substitutions) required to change one word into the other.
  *
@@ -55,6 +55,10 @@ import ca.solostudios.stringsimilarity.util.min
  *
  * **Note: Because this class currently implements the dynamic programming approach,
  * it has a space requirement \(O(m \times n)\)**
+ *
+ * #### References
+ * Levenshtein, V. I. (1966-02). Binary codes capable of correcting deletions,
+ * insertions and reversals. *Soviet Physics Doklady*, *10*, 707-710.
  *
  * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).

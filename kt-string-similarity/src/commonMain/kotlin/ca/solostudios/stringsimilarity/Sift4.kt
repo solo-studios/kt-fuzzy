@@ -34,13 +34,15 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Sift4 distance, as defined by
- * Manda, Costin, &#91;Siderite&#93;. "Super Fast and Accurate String Distance Algorithm: Sift4." Siderite’s Blog,
- * 10 Nov. 2014, https://siderite.dev/blog/super-fast-and-accurate-string-distance.html.
+ * Implements the Sift4 distance (Siderite, 2014) between strings.
  *
  * Note: this algorithm is asymmetric. This means that
  * \(distance(X, Y) \not\equiv distance(Y, X)\).
  * This is one of the artifacts of the linear nature of the algorithm.
+ *
+ * #### References
+ * Costin &#91;Siderite&#93;, M. (2014-11-10). Super fast and accurate string distance
+ * algorithm: Sift4. <https://siderite.dev/blog/super-fast-and-accurate-string-distance.html>
  *
  * @author Thibault Debatty, solonovamax
  */

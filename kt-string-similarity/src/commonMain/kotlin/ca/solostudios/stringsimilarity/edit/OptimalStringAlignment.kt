@@ -35,8 +35,8 @@ import ca.solostudios.stringsimilarity.util.min
 import kotlin.math.min
 
 /**
- * Implementation of the the Optimal String Alignment (sometimes called the
- * restricted edit distance) variant of the Damerau-Levenshtein distance.
+ * Implements the Optimal String Alignment algorithm, sometimes called the
+ * restricted edit distance variant of the Damerau-Levenshtein distance (Damerau, 1964).
  *
  * The difference between the two algorithms consists in that the Optimal String
  * Alignment algorithm computes the number of edit operations needed to make the
@@ -50,6 +50,11 @@ import kotlin.math.min
  *
  * The similarity is computed as
  * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
+ *
+ * #### References
+ * Damerau, F. J. (1964-03). A technique for computer detection and correction of
+ * spelling errors. *Communications of the ACM*, *7*(3), 171-176.
+ * <https://doi.org/10.1145/363958.363994><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1145/363958.363994)</sup>
  *
  * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).

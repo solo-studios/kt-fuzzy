@@ -32,9 +32,17 @@ package ca.solostudios.stringsimilarity.interfaces
  * Normalized string edit measure returns a similarity or distance,
  * relative to the number of edits that must be performed to a string,
  * which is then normalized according to the function.
+ * It is normalized according to "A normalized levenshtein distance metric."
+ * (Yujian & Bo, 2007)
  *
- * The normalized edit distance between Strings \(X\) and \(Y\) is:
- * \(\frac{2 \times distance_{edit}(X, Y)}{w_d \lvert X \rvert + w_i \lvert Y \rvert + distance_{levenshtein}(X, Y)}\).
+ * The normalized edit distance between strings \(X\) and \(Y\) is:
+ * \(\frac{2 \times distance(X, Y)}{w_d \lvert X \rvert + w_i \lvert Y \rvert + distance(X, Y)}\).
+ *
+ * #### References
+ * Yujian, L., & Bo, L. (2007-06). A normalized levenshtein distance metric.
+ * IEEE Transactions on Pattern Analysis and Machine Intelligence, 29(6),
+ * 1091-1095.
+ * <https://doi.org/10.1109/tpami.2007.1078><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1109/tpami.2007.1078)</sup>
  *
  * @see StringEditMeasure
  * @see NormalizedStringSimilarity

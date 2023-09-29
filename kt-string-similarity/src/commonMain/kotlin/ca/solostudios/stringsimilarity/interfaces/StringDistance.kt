@@ -34,6 +34,8 @@ package ca.solostudios.stringsimilarity.interfaces
  * - `0` indicates that both strings are *equivalent*. Equivalent strings are not necessarily identical.
  * - If two strings are identical, then it should always return `0`.
  *
+ * @see StringSimilarity
+ *
  * @author Thibault Debatty, solonovamax
  */
 public interface StringDistance {

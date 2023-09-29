@@ -36,11 +36,8 @@ import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 
 /**
- * A normalized metric based the [Levenshtein] distance, as defined by
- * L. Yujian and L. Bo, "A Normalized Levenshtein Distance Metric",
- * in IEEE Transactions on Pattern Analysis and Machine Intelligence,
- * vol. 29, no. 6, pp. 1091-1095, June 2007, doi: 10.1109/TPAMI.2007.1078.
- * <sup>[&#91;sci-hub&#93;](https://sci-hub.st/https://ieeexplore.ieee.org/document/4160958)</sup>
+ * Implements a normalized metric based the [Levenshtein]
+ * distance (Yujian & Bo, 2007).
  *
  * The normalized Levenshtein distance between Strings \(X\) and \(Y\) is:
  * \(\frac{2 \times distance_{levenshtein}(X, Y)}{w_d \lvert X \rvert + w_i \lvert Y \rvert + distance_{levenshtein}(X, Y)}\).
@@ -51,6 +48,13 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
  * **Note: Because this class uses [Levenshtein] internally,
  * which implements the dynamic programming approach,
  * it has a space requirement \(O(m \times n)\)**
+ *
+ *
+ * #### References
+ * Yujian, L., & Bo, L. (2007-06). A normalized levenshtein distance metric.
+ * IEEE Transactions on Pattern Analysis and Machine Intelligence, 29(6),
+ * 1091-1095.
+ * <https://doi.org/10.1109/tpami.2007.1078><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1109/tpami.2007.1078)</sup>
  *
  * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).

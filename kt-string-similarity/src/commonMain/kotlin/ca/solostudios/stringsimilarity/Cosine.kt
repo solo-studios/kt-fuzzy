@@ -33,10 +33,11 @@ import ca.solostudios.stringsimilarity.util.minMaxOf
 import kotlin.math.sqrt
 
 /**
- * Implements Soft Cosine Similarity between strings. The strings are first
- * transformed in vectors of occurrences of k-shingles (sequences of k
- * characters). In this n-dimensional space, the similarity between the two
- * strings is the Cosine of their respective vectors.
+ * Implements Soft Cosine Similarity between strings.
+ *
+ * The strings are first transformed in vectors of occurrences of k-shingles
+ * (sequences of k characters). In this n-dimensional space, the similarity
+ * between the two strings is the Cosine of their respective vectors.
  *
  * The Cosine similarity between strings \(X\) and \(Y\) is
  * the Cosine of the angle between the two strings as vectors. It is computed as:

@@ -35,15 +35,20 @@ import ca.solostudios.stringsimilarity.util.min
 import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
- * N-Gram Similarity as defined by Kondrak, "N-Gram Similarity and Distance",
- * String Processing and Information Retrieval, Lecture Notes in Computer
- * Science Volume 3772, 2005, pp 115-126.
+ * Implements the N-Gram Similarity (Kondrak, 2005) between strings.
  *
- * The algorithm uses affixing with special character '\0' to increase the
+ * The algorithm uses affixing with special character `'\0'` to increase the
  * weight of first characters. The normalization is achieved by dividing the
  * total similarity score the original length of the longest word.
  *
- * [N-Gram Similarity and Distance](http://webdocs.cs.ualberta.ca/~kondrak/papers/spire05.pdf)
+ * The similarity is computed as
+ * \(1 - distance(X, Y)\).
+ *
+ * #### References
+ * Kondrak, G. (2005-11-02). N-gram similarity and distance. In String processing
+ * and information retrieval, lecture notes in computer science (Pages 115-126).
+ * Springer Berlin Heidelberg.
+ * <https://doi.org/10.1007/11575832_13><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1007/11575832_13)</sup>
  *
  * @see NormalizedStringDistance
  * @see NormalizedStringSimilarity

@@ -48,13 +48,17 @@ package ca.solostudios.stringsimilarity.interfaces
  *      equal to or less than the sum of the lengths of the other two sides.
  *      (eg. \(d(x, z) \leqslant d(x, y) + d(y, z)\))
  *    - > This is a natural property of both physical and metaphorical notions of distance:
- *      you can arrive at z from x by taking a detour through y,
- *      but this will not make your journey any faster than the shortest path.
+ *      > you can arrive at z from x by taking a detour through y,
+ *      > but this will not make your journey any faster than the shortest path.
+ *      > ("Metric space", 2023)
  *
- *      [Wikipedia](https://en.wikipedia.org/wiki/Metric_space#Definition)
- *      <sup>[&#91;archive.org&#93;](https://web.archive.org/web/20230709193203/https://en.wikipedia.org/wiki/Metric_space#Definition)</sup>
  *
  * Where \(d(x, y)\) is the distance between the strings \(x\) and \(y\).
+ *
+ * #### References
+ * Wikipedia contributors. (2023-09-19). Metric space — Wikipedia, the free encyclopedia.
+ * Retrieved 2023-09-29, from
+ * <https://en.wikipedia.org/wiki/Metric_space#Definition><sup>[&#91;archive.org&#93;](https://web.archive.org/web/20230709193203/https://en.wikipedia.org/wiki/Metric_space#Definition)</sup>
  *
  * @author Thibault Debatty, solonovamax
  */
