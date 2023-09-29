@@ -82,7 +82,12 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDista
      * @see NormalizedStringDistance
      */
     override fun distance(s1: String, s2: String): Double {
-        return 1.0 - similarity(s1, s2)
+        if (s1 == s2)
+            return 0.0
+        if (s1.length < k || s2.length < k)
+            return 1.0
+
+        return distance(profile(s1), profile(s2))
     }
 
     /**

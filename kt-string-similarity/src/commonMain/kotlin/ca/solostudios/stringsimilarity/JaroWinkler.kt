@@ -110,52 +110,52 @@ public class JaroWinkler(
         return 1.0 - similarity(s1, s2)
     }
 
-    private fun matches(s1: String, s2: String): Matches {
-        val (shortest, longest) = minMaxByLength(s1, s2)
-        val searchRange = max(longest.length / 2 - 1, 0)
-        val matchIndexes = IntArray(shortest.length) { -1 }
-
-        val matchFlags = BooleanArray(longest.length)
-
-        val matches = shortest.mapIndexedNotNull { index, char ->
-            val low = max(index - searchRange, 0)
-            val high = min(index + searchRange + 1, longest.length)
-            val matchIndex = (low until high).firstOrNull { i ->
-                !matchFlags[i] && char == longest[i]
-            }
-            if (matchIndex != null) {
-                matchIndexes[index] = matchIndex
-                matchFlags[matchIndex] = true
-                char
-            } else {
-                null
-            }
-        }.size
-
-        val ms1 = shortest.filterIndexed { i, _ -> matchIndexes[i] != -1 }.toCharArray()
-        val ms2 = longest.filterIndexed { i, _ -> matchFlags[i] }.toCharArray()
-
-        // val transpositions = ms1.zip(ms2).count { (c1, c2) -> c1 != c2 } / 2
-        var transpositions = 0
-        ms1.forEachIndexed { i, c1 ->
-            if (c1 != ms2[i])
-                transpositions++
-        }
-
-        val commonPrefixLength = shortest.commonPrefixWith(longest).length
-
-        return Matches(matches, transpositions / 2, commonPrefixLength, longest.length)
-    }
-
-    private data class Matches(
-        val matches: Int,
-        val transpositions: Int,
-        val commonPrefixLength: Int,
-        val longestLength: Int,
-    )
-
     private companion object {
         private const val DEFAULT_THRESHOLD = 0.7
         private const val JW_COEFFICIENT = 0.1
+
+        private data class Matches(
+            val matches: Int,
+            val transpositions: Int,
+            val commonPrefixLength: Int,
+            val longestLength: Int,
+        )
+
+        private fun matches(s1: String, s2: String): Matches {
+            val (shortest, longest) = minMaxByLength(s1, s2)
+            val searchRange = max(longest.length / 2 - 1, 0)
+            val matchIndexes = IntArray(shortest.length) { -1 }
+
+            val matchFlags = BooleanArray(longest.length)
+
+            val matches = shortest.mapIndexedNotNull { index, char ->
+                val low = max(index - searchRange, 0)
+                val high = min(index + searchRange + 1, longest.length)
+                val matchIndex = (low until high).firstOrNull { i ->
+                    !matchFlags[i] && char == longest[i]
+                }
+                if (matchIndex != null) {
+                    matchIndexes[index] = matchIndex
+                    matchFlags[matchIndex] = true
+                    char
+                } else {
+                    null
+                }
+            }.size
+
+            val ms1 = shortest.filterIndexed { i, _ -> matchIndexes[i] != -1 }.toCharArray()
+            val ms2 = longest.filterIndexed { i, _ -> matchFlags[i] }.toCharArray()
+
+            // val transpositions = ms1.zip(ms2).count { (c1, c2) -> c1 != c2 } / 2
+            var transpositions = 0
+            ms1.forEachIndexed { i, c1 ->
+                if (c1 != ms2[i])
+                    transpositions++
+            }
+
+            val commonPrefixLength = shortest.commonPrefixWith(longest).length
+
+            return Matches(matches, transpositions / 2, commonPrefixLength, longest.length)
+        }
     }
 }
