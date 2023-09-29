@@ -87,13 +87,4 @@ public class LCS(
             }
         }
     }
-
-    /**
-     * Default LCS instance
-     */
-    public companion object : MetricStringDistance, StringDistance, StringSimilarity {
-        private val defaultMeasure = LCS()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
 }

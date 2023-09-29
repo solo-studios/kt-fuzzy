@@ -150,15 +150,7 @@ public class NGram(public val n: Int = DEFAULT_N) : NormalizedStringDistance, No
         return 1.0 - distance(s1, s2)
     }
 
-    /**
-     * Default NGram instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = NGram()
-
+    private companion object {
         private const val DEFAULT_N = 2
-
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

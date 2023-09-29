@@ -116,13 +116,4 @@ public class Jaccard(k: Int = DEFAULT_K) : ShingleBased(k), MetricStringDistance
     public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
         return 1.0 - similarity(profile1, profile2)
     }
-
-    /**
-     * Default Jaccard instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity, MetricStringDistance {
-        private val defaultMeasure = Jaccard()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
 }

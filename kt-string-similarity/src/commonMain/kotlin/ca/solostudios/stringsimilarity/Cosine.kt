@@ -109,13 +109,7 @@ public class Cosine(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStringDista
         return 1.0 - similarity(profile1, profile2)
     }
 
-    /**
-     * Default Cosine instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = Cosine()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
+    private companion object {
 
         /**
          * Computes the \(L^2\) norm.

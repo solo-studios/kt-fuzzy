@@ -70,17 +70,4 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 public class NormalizedLCS(
     insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractNormalizedStringEditMeasure(
-    editMeasure = LCS(),
-    insertionWeight = insertionWeight,
-    deletionWeight = deletionWeight,
-) {
-    /**
-     * Default Normalized LCS instance
-     */
-    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = NormalizedLCS()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
-}
+) : AbstractNormalizedStringEditMeasure(LCS(insertionWeight, deletionWeight))

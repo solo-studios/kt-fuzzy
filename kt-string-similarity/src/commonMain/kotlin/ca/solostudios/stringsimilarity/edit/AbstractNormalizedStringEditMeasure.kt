@@ -38,11 +38,12 @@ import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
  */
 public abstract class AbstractNormalizedStringEditMeasure(
     public val editMeasure: StringEditMeasure,
-    public final override val insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    public final override val deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    public final override val substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    public final override val transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
 ) : NormalizedStringEditMeasure {
+    public final override val insertionWeight: Double by editMeasure::insertionWeight
+    public final override val deletionWeight: Double by editMeasure::deletionWeight
+    public final override val substitutionWeight: Double by editMeasure::substitutionWeight
+    public final override val transpositionWeight: Double by editMeasure::transpositionWeight
+
     final override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
             return 0.0

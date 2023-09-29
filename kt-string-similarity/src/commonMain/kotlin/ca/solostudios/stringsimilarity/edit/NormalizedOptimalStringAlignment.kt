@@ -74,19 +74,4 @@ public class NormalizedOptimalStringAlignment(
     deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractNormalizedStringEditMeasure(
-    OptimalStringAlignment(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight),
-    insertionWeight,
-    deletionWeight,
-    substitutionWeight,
-    transpositionWeight
-) {
-    /**
-     * Default Normalized Optimal String Alignment instance
-     */
-    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = NormalizedOptimalStringAlignment()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
-}
+) : AbstractNormalizedStringEditMeasure(OptimalStringAlignment(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight))

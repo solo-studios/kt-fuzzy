@@ -72,18 +72,4 @@ public class NormalizedLevenshtein(
     insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractNormalizedStringEditMeasure(
-    editMeasure = Levenshtein(),
-    insertionWeight = insertionWeight,
-    deletionWeight = deletionWeight,
-    substitutionWeight = substitutionWeight,
-) {
-    /**
-     * Default Normalized Levenshtein instance
-     */
-    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = NormalizedLevenshtein()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
-}
+) : AbstractNormalizedStringEditMeasure(Levenshtein(insertionWeight, deletionWeight, substitutionWeight))

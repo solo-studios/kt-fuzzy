@@ -159,15 +159,7 @@ public class Sift4(
         return (max(s1.length, s2.length) - largestCommonSubstringLength + transpositionCount).toDouble()
     }
 
-    /**
-     * Default Sift4 dice instance
-     */
-    @ExperimentalStringMeasure
-    public companion object : StringDistance {
-        private val defaultMeasure = Sift4()
-
+    private companion object {
         private const val DEFAULT_MAX_OFFSET = 10
-
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
     }
 }

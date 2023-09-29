@@ -154,16 +154,8 @@ public class JaroWinkler(
         val longestLength: Int,
     )
 
-    /**
-     * Default Jaro-Winkler instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = JaroWinkler()
-
+    private companion object {
         private const val DEFAULT_THRESHOLD = 0.7
         private const val JW_COEFFICIENT = 0.1
-
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
     }
 }

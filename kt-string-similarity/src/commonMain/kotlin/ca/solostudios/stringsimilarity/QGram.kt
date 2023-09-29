@@ -97,12 +97,4 @@ public class QGram(q: Int = DEFAULT_K) : ShingleBased(q), StringDistance {
         }
         return agg.toDouble()
     }
-
-    /**
-     * Default QGram instance
-     */
-    public companion object : StringDistance {
-        private val defaultMeasure = QGram()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-    }
 }

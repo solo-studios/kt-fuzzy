@@ -79,15 +79,7 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
         return 1.0 - similarity(s1, s2)
     }
 
-    /**
-     * Default Ratcliff-Obershelp instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = RatcliffObershelp()
-
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-
+    private companion object {
         private fun getMatchCount(s1: String, s2: String): Int {
             val anchor = findAnchor(s1, s2)
             return when {

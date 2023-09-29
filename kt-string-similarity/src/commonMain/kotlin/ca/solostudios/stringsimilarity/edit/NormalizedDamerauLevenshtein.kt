@@ -74,19 +74,4 @@ public class NormalizedDamerauLevenshtein(
     deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
     transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractNormalizedStringEditMeasure(
-    DamerauLevenshtein(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight),
-    insertionWeight,
-    deletionWeight,
-    substitutionWeight,
-    transpositionWeight
-) {
-    /**
-     * Default Normalized Damerau-Levenshtein instance
-     */
-    public companion object : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = NormalizedDamerauLevenshtein()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
-}
+) : AbstractNormalizedStringEditMeasure(DamerauLevenshtein(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight))

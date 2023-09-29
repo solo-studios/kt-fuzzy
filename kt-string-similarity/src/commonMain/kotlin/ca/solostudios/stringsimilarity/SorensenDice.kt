@@ -109,13 +109,4 @@ public class SorensenDice(k: Int = DEFAULT_K) : ShingleBased(k), NormalizedStrin
     public fun distance(profile1: Map<String, Int>, profile2: Map<String, Int>): Double {
         return 1.0 - similarity(profile1, profile2)
     }
-
-    /**
-     * Default Sorensen Dice instance
-     */
-    public companion object : NormalizedStringDistance, NormalizedStringSimilarity {
-        private val defaultMeasure = SorensenDice()
-        override fun distance(s1: String, s2: String): Double = defaultMeasure.distance(s1, s2)
-        override fun similarity(s1: String, s2: String): Double = defaultMeasure.similarity(s1, s2)
-    }
 }
