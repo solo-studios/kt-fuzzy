@@ -30,5 +30,6 @@ rootProject.name = "kotlin-fuzzy"
 
 include("kt-string-similarity")
 include("kt-fuzzy")
+include("common-test")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

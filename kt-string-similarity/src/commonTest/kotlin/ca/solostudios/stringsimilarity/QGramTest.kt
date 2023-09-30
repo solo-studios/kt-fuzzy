@@ -27,7 +27,9 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.distanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
 import io.kotest.core.spec.style.FunSpec
 
 class QGramTest : FunSpec({

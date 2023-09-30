@@ -28,12 +28,12 @@
 
 package ca.solostudios.stringsimilarity.edit
 
-import ca.solostudios.stringsimilarity.metricDistanceTests
-import ca.solostudios.stringsimilarity.normalizedDistanceTests
-import ca.solostudios.stringsimilarity.normalizedSimilarityTests
-import ca.solostudios.stringsimilarity.precomputedDistanceTests
-import ca.solostudios.stringsimilarity.precomputedSimilarityTests
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.metricDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class NormalizedLevenshteinTest : FunSpec({
@@ -60,5 +60,5 @@ class NormalizedLevenshteinTest : FunSpec({
     )
 
     include(precomputedDistanceTests(precomputed, normalizedLevenshtein))
-    include(precomputedSimilarityTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, normalizedLevenshtein))
+    include(precomputedSimilarityTests(precomputed.map { it.copy(result = 1 - it.result) }, normalizedLevenshtein))
 })

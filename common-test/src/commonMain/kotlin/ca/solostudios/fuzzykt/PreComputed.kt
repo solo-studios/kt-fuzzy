@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 07:35 p.m.
+ * The file PreComputed.kt is part of kotlin-fuzzy
+ * Last modified on 29-09-2023 08:01 p.m.
  *
  * MIT License
  *
@@ -26,30 +26,28 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
-}
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
 
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
+/**
+ * Tests a precomputed value with a context.
+ *
+ * This has to be platform-specific because js hates nested tests, so on js it does a hack to not be nested.
+ *
+ * @param context The context name
+ * @param precomputed The precomputed data
+ * @param resultFunction The similarity function
+ */
+expect fun FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<FuzzyTestData>,
+    resultFunction: (String, String) -> Double,
+)
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-    }
-}
+expect fun <T, U, V> FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<Triple<T, U, V>>,
+    resultFunction: (T, U) -> V,
+)

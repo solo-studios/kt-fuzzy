@@ -27,7 +27,11 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class SorensenDiceTest : FunSpec({
@@ -53,5 +57,5 @@ class SorensenDiceTest : FunSpec({
     )
 
     include(precomputedSimilarityTests(precomputed, sorensenDice))
-    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, sorensenDice))
+    include(precomputedDistanceTests(precomputed.map { it.copy(result = 1 - it.result) }, sorensenDice))
 })

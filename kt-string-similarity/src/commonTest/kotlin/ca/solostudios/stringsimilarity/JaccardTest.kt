@@ -27,7 +27,12 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.metricDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class JaccardTest : FunSpec({
@@ -52,5 +57,5 @@ class JaccardTest : FunSpec({
     )
 
     include(precomputedSimilarityTests(precomputed, jaccard))
-    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, jaccard))
+    include(precomputedDistanceTests(precomputed.map { it.copy(result = 1 - it.result) }, jaccard))
 })

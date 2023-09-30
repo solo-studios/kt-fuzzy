@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 07:35 p.m.
+ * The file PreComputed.jvm.kt is part of kotlin-fuzzy
+ * Last modified on 29-09-2023 08:01 p.m.
  *
  * MIT License
  *
@@ -26,30 +26,36 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.datatest.withData
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
+
+actual fun FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<FuzzyTestData>,
+    resultFunction: (String, String) -> Double,
+) {
+    context(context) {
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
+        }
+    }
 }
 
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
+@JvmName("testPrecomputed\$generic")
+actual fun <T, U, V> FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<Triple<T, U, V>>,
+    resultFunction: (T, U) -> V,
+) {
+    context(context) {
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe it.third
         }
     }
 }

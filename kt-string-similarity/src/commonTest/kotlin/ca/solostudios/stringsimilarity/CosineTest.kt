@@ -27,8 +27,12 @@
  */
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.utils.DEFAULT_TOLERANCE
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
@@ -45,7 +49,7 @@ class CosineTest : FunSpec({
     )
 
     include(precomputedSimilarityTests(precomputed, cosine))
-    include(precomputedDistanceTests(precomputed.map { it.copy(similarity = 1 - it.similarity) }, cosine))
+    include(precomputedDistanceTests(precomputed.map { it.copy(result = 1 - it.result) }, cosine))
 
     test("should be 0 for strings smaller than k") {
         cosineSmallK.similarity("AB", "ABCE") shouldBe (0.0 plusOrMinus DEFAULT_TOLERANCE)

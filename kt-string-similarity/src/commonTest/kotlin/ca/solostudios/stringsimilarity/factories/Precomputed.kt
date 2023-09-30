@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 07:35 p.m.
+ * The file Precomputed.kt is part of kotlin-fuzzy
+ * Last modified on 29-09-2023 08:01 p.m.
  *
  * MIT License
  *
@@ -26,30 +26,18 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.stringsimilarity.factories
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
+import ca.solostudios.fuzzykt.testPrecomputed
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.interfaces.StringDistance
+import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import io.kotest.core.spec.style.funSpec
+
+fun precomputedSimilarityTests(precomputed: List<FuzzyTestData>, similarity: StringSimilarity) = funSpec {
+    testPrecomputed("Similarity should match all pre-computed similarities", precomputed) { s1, s2 -> similarity.similarity(s1, s2) }
 }
 
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-    }
+fun precomputedDistanceTests(precomputed: List<FuzzyTestData>, distance: StringDistance) = funSpec {
+    testPrecomputed("Distance should match all pre-computed distances", precomputed) { s1, s2 -> distance.distance(s1, s2) }
 }

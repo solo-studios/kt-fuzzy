@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 07:35 p.m.
+ * The file KotestConfig.kt is part of kotlin-fuzzy
+ * Last modified on 22-07-2023 04:21 p.m.
  *
  * MIT License
  *
@@ -26,30 +26,18 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt.kotest
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
-}
+import io.kotest.common.ExperimentalKotest
+import io.kotest.core.config.AbstractProjectConfig
+import io.kotest.core.names.DuplicateTestNameMode
+import io.kotest.core.names.TestNameCase
 
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-    }
+@ExperimentalKotest
+class KotestConfig : AbstractProjectConfig() {
+    override val testNameCase = TestNameCase.Lowercase
+    override val duplicateTestNameMode = DuplicateTestNameMode.Error
+    override val parallelism: Int = 8
+    override val concurrentSpecs: Int = 2
+    override val concurrentTests: Int = 8
 }

@@ -27,11 +27,11 @@
  */
 package ca.solostudios.stringsimilarity.edit
 
-import ca.solostudios.stringsimilarity.metricDistanceTests
-import ca.solostudios.stringsimilarity.precomputedDistanceTests
-import ca.solostudios.stringsimilarity.precomputedSimilarityTests
-import ca.solostudios.stringsimilarity.similarityTests
-import ca.solostudios.stringsimilarity.utils.FuzzyTestData
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import ca.solostudios.stringsimilarity.factories.metricDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
+import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class OptimalStringAlignmentTest : FunSpec({
@@ -58,7 +58,7 @@ class OptimalStringAlignmentTest : FunSpec({
     include(precomputedDistanceTests(precomputed, optimalStringAlignment))
     include(
         precomputedSimilarityTests(
-            precomputed.map { it.copy(similarity = ((it.first.length + it.second.length) - it.similarity) / 2) },
+            precomputed.map { it.copy(result = ((it.first.length + it.second.length) - it.result) / 2) },
             optimalStringAlignment
         )
     )

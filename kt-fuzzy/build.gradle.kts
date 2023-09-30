@@ -43,10 +43,6 @@ description = """
     A dependency-less Kotlin Multiplatform library for fuzzy string matching
 """.trimIndent()
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     sourceSets {
         val commonMain by getting {
@@ -54,12 +50,6 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
 
                 api(projects.ktStringSimilarity)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test) // temporary
             }
         }
     }

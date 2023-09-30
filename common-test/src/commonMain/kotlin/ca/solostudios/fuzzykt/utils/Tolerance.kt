@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2021-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 07:35 p.m.
+ * The file Tolerance.kt is part of kotlin-fuzzy
+ * Last modified on 19-07-2023 04:37 p.m.
  *
  * MIT License
  *
@@ -26,30 +26,6 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt.utils
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.tasks
-    `kt-fuzzy`.publishing
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-    `kt-fuzzy`.benchmark
-}
-
-group = "ca.solo-studios"
-description = """
-    Various string similarity and distance measures for Kotlin Multiplatform
-""".trimIndent()
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-            }
-        }
-    }
-}
+const val DEFAULT_TOLERANCE = 0.00001
