@@ -4,6 +4,7 @@ dokka = "1.9.0"
 axion-release = "1.15.4"
 kotest = "5.6.2"
 kotlinx-benchmark = "0.4.9"
+freefair-sass = "8.3"
 
 [plugins]
 ## Kotlin Plugins
@@ -24,6 +25,8 @@ kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" 
 ## kotlinx.benchmark
 ### Toolkit for running benchmarks for multiplatform code written in Kotlin
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
+
+sass-base = { id = "io.freefair.sass-base", version.ref = "freefair-sass" }
 
 [libraries]
 

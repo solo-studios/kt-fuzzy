@@ -16,47 +16,12 @@ however is now expanding upon it.
 
 ## Including
 
-You can include ${project.module} in your project by adding the following:
-
-### Maven
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>${project.group}</groupId>
-        <artifactId>${project.module}</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-</dependencies>
-```
-
-### Gradle Groovy DSL
-
-```gradle
-dependencies {
-    implementation '${project.group}:${project.module}:${project.version}'
-}
-```
-
-### Gradle Kotlin DSL
-
-```kotlin
-dependencies {
-    implementation("${project.group}:${project.module}:${project.version}")
-}
-```
-
-### Gradle Version Catalog
-
-```toml
-[libraries]
-${project.module} = { group = "${project.group}", name = "${project.module}", version = "${project.version}" }
-```
+[%%including%%]
 
 ## Overview
 
 The main characteristics of each implemented algorithm are presented below.
-The "cost" column gives an estimation of the computational cost to compute the similarity between two strings of length
+The "cost" columns gives an estimation of the computational/memory costs to compute the similarity between two strings of length
 \\(m\\) and \\(n\\) respectively.
 
 | Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost                     | Typical usage   |

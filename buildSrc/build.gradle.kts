@@ -73,6 +73,8 @@ dependencies {
 
     implementation(gradlePlugin(libs.plugins.kotlinx.benchmark, libs.versions.kotlinx.benchmark))
 
+    implementation(gradlePlugin(libs.plugins.sass.base, libs.versions.freefair.sass))
+
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }

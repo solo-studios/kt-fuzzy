@@ -4,41 +4,13 @@ A dependency-less Kotlin Multiplatform library for fuzzy string matching
 
 ## Features
 
-- [x] No dependencies
-- [x] Simple to use
-- [x] Performance friendly
+<ul>
+<li class="checklist-item"><input class="checklist-item-checkbox" type="checkbox" readonly checked> No 3<sup>rd</sup> party dependencies</li>
+<li class="checklist-item"><input class="checklist-item-checkbox" type="checkbox" readonly checked> Simple to use</li>
+<li class="checklist-item"><input class="checklist-item-checkbox" type="checkbox" readonly checked> Performance friendly</li>
+</ul>
 
 ## Including
 
-You can include ${project.module} in your project by adding the following:
-
-### Maven
-
-```xml
-<dependency>
-  <groupId>${project.group}</groupId>
-  <artifactId>${project.module}</artifactId>
-  <version>${project.version}</version>
-</dependency>
-```
-
-### Gradle Groovy DSL
-
-```groovy
-implementation '${project.group}:${project.module}:${project.version}'
-```
-
-### Gradle Kotlin DSL
-
-```kotlin
-implementation("${project.group}:${project.module}:${project.version}")
-```
-
-### Gradle Version Catalog
-
-```toml
-${project.module} = { group = "${project.group}", name = "${project.module}", version = "${project.version}" }
-```
-
-## Examples
+[%%including%%]
 

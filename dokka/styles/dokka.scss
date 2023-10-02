@@ -1,0 +1,208 @@
+/*
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ *
+ * The file dokka.css is part of kotlin-fuzzy
+ * Last modified on 16-09-2023 05:05 p.m.
+ *
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+@import 'mixins';
+
+/* Checklists/checkboxes */
+
+/* Disable checkboxes */
+input[type='checkbox'][readonly] {
+    pointer-events: none;
+}
+
+//input[type="checkbox"][checked]:not([disabled]) {
+//    outline: 5px auto #349be8;
+//}
+
+.checklist-item {
+    list-style-type: none;
+}
+
+.checklist-item-checkbox {
+    margin: 0 .3em 0 -1.3em;
+}
+
+/* Footnotes & References */
+
+/* Super text for footnotes/references */
+.footnote, .reference {
+    padding: .1em;
+}
+
+.footnotes-header, .references-header {
+    font-size: 24px;
+    margin-bottom: 0;
+}
+
+.references-header {
+    margin-top: 0;
+}
+
+.footnotes, .references {
+    border-top: 1px solid var(--border-color);
+    line-height: 1.2;
+    padding: 0 16px;
+
+    li {
+        margin-bottom: 16px;
+        margin-top: 16px;
+    }
+
+    > ol {
+        counter-reset: list;
+
+        > li {
+            counter-increment: list;
+            list-style: none;
+        }
+    }
+}
+
+.footnotes {
+    color: color-mix(in hsl, var(--default-font-color) 80%, var(--background-color));
+    font-size: 13px;
+
+    > ol > li::marker {
+        content: "[" counter(list, lower-alpha) "]\a0";
+    }
+}
+
+.references {
+    font-size: 16px;
+
+    > ol > li::marker {
+        content: "[" counter(list) "]\a0";
+    }
+}
+
+$code-toolbar-transition: opacity 100ms linear;
+
+/* Copy icon shit */
+.sample-container {
+    &:hover, &:focus {
+        span.copy-icon {
+            opacity: 100%;
+        }
+    }
+
+    span.copy-icon {
+        display: unset;
+        opacity: 0;
+        transition: $code-toolbar-transition;
+    }
+}
+
+/* Fix for prism TOML language */
+.token.table {
+    display: revert;
+}
+
+/* PrismJS 1.29.0
+https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+diff&plugins=autolinker+show-language+autoloader+keep-markup+normalize-whitespace+toolbar+match-braces+diff-highlight */
+
+div.code-toolbar {
+    position: relative;
+
+    > .toolbar {
+        opacity: 0;
+        padding-right: 28px;
+        position: absolute;
+        right: .2em;
+        top: .3em;
+        transition: $code-toolbar-transition;
+        z-index: 10;
+
+        > .toolbar-item {
+            display: inline-block;
+
+            > a, > button, > span {
+                background: #f5f2f0;
+                background: rgba(224, 224, 224, .2);
+                border-radius: .5em;
+                box-shadow: 0 2px 0 0 rgba(0, 0, 0, .2);
+                color: var(--default-font-color);
+                font-size: .8em;
+                padding: 0 .5em;
+
+                &:focus, &:hover {
+                    color: inherit;
+                    @include vendor-prefix(text-decoration, none, webkit);
+                }
+            }
+
+            > a {
+                cursor: pointer;
+            }
+
+            > button {
+                @include vendor-prefix(user-select, none);
+                background: 0 0;
+                border: 0;
+                color: inherit;
+                font: inherit;
+                line-height: normal;
+                overflow: visible;
+                padding: 0;
+            }
+        }
+    }
+
+    &:hover > .toolbar {
+        opacity: 1;
+    }
+
+    &:focus-within > .toolbar {
+        opacity: 1;
+    }
+}
+
+[class*="hover"].token {
+    background-color: unset !important;
+}
+
+.token.punctuation {
+    &.brace-hover, &.brace-selected {
+        outline: solid 1px color-mix(in hsl, var(--default-font-color) 60%, transparent);
+    }
+}
+
+pre.diff-highlight > code, pre > code.diff-highlight {
+    .token {
+        .deleted:not(.prefix) {
+            background-color: rgba(255, 0, 0, .1);
+            color: inherit;
+            display: block;
+        }
+
+        .inserted:not(.prefix) {
+            background-color: rgba(0, 255, 128, .1);
+            color: inherit;
+            display: block;
+        }
+    }
+}

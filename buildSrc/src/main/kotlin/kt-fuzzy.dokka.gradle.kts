@@ -30,7 +30,10 @@ import ca.solostudios.dokkascript.plugin.DokkaScriptsConfiguration
 import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
+import io.freefair.gradle.plugins.sass.SassCompile
 import java.time.Year
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.intellij.lang.annotations.Language
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
@@ -38,14 +41,24 @@ import org.jetbrains.dokka.gradle.AbstractDokkaTask
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import sass.embedded_protocol.EmbeddedSass.OutputStyle
 
 plugins {
     id("org.jetbrains.dokka")
+    id("io.freefair.sass-base")
 }
 
 dependencies {
     dokkaPlugin(libs.dokka.plugin.script)
     dokkaPlugin(libs.dokka.plugin.style.tweaks)
+}
+
+sass {
+    omitSourceMapUrl = true
+    outputStyle = OutputStyle.COMPRESSED
+    sourceMapContents = false
+    sourceMapEmbed = false
+    sourceMapEnabled = false
 }
 
 tasks {
@@ -56,7 +69,9 @@ tasks {
         listOf(rootDokkaDirectory)
 
     val processDokkaIncludes by register<ProcessResources>("processDokkaIncludes") {
-        from(dokkaDirectories.map { it.resolve("includes") })
+        from(dokkaDirectories.map { it.resolve("includes") }) {
+            exclude { it.name.startsWith("_") }
+        }
 
         doFirst {
             val projectInfo = ProjectInfo(
@@ -65,24 +80,64 @@ tasks {
                     version = project.version.toStringOrEmpty(),
                                          )
 
-            filter { line ->
-                line.replace("☐", "<input type=\"checkbox\" readonly>")
-                        .replace("☒", "<input type=\"checkbox\" readonly checked>")
-                        .replace("\\[@ft-(\\w+)\\]".toRegex(), "<sup><a href=\"#footnote-\$1\">&#91;\$1&#93;</a></sup>")
-                        .replace("\\[@ref-(\\d+)\\]".toRegex(), "<sup><a href=\"#reference-\$1\">&#91;\$1&#93;</a></sup>")
+            val including = rootDokkaDirectory.resolve("includes/_including.md").readText()
+
+            filter<ReplaceTokens>("tokens" to mapOf("including" to including), "beginToken" to "[%%", "endToken" to "%%]")
+
+            @Language("HTML")
+            val stringReplacements = listOf(
+                    "☐" to """<input type="checkbox" readonly>""",
+                    "☒" to """<input type="checkbox" readonly checked>""",
+                    "- [x]" to """- <input class="checklist-item" type="checkbox" readonly>"""
+                                           )
+
+            @Language("RegExp")
+            val regexReplacements = listOf(
+                    "\\[@ft-(\\w+)\\]".toRegex() to """<sup class="footnote"><a href="#footnote-$1">&#91;$1&#93;</a></sup>""",
+                    "\\[@ref-(\\d+)\\]".toRegex() to """<sup class="reference"><a href="#reference-$1">&#91;$1&#93;</a></sup>""",
+                                          )
+
+            filter { sourceLine ->
+                stringReplacements.fold(sourceLine) { line, (old, new) ->
+                    line.replace(old, new)
+                }.let { processedLine ->
+                    regexReplacements.fold(processedLine) { line, (regex, replacement) ->
+                        line.replace(regex, replacement)
+                    }
+                }
             }
+
             expand("project" to projectInfo)
         }
 
-        destinationDir = buildDir.resolve("dokka/includes")
+        destinationDir = buildDir.resolve("dokka").resolve("includes")
         group = JavaBasePlugin.DOCUMENTATION_GROUP
     }
 
+    val compileDokkaSass by register<SassCompile>("compileDokkaSass") {
+        group = BasePlugin.BUILD_GROUP
+        source = fileTree(rootDokkaDirectory.resolve("styles"))
+        destinationDir = buildDir.resolve("dokka/styles")
+    }
+
     withType<AbstractDokkaTask>().configureEach {
+        inputs.files(rootDokkaDirectory)
+
+        dependsOn(compileDokkaSass)
+
         pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
             footerMessage = "© ${Year.now()} Copyright solo-studios"
             separateInheritedMembers = false
-            customStyleSheets = rootDokkaDirectory.resolve("styles").listFiles()?.toList().orEmpty()
+
+            // Evil bullshit
+            val rootStyles = rootDokkaDirectory.resolve("styles").listFiles { file -> file.extension == "css" }?.toList().orEmpty()
+            val compiledStyles = rootDokkaDirectory.resolve("styles").listFiles { file ->
+                file.extension == "scss" && !file.name.startsWith("_")
+            }?.map {
+                buildDir.resolve("dokka/styles").resolve("${it.nameWithoutExtension}.css")
+            }.orEmpty()
+
+            customStyleSheets = rootStyles + compiledStyles
             customAssets = rootDokkaDirectory.resolve("assets").listFiles()?.toList().orEmpty()
             templatesDir = rootDokkaDirectory.resolve("templates")
         }

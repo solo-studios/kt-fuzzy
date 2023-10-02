@@ -1,9 +1,9 @@
-/*
+/*!
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file kt-fuzzy.tasks.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-07-2023 05:13 p.m.
+ * The file _mixins.scss is part of kotlin-fuzzy
+ * Last modified on 02-10-2023 01:08 p.m.
  *
  * MIT License
  *
@@ -26,47 +26,22 @@
  * SOFTWARE.
  */
 
-import org.gradle.jvm.tasks.Jar
-import org.jetbrains.dokka.gradle.DokkaTask
+$default-prefixes: (
+        'webkit',
+        'moz',
+        'ms',
+);
 
-plugins {
-    kotlin("multiplatform")
-}
-
-val ext = the<ExtraPropertiesExtension>()
-val base = the<BasePluginExtension>()
-
-tasks {
-    withType<AbstractArchiveTask>().configureEach {
-        archiveBaseName = project.name
+/// Mixin to prefix a property
+/// @author Kitty Giraudel
+/// @param {String} $property - Property name
+/// @param {*} $value - Property value
+/// @param {List} $prefixes (()) - List of prefixes to print
+@mixin vendor-prefix($property, $value, $prefixes: $default-prefixes) {
+    @each $prefix in $prefixes {
+        #{'-' + $prefix + '-' + $property}: $value;
     }
 
-    withType<Javadoc>().configureEach {
-        options {
-            encoding = "UTF-8"
-        }
-    }
-
-    withType<Jar>().configureEach {
-        from(rootProject.file("LICENSE"))
-    }
-
-    named<Task>("build") {
-        dependsOn(withType<Jar>())
-    }
-
-    if (tasks.findByName("dokkaHtml") != null) {
-        val dokkaHtml by named<DokkaTask>("dokkaHtml")
-
-        val javadocJar by register<Jar>("javadocJar") {
-            dependsOn(dokkaHtml)
-            from(dokkaHtml.outputDirectory)
-            archiveClassifier = "javadoc"
-            group = JavaBasePlugin.DOCUMENTATION_GROUP
-        }
-
-        artifacts {
-            archives(javadocJar)
-        }
-    }
+    // Output standard non-prefixed declaration
+    #{$property}: $value;
 }

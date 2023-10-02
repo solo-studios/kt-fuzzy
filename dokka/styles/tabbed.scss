@@ -1,0 +1,133 @@
+/*
+ * kt-fuzzy - A Kotlin library for fuzzy string matching
+ * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ *
+ * The file tabbed.css is part of kotlin-fuzzy
+ * Last modified on 30-09-2023 08:43 p.m.
+ *
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/* Tab style starts here */
+.tabbed-labels {
+    display: flex;
+    overflow: auto;
+    scrollbar-width: none;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    & > label {
+        border-bottom: 0.1rem solid transparent;
+        border-top-left-radius: 0.1rem;
+        border-top-right-radius: 0.1rem;
+        cursor: pointer;
+        font-size: 0.84em;
+        font-weight: 700;
+        padding: 0.9375em 1.25em 0.78125em;
+        scroll-snap-align: start;
+        transition: background-color 250ms, color 250ms;
+        white-space: nowrap;
+        width: auto;
+    }
+
+
+    & > label:hover {
+        color: var(--active-section-color);
+    }
+}
+
+.tabbed-alternate {
+    border-radius: 0.1rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 1em 0;
+    position: relative;
+
+    & > input {
+        display: none;
+    }
+
+    .tabbed-content {
+        width: 100%;
+    }
+
+    $input-selectors: ();
+    @for $i from 1 through 8 {
+        $input-selectors: append(
+                        $input-selectors,
+                        unquote("input:nth-child(#{$i}):checked ~ .tabbed-content > :nth-child(#{$i})"),
+                        comma,
+        );
+    }
+
+    #{$input-selectors} {
+        display: block;
+    }
+
+    .tabbed-block {
+        display: none;
+    }
+}
+
+@media screen {
+    $input-selectors: ();
+    @for $i from 1 through 8 {
+        $input-selectors: append(
+                        $input-selectors,
+                        unquote(".tabbed-alternate input:nth-child(#{$i}):checked ~ .tabbed-labels > :nth-child(#{$i})"),
+                        comma,
+        );
+    }
+
+    #{$input-selectors} {
+        color: var(--active-section-color);
+        position: relative;
+
+        &::before {
+            //background: var(--active-section-color);
+            background: var(--active-tab-border-color);
+            border-radius: 8px;
+            content: '';
+            height: 4px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+}
+
+@media print {
+    .tabbed-labels {
+        display: contents;
+    }
+
+    @for $i from 1 through 8 {
+        .tabbed-alternate .tabbed-block:nth-child(#{$i}),
+        .tabbed-labels > label:nth-child(#{$i}) {
+            order: $i;
+        }
+    }
+}
