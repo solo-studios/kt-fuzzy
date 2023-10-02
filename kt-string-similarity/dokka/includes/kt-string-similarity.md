@@ -24,24 +24,24 @@ The main characteristics of each implemented algorithm are presented below.
 The "cost" columns gives an estimation of the computational/memory costs to compute the similarity between two strings of length
 \\(m\\) and \\(n\\) respectively.
 
-| Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost                     | Typical usage   |
-|--------------------------------------------|:--------:|:----------:|:----------:|:------:|----------------------|------------------------------------|-----------------|
-| Levenshtein                                |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Damerau-Levenshtein[@ft-c]                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Optimal String Alignment[@ft-c]            |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Longest Common Subsequence                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] | diff, git       |
-| Normalized Levenshtein                     |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Normalized Damerau-Levenshtein[@ft-c]      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Normalized Optimal String Alignment[@ft-c] |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |                 |
-| Normalized Longest Common Subsequence      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |                 |
-| Cosine similarity                          |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |                 |
-| Jaccard index                              |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |                 |
-| Jaro-Winkler                               |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m \\times n)\\)               | typo correction |
-| N-Gram                                     |    ☒     |     ☐      |     ☒      |   ☐    |                      | \\(O(m \\times n)\\)               |                 |
-| Q-Gram                                     |    ☒     |     ☐      |     ☐      |   ☐    |                      | \\(O(m + n)\\)                     |                 |
-| Ratcliff-Obershelp                         |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(n^3)\\)                       |                 |
-| Sorensen-Dice coefficient                  |    ☒     |     ☒      |     ☒      |   ☐    |                      | \\(O(m + n)\\)                     |                 |
-| Sift 4                                     |    ☒     |     ☐      |     ☐      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |                 |
+| Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost                     |
+|--------------------------------------------|:--------:|:----------:|:----------:|:------:|----------------------|------------------------------------|
+| Levenshtein                                |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Damerau-Levenshtein[@ft-c]                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Optimal String Alignment[@ft-c]            |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Longest Common Subsequence                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
+| Normalized Levenshtein                     |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Normalized Damerau-Levenshtein[@ft-c]      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Normalized Optimal String Alignment[@ft-c] |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Normalized Longest Common Subsequence      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
+| Cosine similarity                          |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
+| Jaccard index                              |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
+| Jaro-Winkler                               |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m \\times n)\\)               |
+| N-Gram                                     |    ☒     |     ☐      |     ☒      |   ☐    |                      | \\(O(m \\times n)\\)               |
+| Q-Gram                                     |    ☒     |     ☐      |     ☐      |   ☐    |                      | \\(O(m + n)\\)                     |
+| Ratcliff-Obershelp                         |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(n^3)\\)                       |
+| Sorensen-Dice coefficient                  |    ☒     |     ☒      |     ☒      |   ☐    |                      | \\(O(m + n)\\)                     |
+| Sift 4                                     |    ☒     |     ☐      |     ☐      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
 
 <h2 class="footnotes-header">Notes</h2>
 <div class="footnotes">
