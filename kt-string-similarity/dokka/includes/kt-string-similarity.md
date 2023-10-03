@@ -26,14 +26,14 @@ The "cost" columns gives an estimation of the computational/memory costs to comp
 
 | Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost                     |
 |--------------------------------------------|:--------:|:----------:|:----------:|:------:|----------------------|------------------------------------|
-| Levenshtein                                |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Damerau-Levenshtein[@ft-c]                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Optimal String Alignment[@ft-c]            |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Longest Common Subsequence                 |    ☒     |     ☐      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
+| Levenshtein                                |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Damerau-Levenshtein[@ft-c]                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Optimal String Alignment[@ft-c]            |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Longest Common Subsequence                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
 | Normalized Levenshtein                     |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Damerau-Levenshtein[@ft-c]      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Optimal String Alignment[@ft-c] |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Longest Common Subsequence      |    ☒     |     ☐      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
+| Normalized Damerau-Levenshtein[@ft-c]      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Normalized Optimal String Alignment[@ft-c] |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
+| Normalized Longest Common Subsequence      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
 | Cosine similarity                          |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
 | Jaccard index                              |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
 | Jaro-Winkler                               |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m \\times n)\\)               |

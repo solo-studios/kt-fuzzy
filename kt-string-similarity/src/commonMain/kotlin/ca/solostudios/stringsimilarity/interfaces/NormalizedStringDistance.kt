@@ -30,7 +30,7 @@ package ca.solostudios.stringsimilarity.interfaces
 /**
  * Normalized string distances return a normalized distance between two strings.
  *
- * The returned distance is always in the range \(&#91;0, 1]\).
+ * The returned distance is always in the range \(&#91;0, 1&#93;\).
  * - `0` indicates that both strings are *equivalent*. Equivalent strings are not necessarily identical.
  * - `1` indicates that neither string have anything in common.
  * - If two strings are identical, then it should always return `0`.
