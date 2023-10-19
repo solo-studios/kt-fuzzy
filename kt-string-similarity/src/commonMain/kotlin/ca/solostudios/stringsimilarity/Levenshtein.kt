@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Levenshtein.kt is part of kotlin-fuzzy
- * Last modified on 31-08-2023 04:33 p.m.
+ * Last modified on 19-10-2023 05:33 p.m.
  *
  * MIT License
  *
@@ -26,13 +26,14 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
-import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import ca.solostudios.stringsimilarity.util.Constants
 import ca.solostudios.stringsimilarity.util.min
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 
 /**
  * Implements the Levenshtein distance (Levenshtein, 1966), or edit distance, between two words is the
@@ -64,31 +65,81 @@ import ca.solostudios.stringsimilarity.util.min
  * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  *
- * @see StringEditMeasure
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
  *
- * @author Thibault Debatty, solonovamax
+ * @author solonovamax
  */
 public class Levenshtein(
-    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractStringEditMeasure(
-    insertionWeight = insertionWeight,
-    deletionWeight = deletionWeight,
-    substitutionWeight = substitutionWeight,
-) {
-    override fun fillCostMatrix(costMatrix: Array<DoubleArray>, shorter: String, longer: String) {
-        longer.forEachIndexed { i, c1 ->
-            shorter.forEachIndexed { j, c2 ->
-                val deletionCost = costMatrix[i][j + 1] + deletionWeight
-                val insertionCost = costMatrix[i + 1][j] + insertionWeight
-                val substitutionCost = costMatrix[i][j] + if (c1 == c2) 0.0 else substitutionWeight
-
-                costMatrix[i + 1][j + 1] = min(deletionCost, insertionCost, substitutionCost)
-            }
+    /**
+     * The weight of an insertion. Represented as \(w_i\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val insertionWeight: Double = Constants.DEFAULT_WEIGHT,
+    /**
+     * The weight of a deletion. Represented as \(w_d\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val deletionWeight: Double = Constants.DEFAULT_WEIGHT,
+    /**
+     * The weight of a substitution. Represented as \(w_s\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val substitutionWeight: Double = Constants.DEFAULT_WEIGHT,
+) : MetricStringDistance, StringSimilarity, StringDistance {
+    init {
+        require(insertionWeight > Constants.MIN_REASONABLE_WEIGHT && insertionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Insertion weight ($insertionWeight) should be between 0 and 1*10^10"
         }
+        require(deletionWeight > Constants.MIN_REASONABLE_WEIGHT && deletionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Deletion weight ($deletionWeight) should be between 0 and 1*10^10"
+        }
+        require(substitutionWeight > Constants.MIN_REASONABLE_WEIGHT && substitutionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Substitution weight ($substitutionWeight) should be between 0 and 1*10^10"
+        }
+    }
+
+    override fun distance(s1: String, s2: String): Double {
+        if (s1 == s2)
+            return 0.0
+        if (s1.isEmpty())
+            return s2.length * insertionWeight
+        if (s2.isEmpty())
+            return s1.length * deletionWeight
+
+        val (shorter, longer) = minMaxByLength(s1, s2)
+
+        var previousRow = DoubleArray(shorter.length + 1)
+        var currentRow = DoubleArray(shorter.length + 1)
+
+        for (i in 0..shorter.length)
+            previousRow[i] = i.toDouble()
+
+        longer.forEachIndexed { i, c1 ->
+            // Initialize first element of current row
+            currentRow[0] = (i + 1).toDouble()
+
+            shorter.forEachIndexed { j, c2 ->
+                val deletionCost = previousRow[j + 1] + deletionWeight
+                val insertionCost = currentRow[j] + insertionWeight
+                val substitutionCost = previousRow[j] + if (c1 == c2) 0.0 else substitutionWeight
+
+                currentRow[j + 1] = min(deletionCost, insertionCost, substitutionCost)
+            }
+            // Swap current & previous rows
+            previousRow = currentRow.also { currentRow = previousRow }
+        }
+
+        // We return the last value from the "previous row" because after the last swap,
+        // the current results are in "previousRow"
+        return previousRow.last()
+    }
+
+    override fun similarity(s1: String, s2: String): Double {
+        return (insertionWeight * s1.length + deletionWeight * s2.length - distance(s1, s2)) / 2
     }
 }

@@ -26,7 +26,7 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity.normalized
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import ca.solostudios.stringsimilarity.factories.metricDistanceTests

@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedDamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:34 a.m.
+ * The file NormalizedLCS.kt is part of kotlin-fuzzy
+ * Last modified on 19-10-2023 05:19 p.m.
  *
  * MIT License
  *
@@ -25,30 +25,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package ca.solostudios.stringsimilarity.normalized
 
-package ca.solostudios.stringsimilarity.edit
-
+import ca.solostudios.stringsimilarity.LCS
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringDistance
-import ca.solostudios.stringsimilarity.interfaces.NormalizedStringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
-import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
 
 /**
- * Implements a normalized metric based the [Damerau Levenshtein][DamerauLevenshtein]
+ * Implements a normalized metric based on the [Longest Common Subsequence][LCS]
  * distance (Yujian & Bo, 2007).
  *
- * The normalized Damerau Levenshtein distance between Strings \(X\) and \(Y\) is:
- * \(\frac{2 \times distance_{damerau levenshtein}(X, Y)}{w_d \lvert X \rvert + w_i \lvert Y \rvert + distance_{damerau levenshtein}(X, Y)}\).
+ * The normalized LCS distance between Strings \(X\) and \(Y\) is:
+ * \(\frac{2 \times distance_{LCS}(X, Y)}{\lvert X \rvert + \lvert Y \rvert + distance_{LCS}(X, Y)}\),
+ * where \(GLD(X, Y)\) is the non-normalized LCS distance.
  *
  * The similarity is computed as
- * \(1 - distance(X, Y)\).
- *
- * **Note: Because this class uses [DamerauLevenshtein] internally,
- * which implements the dynamic programming approach,
- * it has a space requirement \(O(m \times n)\)**
+ * \(1.0 - distance(X, Y)\).
  *
  * #### References
  * Yujian, L., & Bo, L. (2007-06). A normalized levenshtein distance metric.
@@ -56,22 +51,28 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
  * 1091-1095.
  * <https://doi.org/10.1109/tpami.2007.1078><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.1109/tpami.2007.1078)</sup>
  *
- * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- * @param transpositionWeight The weight of a substitution. Represented as \(w_t\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- *
- * @see DamerauLevenshtein
- * @see NormalizedStringEditMeasure
+ * @see LCS
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
  *
  * @author solonovamax
  */
-public class NormalizedDamerauLevenshtein(
-    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractNormalizedStringEditMeasure(DamerauLevenshtein(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight))
+public class NormalizedLCS : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
+    private val lcs = LCS()
+
+    override fun distance(s1: String, s2: String): Double {
+        if (s1 == s2)
+            return 0.0
+        if (s1.isEmpty() || s2.isEmpty())
+            return 1.0
+
+        val distance = lcs.distance(s1, s2)
+        return (2 * distance) / (s1.length + s2.length + distance)
+    }
+
+    override fun similarity(s1: String, s2: String): Double {
+        return 1.0 - distance(s1, s2)
+    }
+}
+

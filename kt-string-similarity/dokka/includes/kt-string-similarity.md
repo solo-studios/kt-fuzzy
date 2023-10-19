@@ -4,9 +4,9 @@ Kotlin String Similarity is a Kotlin Multiplatform library for measuring and com
 
 Kotlin String Similarity implements various string similarity and distance measures.
 It contains over a dozen algorithms, including, but not limited to,
-[Levenshtein][ca.solostudios.stringsimilarity.edit.Levenshtein] distance (and siblings),
+[Levenshtein][ca.solostudios.stringsimilarity.Levenshtein] distance (and siblings),
 [Jaro-Winkler][ca.solostudios.stringsimilarity.JaroWinkler],
-[Longest Common Subsequence][ca.solostudios.stringsimilarity.edit.LCS],
+[Longest Common Subsequence][ca.solostudios.stringsimilarity.LCS],
 [Cosine similarity][ca.solostudios.stringsimilarity.Cosine], and many others.
 Check the summary table below for the complete list.
 
@@ -24,52 +24,35 @@ The main characteristics of each implemented algorithm are presented below.
 The "cost" columns gives an estimation of the computational/memory costs to compute the similarity between two strings of length
 \\(m\\) and \\(n\\) respectively.
 
-| Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost                     |
-|--------------------------------------------|:--------:|:----------:|:----------:|:------:|----------------------|------------------------------------|
-| Levenshtein                                |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Damerau-Levenshtein[@ft-c]                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Optimal String Alignment[@ft-c]            |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Longest Common Subsequence                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
-| Normalized Levenshtein                     |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Damerau-Levenshtein[@ft-c]      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Optimal String Alignment[@ft-c] |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a]        |
-| Normalized Longest Common Subsequence      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)[@ft-a][@ft-b] |
-| Cosine similarity                          |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
-| Jaccard index                              |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
-| Jaro-Winkler                               |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m \\times n)\\)               |
-| N-Gram                                     |    ☒     |     ☐      |     ☒      |   ☐    |                      | \\(O(m \\times n)\\)               |
-| Q-Gram                                     |    ☒     |     ☐      |     ☐      |   ☐    |                      | \\(O(m + n)\\)                     |
-| Ratcliff-Obershelp                         |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(n^3)\\)                       |
-| Sorensen-Dice coefficient                  |    ☒     |     ☒      |     ☒      |   ☐    |                      | \\(O(m + n)\\)                     |
-| Sift 4                                     |    ☒     |     ☐      |     ☐      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)                     |
+| Name                                       | Distance | Similarity | Normalized | Metric | Memory cost          | Execution cost              |
+|--------------------------------------------|:--------:|:----------:|:----------:|:------:|----------------------|-----------------------------|
+| Levenshtein                                |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(n)\\)           | \\(O(m \\times n)\\)        |
+| Longest Common Subsequence                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(n)\\)           | \\(O(m \\times n)\\)[@ft-a] |
+| Damerau-Levenshtein[@ft-b]                 |    ☒     |     ☒      |     ☐      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)        |
+| Optimal String Alignment[@ft-b]            |    ☒     |     ☒      |     ☐      |   ☐    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)        |
+| Normalized Levenshtein                     |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(n)\\)           | \\(O(m \\times n)\\)        |
+| Normalized Longest Common Subsequence      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(n)\\)           | \\(O(m \\times n)\\)[@ft-a] |
+| Normalized Damerau-Levenshtein[@ft-b]      |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)        |
+| Normalized Optimal String Alignment[@ft-b] |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m \\times n)\\) | \\(O(m \\times n)\\)        |
+| Cosine similarity                          |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)              |
+| Jaccard index                              |    ☒     |     ☒      |     ☒      |   ☒    | \\(O(m + n)\\)       | \\(O(m + n)\\)              |
+| Jaro-Winkler                               |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(m \\times n)\\)        |
+| N-Gram                                     |    ☒     |     ☐      |     ☒      |   ☐    |                      | \\(O(m \\times n)\\)        |
+| Q-Gram                                     |    ☒     |     ☐      |     ☐      |   ☐    |                      | \\(O(m + n)\\)              |
+| Ratcliff-Obershelp                         |    ☒     |     ☒      |     ☒      |   ☐    | \\(O(m + n)\\)       | \\(O(n^3)\\)                |
+| Sorensen-Dice coefficient                  |    ☒     |     ☒      |     ☒      |   ☐    |                      | \\(O(m + n)\\)              |
+| Sift 4                                     |    ☒     |     ☐      |     ☐      |   ☐    | \\(O(m + n)\\)       | \\(O(m + n)\\)              |
 
 <h2 class="footnotes-header">Notes</h2>
 <div class="footnotes">
 <ol>
 <li id="footnote-a">
 
-In this library, Levenshtein edit distance, LCS distance and their siblings are computed using the dynamic
-programming method, which has a cost \\(O(m \\times n)\\).
-For Levenshtein distance, the algorithm is sometimes called Wagner-Fischer algorithm.[@ref-1]
-The original algorithm uses a matrix of size \\(m \\times n\\) to store the Levenshtein distance between string
-prefixes.
-
-If the alphabet is finite, it is possible to use the "Four-Russians" technique[@ref-2] to speedup computation,
-as shown by Masek and Paterson.[@ref-3]
-This method splits the matrix in blocks of size \\(t \\times t\\).
-Each possible block is precomputed to produce a lookup table.
-This lookup table can then be used to compute the string similarity (or distance) in \\(O(\\frac{n \\times m}{t})\\).
-Usually, \\(t\\) is chosen as \\(log(m)\\) if \\(m > n\\).
-The resulting computation cost is thus \\(O(\\frac{m \\times n}{\\text{log}(m)})\\).
-This method has not been implemented (yet).
-</li>
-<li id="footnote-b">
-
 K.S. Larsen proposed an algorithm that computes the length of LCS in time
 \\(O(log(m) \\times log(n))\\).[@ref-4] But the algorithm has a memory requirement \\(O(m \\times n^2)\\) and was thus not
 implemented here.
 </li>
-<li id="footnote-c">
+<li id="footnote-b">
 
 There are two variants of Damerau-Levenshtein string distance: Damerau-Levenshtein with adjacent transpositions
 (also sometimes called unrestricted Damerau–Levenshtein distance) and Optimal String Alignment (also sometimes called

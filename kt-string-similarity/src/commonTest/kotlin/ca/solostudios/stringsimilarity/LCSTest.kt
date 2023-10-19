@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedOptimalStringAlignmentTest.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:15 a.m.
+ * The file LCSTest.kt is part of kotlin-fuzzy
+ * Last modified on 19-10-2023 05:40 p.m.
  *
  * MIT License
  *
@@ -25,44 +25,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import ca.solostudios.stringsimilarity.factories.metricDistanceTests
-import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
-import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
 import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
 import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
+import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
-class NormalizedOptimalStringAlignmentTest : FunSpec({
-    val normalizedOptimalStringAlignment = NormalizedOptimalStringAlignment()
+class LCSTest : FunSpec({
+    val lcs = LCS()
 
-    include(metricDistanceTests(normalizedOptimalStringAlignment))
-    include(normalizedDistanceTests(normalizedOptimalStringAlignment, false))
-    include(normalizedSimilarityTests(normalizedOptimalStringAlignment))
+    include(metricDistanceTests(lcs))
+    include(similarityTests(lcs))
 
     val precomputed = listOf(
-        FuzzyTestData("AGCAT", "GAC", 0.54545),
-        FuzzyTestData("AGCAT", "AGCT", 0.2),
-        FuzzyTestData("ABCDE", "ABCDF", 0.18181),
-        FuzzyTestData("ABCDEF", "ABDCEF", 0.15384),
-        FuzzyTestData("ABCDEF", "BACDFE", 0.28571),
-        FuzzyTestData("ABCDEF", "ABCDE", 0.16666),
-        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 0.69565),
-        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 0.73469),
-        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 0.65625),
-        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 0.65454),
-        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 0.875),
-        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 0.71428),
-        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.70588),
+        FuzzyTestData("AGCAT", "GAC", 4.0),
+        FuzzyTestData("AGCAT", "AGCT", 1.0),
+        FuzzyTestData("ABCDE", "ABCDF", 2.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 2.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 4.0),
+        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 26.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 27.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 33.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 31.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 23.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 14.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 22.0),
     )
 
-    include(precomputedDistanceTests(precomputed, normalizedOptimalStringAlignment))
+    include(precomputedDistanceTests(precomputed, lcs))
     include(
         precomputedSimilarityTests(
-            precomputed.map { it.copy(result = 1 - it.result) },
-            normalizedOptimalStringAlignment
+            precomputed.map { it.copy(result = ((it.first.length + it.second.length) - it.result) / 2) },
+            lcs
         )
     )
 })

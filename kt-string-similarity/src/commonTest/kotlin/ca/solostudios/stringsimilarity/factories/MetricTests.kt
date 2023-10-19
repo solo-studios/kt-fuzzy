@@ -83,6 +83,7 @@ fun metricDistanceTests(metricDistance: MetricStringDistance, includeStandard: B
             val bc = metricDistance.distance(b, c)
             // in a triangle, distance AB must be >= distance AC + BC
             withClue("ab=$ab, ac=$ac, bc=$bc") {
+                // AC + BC >= AB
                 ab shouldBeLessThanOrEqual ac + bc
             }
         }

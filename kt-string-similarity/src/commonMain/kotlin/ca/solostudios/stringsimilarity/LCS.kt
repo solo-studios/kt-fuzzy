@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file LCS.kt is part of kotlin-fuzzy
- * Last modified on 31-08-2023 04:33 p.m.
+ * Last modified on 19-10-2023 04:33 p.m.
  *
  * MIT License
  *
@@ -26,13 +26,14 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
-import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
-import kotlin.math.min
+import ca.solostudios.stringsimilarity.util.minMaxByLength
+import kotlin.math.max
+
 
 /**
  * Implements the Longest Common Subsequence (LCS) problem consists in finding the longest
@@ -51,40 +52,40 @@ import kotlin.math.min
  * deletion is allowed (no substitution), or when the cost of the substitution
  * is the double of the cost of an insertion or deletion.
  *
- * The similarity is computed as
- * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
- *
- * **Note: Because this class currently implements the dynamic programming approach,
- * it has a space requirement \(O(m \times n)\)**
- *
- * @param insertionWeight The weight of an insertion. Represented as \(w_i\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- * @param deletionWeight The weight of a deletion. Represented as \(w_d\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
- *
- * @see StringEditMeasure
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
  *
- * @author Thibault Debatty, solonovamax
+ * @author solonovamax
  */
-public class LCS(
-    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractStringEditMeasure(
-    insertionWeight = insertionWeight,
-    deletionWeight = deletionWeight,
-) {
-    override fun fillCostMatrix(costMatrix: Array<DoubleArray>, shorter: String, longer: String) {
-        longer.forEachIndexed { i, c1 ->
-            shorter.forEachIndexed { j, c2 ->
-                val deletionCost = costMatrix[i][j + 1] + deletionWeight
-                val insertionCost = costMatrix[i + 1][j] + insertionWeight
+public class LCS : MetricStringDistance, StringSimilarity, StringDistance {
+    override fun distance(s1: String, s2: String): Double {
+        return s1.length + s2.length - (similarity(s1, s2)) * 2
+    }
 
-                costMatrix[i + 1][j + 1] = if (c1 == c2)
-                    costMatrix[i][j]
+    override fun similarity(s1: String, s2: String): Double {
+        if (s1 == s2)
+            return s1.length.toDouble()
+        if (s1.isEmpty())
+            return 0.0
+        if (s2.isEmpty())
+            return 0.0
+
+        val (shorter, longer) = minMaxByLength(s1, s2)
+
+        val previous = DoubleArray(shorter.length + 1)
+        val current = DoubleArray(shorter.length + 1)
+
+        longer.forEachIndexed { _, c1 ->
+            shorter.forEachIndexed { j, c2 ->
+                current[j + 1] = if (c1 == c2)
+                    previous[j] + 1
                 else
-                    min(deletionCost, insertionCost)
+                    max(current[j], previous[j + 1])
             }
+            current.copyInto(previous)
         }
+
+        return current.last()
     }
 }

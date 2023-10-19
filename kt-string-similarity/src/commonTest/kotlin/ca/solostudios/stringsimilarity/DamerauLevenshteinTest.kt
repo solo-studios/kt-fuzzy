@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file LCSTest.kt is part of kotlin-fuzzy
- * Last modified on 01-08-2023 11:29 p.m.
+ * The file DamerauLevenshteinTest.kt is part of kotlin-fuzzy
+ * Last modified on 19-10-2023 05:40 p.m.
  *
  * MIT License
  *
@@ -25,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import ca.solostudios.stringsimilarity.factories.metricDistanceTests
@@ -34,33 +34,31 @@ import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
-class LCSTest : FunSpec({
-    val lcs = LCS()
+class DamerauLevenshteinTest : FunSpec({
+    val damerauLevenshtein = DamerauLevenshtein()
 
-    include(metricDistanceTests(lcs))
-    include(similarityTests(lcs))
+    include(metricDistanceTests(damerauLevenshtein))
+    include(similarityTests(damerauLevenshtein))
 
     val precomputed = listOf(
-        FuzzyTestData("AGCAT", "GAC", 4.0),
-        FuzzyTestData("AGCAT", "AGCT", 1.0),
-        FuzzyTestData("ABCDE", "ABCDF", 2.0),
-        FuzzyTestData("ABCDEF", "ABDCEF", 2.0),
-        FuzzyTestData("ABCDEF", "BACDFE", 4.0),
+        FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
+        FuzzyTestData("ABCDEF", "BACDFE", 2.0),
         FuzzyTestData("ABCDEF", "ABCDE", 1.0),
-        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 26.0),
-        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 27.0),
-        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 33.0),
-        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 31.0),
-        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 23.0),
-        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 14.0),
-        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 22.0),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 18.0),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 21.0),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 18.0),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 21.0),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 10.0),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
     )
 
-    include(precomputedDistanceTests(precomputed, lcs))
+    include(precomputedDistanceTests(precomputed, damerauLevenshtein))
     include(
         precomputedSimilarityTests(
             precomputed.map { it.copy(result = ((it.first.length + it.second.length) - it.result) / 2) },
-            lcs
+            damerauLevenshtein
         )
     )
+
 })

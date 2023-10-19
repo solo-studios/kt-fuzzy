@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file NormalizedDamerauLevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 02-08-2023 12:13 a.m.
+ * The file NormalizedOptimalStringAlignmentTest.kt is part of kotlin-fuzzy
+ * Last modified on 02-08-2023 12:15 a.m.
  *
  * MIT License
  *
@@ -25,22 +25,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity.normalized
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
-import ca.solostudios.stringsimilarity.factories.metricDistanceTests
 import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
 import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
 import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
 import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
-class NormalizedDamerauLevenshteinTest : FunSpec({
-    val normalizedDamerauLevenshtein = NormalizedDamerauLevenshtein()
+class NormalizedOptimalStringAlignmentTest : FunSpec({
+    val normalizedOptimalStringAlignment = NormalizedOptimalStringAlignment()
 
-    include(metricDistanceTests(normalizedDamerauLevenshtein))
-    include(normalizedDistanceTests(normalizedDamerauLevenshtein, false))
-    include(normalizedSimilarityTests(normalizedDamerauLevenshtein))
+    include(normalizedDistanceTests(normalizedOptimalStringAlignment, false))
+    include(normalizedSimilarityTests(normalizedOptimalStringAlignment))
 
     val precomputed = listOf(
         FuzzyTestData("AGCAT", "GAC", 0.54545),
@@ -58,11 +56,11 @@ class NormalizedDamerauLevenshteinTest : FunSpec({
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.70588),
     )
 
-    include(precomputedDistanceTests(precomputed, normalizedDamerauLevenshtein))
+    include(precomputedDistanceTests(precomputed, normalizedOptimalStringAlignment))
     include(
         precomputedSimilarityTests(
             precomputed.map { it.copy(result = 1 - it.result) },
-            normalizedDamerauLevenshtein
+            normalizedOptimalStringAlignment
         )
     )
 })

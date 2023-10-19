@@ -1,9 +1,9 @@
 /*
  * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file KotestConfig.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:21 p.m.
+ * The file Constants.kt is part of kotlin-fuzzy
+ * Last modified on 19-10-2023 05:35 p.m.
  *
  * MIT License
  *
@@ -26,23 +26,28 @@
  * SOFTWARE.
  */
 
-package ca.solostudios.fuzzykt.kotest
+package ca.solostudios.stringsimilarity.util
 
-import io.kotest.common.ExperimentalKotest
-import io.kotest.core.config.AbstractProjectConfig
-import io.kotest.core.names.DuplicateTestNameMode
-import io.kotest.core.names.TestNameCase
-import io.kotest.core.spec.SpecExecutionOrder
-import io.kotest.core.test.TestCaseOrder
+/**
+ * Various misc. constants
+ */
+public object Constants {
+    /**
+     * The default weight to be used.
+     */
+    public const val DEFAULT_WEIGHT: Double = 1.0
 
-@ExperimentalKotest
-class KotestConfig : AbstractProjectConfig() {
-    override val testNameCase = TestNameCase.Lowercase
-    override val duplicateTestNameMode = DuplicateTestNameMode.Error
-    override val parallelism = 8
-    override val concurrentSpecs = 4
-    override val concurrentTests = 8
-    override val testCaseOrder = TestCaseOrder.Sequential
-    override val specExecutionOrder = SpecExecutionOrder.Lexicographic
-    override var displayFullTestPath: Boolean? = false
+    /**
+     * The maximum weight that should reasonably be used.
+     * If there is no maximum, then it can sometimes return
+     * [Double.POSITIVE_INFINITY], which is very unwanted.
+     */
+    public const val MAX_REASONABLE_WEIGHT: Double = 1E10
+
+    /**
+     * The minimum weight that should reasonably be used.
+     *
+     * Negative weights make no sense.
+     */
+    public const val MIN_REASONABLE_WEIGHT: Double = 0.0
 }

@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file DamerauLevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 01-08-2023 11:30 p.m.
+ * The file LevenshteinTest.kt is part of kotlin-fuzzy
+ * Last modified on 19-10-2023 05:40 p.m.
  *
  * MIT License
  *
@@ -25,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import ca.solostudios.stringsimilarity.factories.metricDistanceTests
@@ -34,16 +34,16 @@ import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
-class DamerauLevenshteinTest : FunSpec({
-    val damerauLevenshtein = DamerauLevenshtein()
+class LevenshteinTest : FunSpec({
+    val levenshtein = Levenshtein()
 
-    include(metricDistanceTests(damerauLevenshtein))
-    include(similarityTests(damerauLevenshtein))
+    include(metricDistanceTests(levenshtein))
+    include(similarityTests(levenshtein))
 
     val precomputed = listOf(
-        FuzzyTestData("ABCDEF", "ABDCEF", 1.0),
-        FuzzyTestData("ABCDEF", "BACDFE", 2.0),
-        FuzzyTestData("ABCDEF", "ABCDE", 1.0),
+        FuzzyTestData("My string", "My tring", 1.0),
+        FuzzyTestData("My string", "M string2", 2.0),
+        FuzzyTestData("My string", "My \$tring", 1.0),
         FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
         FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 18.0),
         FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 21.0),
@@ -52,13 +52,11 @@ class DamerauLevenshteinTest : FunSpec({
         FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 10.0),
         FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
     )
-
-    include(precomputedDistanceTests(precomputed, damerauLevenshtein))
+    include(precomputedDistanceTests(precomputed, levenshtein))
     include(
         precomputedSimilarityTests(
             precomputed.map { it.copy(result = ((it.first.length + it.second.length) - it.result) / 2) },
-            damerauLevenshtein
+            levenshtein
         )
     )
-
 })

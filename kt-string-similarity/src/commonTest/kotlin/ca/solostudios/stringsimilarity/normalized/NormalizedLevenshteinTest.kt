@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file LevenshteinTest.kt is part of kotlin-fuzzy
- * Last modified on 04-09-2023 05:57 p.m.
+ * The file NormalizedLevenshteinTest.kt is part of kotlin-fuzzy
+ * Last modified on 01-08-2023 09:43 p.m.
  *
  * MIT License
  *
@@ -25,38 +25,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+
+package ca.solostudios.stringsimilarity.normalized
 
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import ca.solostudios.stringsimilarity.factories.metricDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedDistanceTests
+import ca.solostudios.stringsimilarity.factories.normalizedSimilarityTests
 import ca.solostudios.stringsimilarity.factories.precomputedDistanceTests
 import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
-import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
-class LevenshteinTest : FunSpec({
-    val levenshtein = Levenshtein()
+class NormalizedLevenshteinTest : FunSpec({
+    val normalizedLevenshtein = NormalizedLevenshtein()
 
-    include(metricDistanceTests(levenshtein))
-    include(similarityTests(levenshtein))
+    include(metricDistanceTests(normalizedLevenshtein))
+    include(normalizedDistanceTests(normalizedLevenshtein, false))
+    include(normalizedSimilarityTests(normalizedLevenshtein))
 
     val precomputed = listOf(
-        FuzzyTestData("My string", "My tring", 1.0),
-        FuzzyTestData("My string", "M string2", 2.0),
-        FuzzyTestData("My string", "My \$tring", 1.0),
-        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 16.0),
-        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 18.0),
-        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 21.0),
-        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 18.0),
-        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 21.0),
-        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 10.0),
-        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 12.0),
+        FuzzyTestData("AGCAT", "GAC", 0.54545),
+        FuzzyTestData("AGCAT", "AGCT", 0.2),
+        FuzzyTestData("ABCDE", "ABCDF", 0.18181),
+        FuzzyTestData("ABCDEF", "ABDCEF", 0.28571),
+        FuzzyTestData("ABCDEF", "BACDFE", 0.5),
+        FuzzyTestData("ABCDEF", "ABCDE", 0.16666),
+        FuzzyTestData("U5NvE5B242q6YtIc5", "cXV7655wniS37", 0.69565),
+        FuzzyTestData("pYmO5Wv8z2Jk", "7zdJH16A0d42q8r78dh", 0.73469),
+        FuzzyTestData("AwjI1Z6Gc58qKgh429IMk", "8Uw64CO0W1zBU6519uD0b2", 0.65625),
+        FuzzyTestData("AHu5hCc4wGsz6sK583lL", "837zdBejiKzPHWLw3", 0.65454),
+        FuzzyTestData("rxGFJothWFimR9YURkSR3V", "W5CbF", 0.875),
+        FuzzyTestData("m75tEQEf4p6", "AOFn5fm", 0.71428),
+        FuzzyTestData("903F7nNC0YP1", "8ADG5jBAry", 0.70588),
     )
-    include(precomputedDistanceTests(precomputed, levenshtein))
-    include(
-        precomputedSimilarityTests(
-            precomputed.map { it.copy(result = ((it.first.length + it.second.length) - it.result) / 2) },
-            levenshtein
-        )
-    )
+
+    include(precomputedDistanceTests(precomputed, normalizedLevenshtein))
+    include(precomputedSimilarityTests(precomputed.map { it.copy(result = 1 - it.result) }, normalizedLevenshtein))
 })

@@ -6,7 +6,126 @@ This package contains most of the string measure implementations.
 
 ### Edit-based measures (Levenshtein, LCS, Damerau-Levenshtein, etc.)
 
-All edit-based string measures are located in the `edit` package.
+### [Levenshtein][ca.solostudios.stringsimilarity.Levenshtein]
+
+The [Levenshtein][ca.solostudios.stringsimilarity.Levenshtein] distance between two words is the minimum number of
+single-character edits (insertions, deletions, or substitutions) required to change one word into the other.
+
+It is a metric string distance.
+
+This class implements the dynamic programming approach with two arrays,
+which has a space requirement \\(O(n)\\), and computation cost \\(O(m \\times n)\\).
+
+#### Example
+
+```kotlin
+val levenshtein = Levenshtein()
+
+println(levenshtein.distance("My string", "My \\\$tring")) // prints 1.0
+```
+
+### [Damerau-Levenshtein][ca.solostudios.stringsimilarity.DamerauLevenshtein]
+
+Similar to the [Levenshtein distance][ca.solostudios.stringsimilarity.Levenshtein],
+the [Damerau-Levenshtein distance][ca.solostudios.stringsimilarity.DamerauLevenshtein] with transposition
+(also sometimes calls unrestricted Damerau-Levenshtein distance) is the minimum number of operations needed to transform
+one string into the other, where an operation is defined as an insertion, deletion, or substitution of a single character,
+or a **transposition of two adjacent characters**.
+
+It is a metric string distance.
+
+This class implements the dynamic programming approach,
+which has a space requirement \\(O(m \\times n)\\), and computation cost \\(O(m \\times n)\\).
+
+This is not to be confused with the optimal string alignment distance, which is an extension where no substring can be
+edited more than once.
+
+#### Example
+
+```kotlin
+val damerau = DamerauLevenshtein()
+
+println(damerau.distance("ABCDEF", "ABDCEF")) // prints 1.0
+
+// 2 substitutions
+println(damerau.distance("ABCDEF", "BACDFE")) // prints 2.0
+
+// 1 deletion
+println(damerau.distance("ABCDEF", "ABCDE")) // prints 1.0
+println(damerau.distance("ABCDEF", "BCDEF")) // prints 1.0
+println(damerau.distance("ABCDEF", "ABCGDEF")) // prints 1.0
+
+// All different
+println(damerau.distance("ABCDEF", "POIU")) // prints 6.0
+
+// Transpose
+println(damerau.distance("CA", "ABC")) // prints 2.0
+```
+
+### [Optimal String Alignment][ca.solostudios.stringsimilarity.OptimalStringAlignment]
+
+The [Optimal String Alignment distance][ca.solostudios.stringsimilarity.OptimalStringAlignment] variant
+of [Damerau-Levenshtein distance][ca.solostudios.stringsimilarity.DamerauLevenshtein]
+(sometimes called the restricted edit distance) computes the number of edit operations needed
+to make the strings equal under the condition that **no substring is edited more than once**,
+whereas the true the [Damerau-Levenshtein distance][ca.solostudios.stringsimilarity.DamerauLevenshtein]
+presents no such restriction.
+The difference from the algorithm for the [Levenshtein distance][ca.solostudios.stringsimilarity.Levenshtein] is the
+addition of one recurrence for the transposition operations.
+
+It is *not* a metric string distance.
+
+This class implements the dynamic programming approach,
+which has a space requirement \\(O(m \\times n)\\), and computation cost \\(O(m \\times n)\\).
+
+#### Example
+
+```kotlin
+val osa = OptimalStringAlignment()
+
+println(osa.distance("ABCDEF", "ABDCEF")) // prints 1.0
+
+// 2 substitutions
+println(osa.distance("ABCDEF", "BACDFE")) // prints 2.0
+
+// 1 deletion
+println(osa.distance("ABCDEF", "ABCDE")) // prints 1.0
+println(osa.distance("ABCDEF", "BCDEF")) // prints 1.0
+println(osa.distance("ABCDEF", "ABCGDEF")) // prints 1.0
+
+// All different
+println(osa.distance("ABCDEF", "POIU")) // prints 6.0
+
+println(osa.distance("CA", "ABC")) // prints 3.0
+```
+
+### [Longest Common Subsequence][ca.solostudios.stringsimilarity.LCS]
+
+The [Longest Common Subsequence][ca.solostudios.stringsimilarity.LCS] (LCS) problem consists in finding the longest
+subsequence common to two (or more) sequences.
+It differs from problems of finding common substrings: unlike substrings, subsequences are not required to
+occupy consecutive positions within the original sequences.
+
+It is used by the diff utility, by Git for reconciling multiple changes, etc.
+
+The [LCS distance][ca.solostudios.stringsimilarity.LCS] is equivalent
+to the [Levenshtein distance][ca.solostudios.stringsimilarity.Levenshtein] when only insertion and deletion is
+allowed (no substitution), or when the cost of the substitution is the double of the cost of an insertion or deletion.
+
+It is a metric string distance.
+
+This class implements the dynamic programming approach with two arrays,
+which has a space requirement \\(O(n)\\), and computation cost \\(O(m \\times n)\\)[@ft-a].
+
+#### Example
+
+```kotlin
+val lcs = LCS()
+
+println(lcs.distance("AGCAT", "GAC")) // prints 4.0
+
+println(lcs.distance("AGCAT", "AGCT")) // prints 1.0
+```
 
 ### Shingles (n-gram) based similarity and distance
 
@@ -33,7 +152,7 @@ and to detect transposition typos.
 
 [Jaro-Winkler][ca.solostudios.stringsimilarity.JaroWinkler] computes the similarity between 2 strings, and the returned
 value lies in the interval \\(&#91;0.0, 1.0&#93;\\).
-It is (roughly) a variation of [Damerau-Levenshtein][ca.solostudios.stringsimilarity.edit.DamerauLevenshtein], where the
+It is (roughly) a variation of [Damerau-Levenshtein][ca.solostudios.stringsimilarity.normalized.DamerauLevenshtein], where the
 transposition of 2 close characters is considered less important
 than the transposition of 2 characters that are far from each other.
 [Jaro-Winkler][ca.solostudios.stringsimilarity.JaroWinkler] penalizes additions or substitutions that cannot be
@@ -127,8 +246,8 @@ Pay attention, this only works if the same KShingling object is used to parse al
 The distance between two strings is defined as the L1 norm of the difference of their profiles (the number of occurences
 of each [n-gram][ca.solostudios.stringsimilarity.NGram]): \\(\\sum_{i=1}^n \\lVert \\vec{v1_i} - \\vec{v2_i} \\rVert\\).
 [Q-gram][ca.solostudios.stringsimilarity.QGram] distance is a lower bound on
-the [Levenshtein][ca.solostudios.stringsimilarity.edit.Levenshtein] distance, but can be computed in \\(O(m + n)\\) time,
-whereas the [Levenshtein][ca.solostudios.stringsimilarity.edit.Levenshtein] distance requires \\(O(m \\times n)\\) time.
+the [Levenshtein][ca.solostudios.stringsimilarity.normalized.Levenshtein] distance, but can be computed in \\(O(m + n)\\) time,
+whereas the [Levenshtein][ca.solostudios.stringsimilarity.normalized.Levenshtein] distance requires \\(O(m \\times n)\\) time.
 
 #### [Cosine similarity][ca.solostudios.stringsimilarity.Cosine]
 
@@ -177,7 +296,8 @@ println(ratcliffObershelp.similarity("My string", "My ntrisg")) // prints 0.7777
 #### [Sift4][ca.solostudios.stringsimilarity.Sift4]
 
 [Sift4][ca.solostudios.stringsimilarity.Sift4] is a general purpose string distance algorithm inspired
-by [JaroWinkler][ca.solostudios.stringsimilarity.JaroWinkler] and [Longest Common Subsequence][ca.solostudios.stringsimilarity.edit.LCS].
+by [JaroWinkler][ca.solostudios.stringsimilarity.JaroWinkler]
+and [Longest Common Subsequence][ca.solostudios.stringsimilarity.normalized.LCS].
 It was developed to produce a distance measure that matches as close as possible to the human perception of string
 distance.
 Hence, it takes into account elements like character substitution, character distance, longest common subsequence etc.
@@ -197,6 +317,29 @@ val result = sift4.distance(s1, s2)
 assertEquals(expectedResult, result, 0.0)
 ```
 
+<h2 class="footnotes-header">Notes</h2>
+<div class="footnotes">
+<ol>
+<li id="footnote-a">
+
+K.S. Larsen proposed an algorithm that computes the length of LCS in time
+\\(O(log(m) \\times log(n))\\).[@ref-4] But the algorithm has a memory requirement \\(O(m \\times n^2)\\) and was thus not
+implemented here.
+</li>
+</ol>
+</div>
+
+<h2 class="references-header">References</h2>
+<div class="references">
+<ol>
+<li id="reference-1">
+
+Larsen, K. S. (1992-10). Length of maximal common subsequences. DAIMI Report
+Series, 21(426).
+<https://doi.org/10.7146/dpb.v21i426.6740><sup>[&#91;sci-hub&#93;](https://sci-hub.st/10.7146/dpb.v21i426.6740)</sup>
+</li>
+</ol>
+</div>
 <h2 class="references-header">References</h2>
 <div class="references">
 <ol>

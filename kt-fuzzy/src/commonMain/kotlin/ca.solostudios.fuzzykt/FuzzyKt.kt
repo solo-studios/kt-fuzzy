@@ -28,7 +28,7 @@
 
 package ca.solostudios.fuzzykt
 
-import ca.solostudios.stringsimilarity.edit.NormalizedLevenshtein
+import ca.solostudios.stringsimilarity.normalized.NormalizedLevenshtein
 import kotlin.math.min
 
 public object FuzzyKt {

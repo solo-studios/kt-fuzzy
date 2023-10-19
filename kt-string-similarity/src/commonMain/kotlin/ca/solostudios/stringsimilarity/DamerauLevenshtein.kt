@@ -3,7 +3,7 @@
  * Copyright (c) 2015-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file DamerauLevenshtein.kt is part of kotlin-fuzzy
- * Last modified on 31-08-2023 04:33 p.m.
+ * Last modified on 19-10-2023 05:33 p.m.
  *
  * MIT License
  *
@@ -25,13 +25,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ca.solostudios.stringsimilarity.edit
+package ca.solostudios.stringsimilarity
 
 import ca.solostudios.stringsimilarity.interfaces.MetricStringDistance
 import ca.solostudios.stringsimilarity.interfaces.StringDistance
-import ca.solostudios.stringsimilarity.interfaces.StringEditMeasure
 import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
+import ca.solostudios.stringsimilarity.util.Constants
 import ca.solostudios.stringsimilarity.util.min
+import ca.solostudios.stringsimilarity.util.minMaxByLength
 import kotlin.math.min
 
 /**
@@ -49,9 +50,6 @@ import kotlin.math.min
  * The similarity is computed as
  * \(\frac{w_d \lvert X \rvert + w_i \lvert Y \rvert - distance(X, Y)}{2}\).
  *
- * **Note: Because this class currently implements the dynamic programming approach,
- * it has a space requirement \(O(m \times n)\)**
- *
  * #### References
  * Damerau, F. J. (1964-03). A technique for computer detection and correction of
  * spelling errors. *Communications of the ACM*, *7*(3), 171-176.
@@ -62,25 +60,66 @@ import kotlin.math.min
  * @param substitutionWeight The weight of a substitution. Represented as \(w_s\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  * @param transpositionWeight The weight of a substitution. Represented as \(w_t\). Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
  *
- * @see StringEditMeasure
  * @see MetricStringDistance
  * @see StringDistance
  * @see StringSimilarity
  *
- * @author Thibault Debatty, solonovamax
+ * @author solonovamax
  */
 public class DamerauLevenshtein(
-    insertionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    deletionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    substitutionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-    transpositionWeight: Double = StringEditMeasure.DEFAULT_WEIGHT,
-) : AbstractStringEditMeasure(insertionWeight, deletionWeight, substitutionWeight, transpositionWeight) {
-    override fun initializeCostMatrix(shorter: String, longer: String): Array<DoubleArray> {
-        val maxDistance = (shorter.length + longer.length).toDouble()
+    /**
+     * The weight of an insertion. Represented as \(w_i\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val insertionWeight: Double = Constants.DEFAULT_WEIGHT,
+    /**
+     * The weight of a deletion. Represented as \(w_d\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val deletionWeight: Double = Constants.DEFAULT_WEIGHT,
+    /**
+     * The weight of a substitution. Represented as \(w_s\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val substitutionWeight: Double = Constants.DEFAULT_WEIGHT,
+    /**
+     * The weight of a transposition. Represented as \(w_t\).
+     *
+     * Must be in the range \(&#91;0, 1 \times 10^{10} &#93;\).
+     */
+    public val transpositionWeight: Double = Constants.DEFAULT_WEIGHT,
+) : MetricStringDistance, StringSimilarity, StringDistance {
+    init {
+        require(insertionWeight > Constants.MIN_REASONABLE_WEIGHT && insertionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Insertion weight ($insertionWeight) should be between 0 and 1*10^10"
+        }
+        require(deletionWeight > Constants.MIN_REASONABLE_WEIGHT && deletionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Deletion weight ($deletionWeight) should be between 0 and 1*10^10"
+        }
+        require(substitutionWeight > Constants.MIN_REASONABLE_WEIGHT && substitutionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Substitution weight ($substitutionWeight) should be between 0 and 1*10^10"
+        }
+        require(transpositionWeight > Constants.MIN_REASONABLE_WEIGHT && transpositionWeight < Constants.MAX_REASONABLE_WEIGHT) {
+            "Transposition weight ($transpositionWeight) should be between 0 and 1*10^10"
+        }
+    }
 
+    override fun distance(s1: String, s2: String): Double {
+        if (s1 == s2)
+            return 0.0
+        if (s1.isEmpty())
+            return s2.length * insertionWeight
+        if (s2.isEmpty())
+            return s1.length * deletionWeight
+
+        val (shorter, longer) = minMaxByLength(s1, s2)
+
+        val maxDistance = (shorter.length + longer.length).toDouble()
         // This has a 1-wide side zone for initial values
         val costMatrix = Array(longer.length + 2) { DoubleArray(shorter.length + 2) }
-
         // initialize the left and top edges of costMatrix
         for (i in 0..longer.length) {
             costMatrix[i + 1][0] = maxDistance
@@ -90,13 +129,9 @@ public class DamerauLevenshtein(
             costMatrix[0][j + 1] = maxDistance
             costMatrix[1][j + 1] = j.toDouble()
         }
-        return costMatrix
-    }
 
-    override fun fillCostMatrix(costMatrix: Array<DoubleArray>, shorter: String, longer: String) {
         // we could instead use an array of size Char.MAX_VALUE, but that would *probably* use more space
         val lastRowId = mutableMapOf<Char, Int>()
-
         longer.forEachIndexed { i, c1 ->
             var currentMin = costMatrix[i + 1][1]
             var lastColId = 0
@@ -120,5 +155,11 @@ public class DamerauLevenshtein(
 
             lastRowId[c1] = i + 1
         }
+
+        return costMatrix.last().last()
+    }
+
+    override fun similarity(s1: String, s2: String): Double {
+        return (insertionWeight * s1.length + deletionWeight * s2.length - distance(s1, s2)) / 2
     }
 }
