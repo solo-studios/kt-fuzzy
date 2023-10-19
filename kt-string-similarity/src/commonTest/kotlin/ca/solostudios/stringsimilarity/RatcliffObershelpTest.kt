@@ -35,7 +35,7 @@ import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class RatcliffObershelpTest : FunSpec({
-    val ratcliffObershelp = RatcliffObershelp()
+    val ratcliffObershelp = RatcliffObershelp
 
     include(normalizedDistanceTests(ratcliffObershelp))
     include(normalizedSimilarityTests(ratcliffObershelp))

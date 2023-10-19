@@ -48,7 +48,7 @@ import ca.solostudios.stringsimilarity.interfaces.NormalizedStringSimilarity
  *
  * @author [Ligi](https://github.com/dxpux), solonovamax, Ported to java from .net by denmase
  */
-public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDistance {
+public object RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDistance {
     /**
      * Compute the Ratcliff-Obershelp similarity between strings.
      *
@@ -79,39 +79,37 @@ public class RatcliffObershelp : NormalizedStringSimilarity, NormalizedStringDis
         return 1.0 - similarity(s1, s2)
     }
 
-    private companion object {
-        private fun getMatchCount(s1: String, s2: String): Int {
-            val anchor = findAnchor(s1, s2)
-            return when {
-                anchor.isEmpty() -> 0
-                else -> {
-                    val s1MatchIndex = s1.indexOf(anchor)
-                    val s2MatchIndex = s2.indexOf(anchor)
-                    val frontS1 = s1.take(s1MatchIndex)
-                    val frontS2 = s2.take(s2MatchIndex)
-                    val endS1 = s1.substring(s1MatchIndex + anchor.length)
-                    val endS2 = s2.substring(s2MatchIndex + anchor.length)
+    private fun getMatchCount(s1: String, s2: String): Int {
+        val anchor = findAnchor(s1, s2)
+        return when {
+            anchor.isEmpty() -> 0
+            else -> {
+                val s1MatchIndex = s1.indexOf(anchor)
+                val s2MatchIndex = s2.indexOf(anchor)
+                val frontS1 = s1.take(s1MatchIndex)
+                val frontS2 = s2.take(s2MatchIndex)
+                val endS1 = s1.substring(s1MatchIndex + anchor.length)
+                val endS2 = s2.substring(s2MatchIndex + anchor.length)
 
-                    val frontCount = getMatchCount(frontS1, frontS2)
-                    val endCount = getMatchCount(endS1, endS2)
-                    return frontCount + anchor.length + endCount
+                val frontCount = getMatchCount(frontS1, frontS2)
+                val endCount = getMatchCount(endS1, endS2)
+                return frontCount + anchor.length + endCount
+            }
+        }
+    }
+
+    private fun findAnchor(s1: String, s2: String): String {
+        var longestLength = 0
+        var longest = ""
+        for (i in s1.indices) {
+            for (j in i + 1..s1.length) {
+                val substring = s1.substring(i, j)
+                if (substring.length > longestLength && s2.contains(substring)) {
+                    longestLength = substring.length
+                    longest = substring
                 }
             }
         }
-
-        private fun findAnchor(s1: String, s2: String): String {
-            var longestLength = 0
-            var longest = ""
-            for (i in s1.indices) {
-                for (j in i + 1..s1.length) {
-                    val substring = s1.substring(i, j)
-                    if (substring.length > longestLength && s2.contains(substring)) {
-                        longestLength = substring.length
-                        longest = substring
-                    }
-                }
-            }
-            return longest
-        }
+        return longest
     }
 }

@@ -37,7 +37,7 @@ import ca.solostudios.stringsimilarity.factories.precomputedSimilarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class NormalizedLCSTest : FunSpec({
-    val normalizedLCS = NormalizedLCS()
+    val normalizedLCS = NormalizedLCS
 
     include(metricDistanceTests(normalizedLCS))
     include(normalizedDistanceTests(normalizedLCS, false))

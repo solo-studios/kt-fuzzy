@@ -35,7 +35,7 @@ import ca.solostudios.stringsimilarity.factories.similarityTests
 import io.kotest.core.spec.style.FunSpec
 
 class LCSTest : FunSpec({
-    val lcs = LCS()
+    val lcs = LCS
 
     include(metricDistanceTests(lcs))
     include(similarityTests(lcs))

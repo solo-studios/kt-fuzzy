@@ -58,16 +58,14 @@ import ca.solostudios.stringsimilarity.interfaces.StringSimilarity
  *
  * @author solonovamax
  */
-public class NormalizedLCS : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
-    private val lcs = LCS()
-
+public object NormalizedLCS : MetricStringDistance, NormalizedStringDistance, NormalizedStringSimilarity {
     override fun distance(s1: String, s2: String): Double {
         if (s1 == s2)
             return 0.0
         if (s1.isEmpty() || s2.isEmpty())
             return 1.0
 
-        val distance = lcs.distance(s1, s2)
+        val distance = LCS.distance(s1, s2)
         return (2 * distance) / (s1.length + s2.length + distance)
     }
 

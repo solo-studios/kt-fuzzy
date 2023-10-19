@@ -58,7 +58,7 @@ import kotlin.math.max
  *
  * @author solonovamax
  */
-public class LCS : MetricStringDistance, StringSimilarity, StringDistance {
+public object LCS : MetricStringDistance, StringSimilarity, StringDistance {
     override fun distance(s1: String, s2: String): Double {
         return s1.length + s2.length - (similarity(s1, s2)) * 2
     }
