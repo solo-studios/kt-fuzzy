@@ -50,7 +50,6 @@ class StringMeasureBenchmark {
     val jaroWinkler = JaroWinkler()
     val nGram = NGram()
     val qGram = QGram()
-    val ratcliffObershelp = RatcliffObershelp()
     val sift4 = Sift4()
 
     @Benchmark
@@ -80,7 +79,7 @@ class StringMeasureBenchmark {
 
     @Benchmark
     fun testRatcliffObershelp(blackhole: Blackhole) {
-        blackhole.consume(ratcliffObershelp.similarity(s1, s2))
+        blackhole.consume(RatcliffObershelp.similarity(s1, s2))
     }
 
     @Benchmark
