@@ -27,14 +27,11 @@
  */
 
 plugins {
-    // alias(libs.plugins.axion.release)
     id("pl.allegro.tech.build.axion-release")
 }
 
 scmVersion {
     tag {
-        // println("prefix = ${project.name.toStringOrEmpty().replace("-", "")}")
-        // prefix.set(project.name.toStringOrEmpty().replace("-", ""))
         prefix = project.name
         versionSeparator = "-"
     }

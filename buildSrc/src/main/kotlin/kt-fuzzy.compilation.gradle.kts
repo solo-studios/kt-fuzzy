@@ -56,7 +56,7 @@ kotlin {
     }
 
     // Why is kotlin/js broken? I don't fucking know!
-    // For some reason it shows errors when importing a library I definitely added as a dependency!
+    // For some reason it refuses to run my tests!
     js(IR) {
         configureCommonJs()
         configureEsModules()

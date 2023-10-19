@@ -30,6 +30,7 @@ import ca.solostudios.dokkascript.plugin.DokkaScriptsConfiguration
 import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
+import com.sass_lang.embedded_protocol.OutputStyle
 import io.freefair.gradle.plugins.sass.SassCompile
 import java.time.Year
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -41,7 +42,6 @@ import org.jetbrains.dokka.gradle.AbstractDokkaTask
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
-import sass.embedded_protocol.EmbeddedSass.OutputStyle
 
 plugins {
     id("org.jetbrains.dokka")
@@ -110,14 +110,14 @@ tasks {
             expand("project" to projectInfo)
         }
 
-        destinationDir = buildDir.resolve("dokka").resolve("includes")
+        destinationDir = layout.buildDirectory.dir("dokka/includes").get().asFile
         group = JavaBasePlugin.DOCUMENTATION_GROUP
     }
 
     val compileDokkaSass by register<SassCompile>("compileDokkaSass") {
         group = BasePlugin.BUILD_GROUP
         source = fileTree(rootDokkaDirectory.resolve("styles"))
-        destinationDir = buildDir.resolve("dokka/styles")
+        destinationDir = layout.buildDirectory.dir("dokka/styles")
     }
 
     withType<AbstractDokkaTask>().configureEach {
@@ -134,7 +134,7 @@ tasks {
             val compiledStyles = rootDokkaDirectory.resolve("styles").listFiles { file ->
                 file.extension == "scss" && !file.name.startsWith("_")
             }?.map {
-                buildDir.resolve("dokka/styles").resolve("${it.nameWithoutExtension}.css")
+                layout.buildDirectory.file("dokka/styles/${it.nameWithoutExtension}.css").get().asFile
             }.orEmpty()
 
             customStyleSheets = rootStyles + compiledStyles
