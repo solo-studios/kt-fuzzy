@@ -28,10 +28,6 @@
 
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.edit.DamerauLevenshtein
-import ca.solostudios.stringsimilarity.edit.LCS
-import ca.solostudios.stringsimilarity.edit.Levenshtein
-import ca.solostudios.stringsimilarity.edit.OptimalStringAlignment
 import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.BenchmarkMode
 import kotlinx.benchmark.BenchmarkTimeUnit
@@ -48,7 +44,6 @@ class EditMeasureBenchmark {
     val s1: String = "mysmilarstring"
     val s2: String = "myawfullysimilarstirng"
     val damerauLevenshtein = DamerauLevenshtein()
-    val lcs = LCS()
     val levenshtein = Levenshtein()
     val optimalStringAlignment = OptimalStringAlignment()
 
@@ -59,7 +54,7 @@ class EditMeasureBenchmark {
 
     @Benchmark
     fun testLCS(blackhole: Blackhole) {
-        blackhole.consume(lcs.distance(s1, s2))
+        blackhole.consume(LCS.distance(s1, s2))
     }
 
     @Benchmark

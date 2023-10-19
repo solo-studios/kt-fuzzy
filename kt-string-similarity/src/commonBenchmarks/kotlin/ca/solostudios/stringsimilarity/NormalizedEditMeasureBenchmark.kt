@@ -28,10 +28,10 @@
 
 package ca.solostudios.stringsimilarity
 
-import ca.solostudios.stringsimilarity.edit.NormalizedDamerauLevenshtein
-import ca.solostudios.stringsimilarity.edit.NormalizedLCS
-import ca.solostudios.stringsimilarity.edit.NormalizedLevenshtein
-import ca.solostudios.stringsimilarity.edit.NormalizedOptimalStringAlignment
+import ca.solostudios.stringsimilarity.normalized.NormalizedDamerauLevenshtein
+import ca.solostudios.stringsimilarity.normalized.NormalizedLCS
+import ca.solostudios.stringsimilarity.normalized.NormalizedLevenshtein
+import ca.solostudios.stringsimilarity.normalized.NormalizedOptimalStringAlignment
 import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.BenchmarkMode
 import kotlinx.benchmark.BenchmarkTimeUnit
@@ -48,7 +48,6 @@ class NormalizedEditMeasureBenchmark {
     val s1: String = "mysmilarstring"
     val s2: String = "myawfullysimilarstirng"
     val damerauLevenshtein = NormalizedDamerauLevenshtein()
-    val lcs = NormalizedLCS()
     val levenshtein = NormalizedLevenshtein()
     val optimalStringAlignment = NormalizedOptimalStringAlignment()
 
@@ -59,7 +58,7 @@ class NormalizedEditMeasureBenchmark {
 
     @Benchmark
     fun testNormalizedLCS(blackhole: Blackhole) {
-        blackhole.consume(lcs.distance(s1, s2))
+        blackhole.consume(NormalizedLCS.distance(s1, s2))
     }
 
     @Benchmark
