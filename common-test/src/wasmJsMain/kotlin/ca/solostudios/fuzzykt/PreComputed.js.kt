@@ -2,8 +2,8 @@
  * kt-fuzzy - A Kotlin library for fuzzy string matching
  * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file kt-fuzzy.benchmark.gradle.kts is part of kotlin-fuzzy
- * Last modified on 09-08-2023 07:24 p.m.
+ * The file PreComputed.js.kt is part of kotlin-fuzzy
+ * Last modified on 29-09-2023 08:01 p.m.
  *
  * MIT License
  *
@@ -26,58 +26,40 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt
 
-import kotlinx.benchmark.gradle.JvmBenchmarkTarget
-import kotlinx.benchmark.gradle.benchmark
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import io.kotest.assertions.withClue
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.datatest.getStableIdentifier
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
 
-plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.allopen")
-
-    id("org.jetbrains.kotlinx.benchmark")
-}
-
-allOpen {
-    annotation("org.openjdk.jmh.annotations.State") // Make jmh happy
-}
-
-@Suppress("unused")
-kotlin {
-    jvm {
-        val benchmarks by compilations.creating {
-            associateWith(this@jvm.compilations["main"])
-        }
-    }
-
-    sourceSets {
-        val commonBenchmarks by creating {
-            dependsOn(commonMain.get())
-            dependencies {
-                implementation(libs.kotlinx.benchmark.runtime)
+actual fun FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<FuzzyTestData>,
+    resultFunction: (String, String) -> Double,
+) {
+    context(context) {
+        precomputed.forEach {
+            withClue({ getStableIdentifier(it) }) {
+                resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
             }
         }
-        val jvmBenchmarks by getting {
-            dependsOn(commonBenchmarks)
-        }
     }
 }
 
-
-benchmark {
-    configurations {
-        named("main") {
-            reportFormat = "json"
-            warmups = 5
-            iterations = 5
-            iterationTime = 5
-            iterationTimeUnit = "s"
-        }
-    }
-    targets {
-        register("jvmBenchmarks") {
-            this as JvmBenchmarkTarget
-            jmhVersion = "1.37"
+actual fun <T, U, V> FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<Triple<T, U, V>>,
+    resultFunction: (T, U) -> V,
+) {
+    context(context) {
+        precomputed.forEach {
+            withClue({ getStableIdentifier(it) }) {
+                resultFunction(it.first, it.second) shouldBe it.third
+            }
         }
     }
 }

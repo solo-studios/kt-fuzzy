@@ -31,7 +31,6 @@ import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
 import com.sass_lang.embedded_protocol.OutputStyle
-import gradle.kotlin.dsl.accessors._cdfee9268d0dc53c8b6c56cc9a386d8c.publishing
 import io.freefair.gradle.plugins.sass.SassCompile
 import java.time.Year
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -107,10 +106,10 @@ tasks {
     // }
     // (components["kotlin"] as AdhocComponentWithVariants).addVariantsFromConfiguration(javadocElements) {}
 
-    if (project.plugins.hasPlugin("publishing"))
-        publishing.publications.withType<MavenPublication>() {
-            artifact(javadocJar)
-        }
+    // if (project.plugins.hasPlugin("publishing"))
+    //     publishing.publications.withType<MavenPublication>() {
+    //         artifact(javadocJar)
+    //     }
 
     val processDokkaIncludes by register<ProcessResources>("processDokkaIncludes") {
         from(dokkaDirs.includes) {

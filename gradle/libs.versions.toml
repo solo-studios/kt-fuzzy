@@ -1,8 +1,9 @@
 [versions]
-kotlin = "1.9.10"
+kotlin = "2.0.0"
 dokka = "1.9.10"
+nyx = "0.3.0-SNAPSHOT"
 axion-release = "1.15.5"
-kotest = "5.7.2"
+kotest = "5.9.1"
 kotlinx-benchmark = "0.4.9"
 freefair-sass = "8.4"
 
@@ -14,6 +15,8 @@ kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.re
 ## Dokka
 ### API documentation engine for Kotlin.
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+
+nyx = { id = "ca.solo-studios.nyx", version.ref = "nyx" }
 
 ## Axion release plugin
 ### Gradle release and version management plugin.

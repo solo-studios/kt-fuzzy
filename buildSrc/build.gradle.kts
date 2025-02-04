@@ -28,6 +28,7 @@
 
 plugins {
     `kotlin-dsl`
+    alias(libs.plugins.nyx)
 }
 
 repositories {
@@ -36,6 +37,9 @@ repositories {
     gradlePluginPortal()
 
     maven("https://maven.solo-studios.ca/releases/") {
+        name = "Solo Studios"
+    }
+    maven("https://maven.solo-studios.ca/snapshots/") {
         name = "Solo Studios"
     }
 }
@@ -68,6 +72,8 @@ dependencies {
     implementation(gradlePlugin(libs.plugins.dokka, libs.versions.dokka))
     implementation(gradlePlugin(libs.plugins.kotlin.multiplatform, libs.versions.kotlin))
     implementation(gradlePlugin(libs.plugins.kotlin.plugin.allopen, libs.versions.kotlin))
+
+    implementation(gradlePlugin(libs.plugins.nyx, libs.versions.nyx))
 
     implementation(gradlePlugin(libs.plugins.axion.release, libs.versions.axion.release))
 

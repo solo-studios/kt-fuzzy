@@ -26,18 +26,11 @@
  * SOFTWARE.
  */
 
+import java.util.Locale
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
 import org.gradle.kotlin.dsl.the
-import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsOptions
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinTargetHierarchyDsl
-import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
-import org.jetbrains.kotlin.gradle.targets.js.ir.JsIrBinary
-import java.util.Locale
 
 fun String.capitalize(): String = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
@@ -114,91 +107,4 @@ class DokkaDirectories(val project: Project) {
     private fun input(name: String) = base.map { it.resolve(name) }
     private fun rootInput(name: String) = root.resolve(name)
     private fun output(name: String) = baseOutput.dir(name)
-}
-
-/*
- Magic shit
- */
-fun KotlinJsTargetDsl.configureCommonJs() {
-    compilations.configureEach {
-        kotlinOptions.configureCommonJsOptions()
-
-        binaries.withType<JsIrBinary>().configureEach {
-            linkTask.configure {
-                kotlinOptions.configureCommonJsOptions()
-            }
-        }
-    }
-}
-
-/*-------------------------------------------------------------------+
- |                                                                   |
- |      Implementations of useCommonJs(), useEsModules(), and        |
- | generateTypeScriptDefinitions() that use lazy task configuration. |
- |                                                                   |
- +-------------------------------------------------------------------*/
-
-fun KotlinJsTargetDsl.configureEsModules() {
-    compilations.configureEach {
-        kotlinOptions.configureEsModulesOptions()
-
-        binaries.withType<JsIrBinary>().configureEach {
-            linkTask.configure {
-                kotlinOptions.configureEsModulesOptions()
-            }
-        }
-    }
-}
-
-fun KotlinJsTargetDsl.configureGenerateTypeScriptDefinitions() {
-    compilations.configureEach {
-        binaries.withType<JsIrBinary>().configureEach {
-            generateTs = true
-            linkTask.configure {
-                compilerOptions.freeCompilerArgs.add(CompilerFlags.GENERATE_D_TS)
-            }
-        }
-    }
-}
-
-private fun KotlinJsOptions.configureCommonJsOptions() {
-    moduleKind = "commonjs"
-    sourceMap = true
-    sourceMapEmbedSources = "never"
-}
-
-private fun KotlinJsOptions.configureEsModulesOptions() {
-    moduleKind = "es"
-    sourceMap = true
-    sourceMapEmbedSources = "never"
-}
-
-@ExperimentalKotlinGradlePluginApi
-fun KotlinMultiplatformExtension.targetHierarchy(configure: KotlinTargetHierarchyDsl.() -> Unit) {
-    targetHierarchy.configure()
-}
-
-/**
- * [org.jetbrains.kotlin.gradle.targets.js.ir.ENTRY_IR_MODULE]
- */
-internal object CompilerFlags {
-    internal const val ENTRY_IR_MODULE = "-Xinclude"
-
-    internal const val DISABLE_PRE_IR = "-Xir-only"
-    internal const val ENABLE_DCE = "-Xir-dce"
-
-    internal const val GENERATE_D_TS = "-Xgenerate-dts"
-
-    internal const val PRODUCE_JS = "-Xir-produce-js"
-    internal const val PRODUCE_UNZIPPED_KLIB = "-Xir-produce-klib-dir"
-    internal const val PRODUCE_ZIPPED_KLIB = "-Xir-produce-klib-file"
-
-    internal const val MINIMIZED_MEMBER_NAMES = "-Xir-minimized-member-names"
-
-    internal const val KLIB_MODULE_NAME = "-Xir-module-name"
-
-    internal const val PER_MODULE = "-Xir-per-module"
-    internal const val PER_MODULE_OUTPUT_NAME = "-Xir-per-module-output-name"
-
-    internal const val WASM_BACKEND = "-Xwasm"
 }

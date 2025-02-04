@@ -39,8 +39,6 @@ plugins {
     `kt-fuzzy`.benchmark
 }
 
-println("components: ${components.asMap}")
-
 group = "ca.solo-studios"
 description = """
     Various string similarity and distance measures for Kotlin Multiplatform

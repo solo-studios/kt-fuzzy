@@ -26,9 +26,12 @@
  * SOFTWARE.
  */
 
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform")
@@ -37,35 +40,37 @@ plugins {
 kotlin {
     explicitApi()
 
-    targets.configureEach {
-        compilations.configureEach {
-            kotlinOptions {
-                apiVersion = "1.8"
-                languageVersion = "1.8"
-            }
-        }
+    compilerOptions {
+        apiVersion = KotlinVersion.KOTLIN_2_0
+        languageVersion = KotlinVersion.KOTLIN_2_0
     }
 
-    targetHierarchy.default()
-
+    applyDefaultHierarchyTemplate()
 
     jvm {
-        compilations.configureEach {
-            kotlinOptions.jvmTarget = "1.8"
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_1_8
         }
     }
 
     // Why is kotlin/js broken? I don't fucking know!
     // For some reason it refuses to run my tests!
     js(IR) {
-        configureCommonJs()
-        configureEsModules()
+        useCommonJs()
+        useEsModules()
 
-        configureGenerateTypeScriptDefinitions()
+        generateTypeScriptDefinitions()
 
         nodejs()
         browser()
     }
+
+    wasmJs {
+        browser()
+        nodejs()
+        d8()
+    }
+    // wasmWasi()
 
 
     mingwX64()
@@ -77,24 +82,21 @@ kotlin {
     macosArm64()
 
     // TODO build android shit (idk why it doesn't work, too lazy to figure it out, the jvm source sets should be fine)
-    // android()
+    // androidTarget()
     // androidNativeX64()
     // androidNativeX86()
     // androidNativeArm32()
     // androidNativeArm64()
 
-    ios()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
-    watchos()
     watchosX64()
     watchosArm32()
     watchosArm64()
     watchosSimulatorArm64()
 
-    tvos()
     tvosX64()
     tvosArm64()
     tvosSimulatorArm64()

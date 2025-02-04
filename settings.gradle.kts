@@ -28,6 +28,15 @@
 
 rootProject.name = "kotlin-fuzzy"
 
+pluginManagement {
+    repositories {
+        maven("https://maven.solo-studios.ca/releases")
+        maven("https://maven.solo-studios.ca/snapshots")
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 include("kt-string-similarity")
 include("kt-fuzzy")
 include("common-test")
