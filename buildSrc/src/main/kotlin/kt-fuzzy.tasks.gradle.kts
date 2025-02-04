@@ -26,8 +26,9 @@
  * SOFTWARE.
  */
 
+import org.gradle.api.internal.project.ProjectInternal
+import org.gradle.api.plugins.internal.JvmPluginsHelper
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     kotlin("multiplatform")
@@ -53,20 +54,5 @@ tasks {
 
     named<Task>("build") {
         dependsOn(withType<Jar>())
-    }
-
-    if (tasks.findByName("dokkaHtml") != null) {
-        val dokkaHtml by named<DokkaTask>("dokkaHtml")
-
-        val javadocJar by register<Jar>("javadocJar") {
-            dependsOn(dokkaHtml)
-            from(dokkaHtml.outputDirectory)
-            archiveClassifier = "javadoc"
-            group = JavaBasePlugin.DOCUMENTATION_GROUP
-        }
-
-        artifacts {
-            archives(javadocJar)
-        }
     }
 }

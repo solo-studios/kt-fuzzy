@@ -32,6 +32,11 @@ plugins {
 }
 
 afterEvaluate {
+    // Make signing not break
+    tasks.withType<AbstractPublishToMaven>().configureEach {
+        dependsOn(tasks.withType<Sign>())
+    }
+
     publishing {
         publications.withType<MavenPublication>().configureEach {
             val projectName = project.name.formatAsName()

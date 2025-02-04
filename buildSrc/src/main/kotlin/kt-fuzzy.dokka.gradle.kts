@@ -31,9 +31,12 @@ import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
 import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
 import com.sass_lang.embedded_protocol.OutputStyle
+import gradle.kotlin.dsl.accessors._cdfee9268d0dc53c8b6c56cc9a386d8c.publishing
 import io.freefair.gradle.plugins.sass.SassCompile
 import java.time.Year
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.gradle.api.internal.component.SoftwareComponentInternal
+import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dokka.DokkaConfiguration.Visibility
 import org.jetbrains.dokka.base.DokkaBase
@@ -61,67 +64,78 @@ sass {
     sourceMapEnabled = false
 }
 
+// project.configure<JavaPluginExtension> {
+//     withSourcesJar()
+//     withJavadocJar()
+// }
+
+val dokkaDirs = DokkaDirectories(project)
+
 tasks {
-    val rootDokkaDirectory = rootProject.projectDir.resolve("dokka")
-    val dokkaDirectories = if (project.rootProject != project)
-        listOf(rootDokkaDirectory, project.projectDir.resolve("dokka"))
-    else
-        listOf(rootDokkaDirectory)
+    val dokkaHtml by named<DokkaTask>("dokkaHtml")
+
+    val javadocJar by register<Jar>("javadocJar") {
+        dependsOn(dokkaHtml)
+        from(dokkaHtml.outputDirectory)
+        archiveClassifier = "javadoc"
+        group = JavaBasePlugin.DOCUMENTATION_GROUP
+    }
+
+    // Here's a configuration to declare the outgoing variant
+    val javadocElements by configurations.register("javadocElements") {
+        description = "Declares build script outgoing variant"
+        isCanBeConsumed = true
+        isCanBeResolved = false
+        attributes {
+            // See https://docs.gradle.org/current/userguide/variant_attributes.html
+            attributes {
+                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.DOCUMENTATION))
+                attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+                attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.JAVADOC))
+                attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
+            }
+        }
+        outgoing.artifact(javadocJar) {
+            classifier = "sources"
+        }
+    }
+
+    // This is probably the most non-trivial incantation: adding the variant to "java" component
+    // println("components: ${components.asMap}")
+    // components.withType<SoftwareComponentInternal>() {
+    //     println("name =$name")
+    // }
+    // (components["kotlin"] as AdhocComponentWithVariants).addVariantsFromConfiguration(javadocElements) {}
+
+    if (project.plugins.hasPlugin("publishing"))
+        publishing.publications.withType<MavenPublication>() {
+            artifact(javadocJar)
+        }
 
     val processDokkaIncludes by register<ProcessResources>("processDokkaIncludes") {
-        from(dokkaDirectories.map { it.resolve("includes") }) {
+        from(dokkaDirs.includes) {
             exclude { it.name.startsWith("_") }
         }
 
         doFirst {
-            val projectInfo = ProjectInfo(
-                    group = project.group.toStringOrEmpty(),
-                    module = project.name,
-                    version = project.version.toStringOrEmpty(),
-                                         )
-
-            val including = rootDokkaDirectory.resolve("includes/_including.md").readText()
-
-            filter<ReplaceTokens>("tokens" to mapOf("including" to including), "beginToken" to "[%%", "endToken" to "%%]")
-
-            @Language("HTML")
-            val stringReplacements = listOf(
-                    "☐" to """<input type="checkbox" readonly>""",
-                    "☒" to """<input type="checkbox" readonly checked>""",
-                    "- [x]" to """- <input class="checklist-item" type="checkbox" readonly>"""
-                                           )
-
-            @Language("RegExp")
-            val regexReplacements = listOf(
-                    "\\[@ft-(\\w+)\\]".toRegex() to """<sup class="footnote"><a href="#footnote-$1">&#91;$1&#93;</a></sup>""",
-                    "\\[@ref-(\\d+)\\]".toRegex() to """<sup class="reference"><a href="#reference-$1">&#91;$1&#93;</a></sup>""",
-                                          )
-
-            filter { sourceLine ->
-                stringReplacements.fold(sourceLine) { line, (old, new) ->
-                    line.replace(old, new)
-                }.let { processedLine ->
-                    regexReplacements.fold(processedLine) { line, (regex, replacement) ->
-                        line.replace(regex, replacement)
-                    }
-                }
-            }
-
-            expand("project" to projectInfo)
+            val dependency = dokkaDirs.readInclude("dependency")
+            filter<ReplaceTokens>("tokens" to mapOf("dependencies" to dependency), "beginToken" to "{{", "endToken" to "}}")
+            filter(::includesLineTransformer)
+            expand("project" to ProjectInfo.fromProject(project))
         }
 
-        destinationDir = layout.buildDirectory.dir("dokka/includes").get().asFile
+        into(dokkaDirs.includesOutput)
         group = JavaBasePlugin.DOCUMENTATION_GROUP
     }
 
     val compileDokkaSass by register<SassCompile>("compileDokkaSass") {
         group = BasePlugin.BUILD_GROUP
-        source = fileTree(rootDokkaDirectory.resolve("styles"))
-        destinationDir = layout.buildDirectory.dir("dokka/styles")
+        source = files(dokkaDirs.styles).asFileTree
+        destinationDir = dokkaDirs.stylesOutput
     }
 
     withType<AbstractDokkaTask>().configureEach {
-        inputs.files(rootDokkaDirectory)
+        inputs.files(dokkaDirs.stylesOutput, dokkaDirs.assets, dokkaDirs.templates, dokkaDirs.scripts)
 
         dependsOn(compileDokkaSass)
 
@@ -130,19 +144,15 @@ tasks {
             separateInheritedMembers = false
 
             // Evil bullshit
-            val rootStyles = rootDokkaDirectory.resolve("styles").listFiles { file -> file.extension == "css" }?.toList().orEmpty()
-            val compiledStyles = rootDokkaDirectory.resolve("styles").listFiles { file ->
-                file.extension == "scss" && !file.name.startsWith("_")
-            }?.map {
-                layout.buildDirectory.file("dokka/styles/${it.nameWithoutExtension}.css").get().asFile
-            }.orEmpty()
+            val rootStyles = dokkaDirs.styles.flatMap { it.walk().filter { file -> file.extension == "css" } }
+            val compiledStyles = dokkaDirs.stylesOutput.asFile.walk().toList()
 
             customStyleSheets = rootStyles + compiledStyles
-            customAssets = rootDokkaDirectory.resolve("assets").listFiles()?.toList().orEmpty()
-            templatesDir = rootDokkaDirectory.resolve("templates")
+            customAssets = dokkaDirs.assets.flatMap { it.walk() }
+            templatesDir = dokkaDirs.templates
         }
         pluginConfiguration<DokkaScriptsPlugin, DokkaScriptsConfiguration> {
-            scripts = rootDokkaDirectory.resolve("scripts").listFiles()?.toList().orEmpty()
+            scripts = dokkaDirs.scripts.flatMap { it.listFiles().orEmpty().toList() }
             remoteScripts = listOf(
                     // MathJax
                     "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML&latest",
@@ -176,10 +186,8 @@ tasks {
     withType<DokkaTask>().configureEach {
         dependsOn(processDokkaIncludes)
 
-        inputs.files(dokkaDirectories)
-
         dokkaSourceSets.configureEach {
-            includes.from(processDokkaIncludes.outputs.files.asFileTree)
+            includes.from(dokkaDirs.includesOutput.asFileTree)
 
             reportUndocumented = true
             documentedVisibilities = setOf(Visibility.PUBLIC, Visibility.PROTECTED)
@@ -189,12 +197,25 @@ tasks {
     withType<DokkaTaskPartial>().configureEach {
         dependsOn(processDokkaIncludes)
 
-        inputs.files(dokkaDirectories)
-
         dokkaSourceSets.configureEach {
-            includes.from(processDokkaIncludes.outputs.files.asFileTree)
+            includes.from(dokkaDirs.includesOutput)
 
             reportUndocumented = true
         }
+    }
+}
+
+@Language("RegExp")
+val stringReplacements = listOf(
+        "☐" to """<input type="checkbox" readonly>""",
+        "☒" to """<input type="checkbox" readonly checked>""",
+        "- \\[x\\]" to """- <input class="checklist-item" type="checkbox" readonly>""",
+        "\\[@ft-(\\w+)\\]" to """<sup class="footnote"><a href="#footnote-$1">&#91;$1&#93;</a></sup>""",
+        "\\[@ref-(\\d+)\\]" to """<sup class="reference"><a href="#reference-$1">&#91;$1&#93;</a></sup>""",
+                               ).map { it.first.toRegex() to it.second }
+
+fun includesLineTransformer(sourceLine: String): String {
+    return stringReplacements.fold(sourceLine) { line, (old, new) ->
+        line.replace(old, new)
     }
 }

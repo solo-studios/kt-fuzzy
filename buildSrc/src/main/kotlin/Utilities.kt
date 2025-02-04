@@ -59,7 +59,7 @@ val Project.libs: LibrariesForLibs
 data class Repository(
     val projectUser: String,
     val projectRepo: String,
-    val projectHost: String = "github.com",
+    val projectHost: String,
 ) {
     val projectBaseUri: String
         get() = "$projectHost/$projectUser/$projectRepo"
@@ -76,7 +76,45 @@ var Project.repository: Repository
 /**
  * Project info class for the `processDokkaIncludes` task.
  */
-data class ProjectInfo(val group: String, val module: String, val version: String)
+data class ProjectInfo(val group: String, val module: String, val version: String) {
+    companion object {
+        fun fromProject(project: Project): ProjectInfo {
+            return ProjectInfo(
+                group = project.group.toStringOrEmpty(),
+                module = project.name,
+                version = project.version.toStringOrEmpty(),
+            )
+        }
+    }
+}
+
+class DokkaDirectories(val project: Project) {
+    val root = project.rootProject.projectDir.resolve("dokka")
+
+    val base = buildList {
+        add(root)
+        if (project.rootProject != project)
+            add(project.projectDir.resolve("dokka"))
+    }
+    val baseOutput = project.layout.buildDirectory.dir("dokka").get()
+
+    val includes = input("includes")
+    val includesOutput = output("includes")
+
+    val styles = input("styles")
+    val stylesOutput = output("styles")
+
+    val assets = input("assets")
+    val templates = rootInput("templates")
+    val scripts = input("scripts")
+
+    fun include(name: String) = includes.map { it.resolve("_$name.md") }.first { it.exists() && it.isFile }
+    fun readInclude(name: String) = include(name).readText()
+
+    private fun input(name: String) = base.map { it.resolve(name) }
+    private fun rootInput(name: String) = root.resolve(name)
+    private fun output(name: String) = baseOutput.dir(name)
+}
 
 /*
  Magic shit

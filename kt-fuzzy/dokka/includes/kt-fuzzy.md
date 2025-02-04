@@ -12,5 +12,5 @@ A dependency-less Kotlin Multiplatform library for fuzzy string matching
 
 ## Including
 
-[%%including%%]
+{{dependencies}}
 

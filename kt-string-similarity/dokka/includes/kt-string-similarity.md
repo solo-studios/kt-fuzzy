@@ -16,7 +16,7 @@ however is now expanding upon it.
 
 ## Including
 
-[%%including%%]
+{{dependencies}}
 
 ## Overview
 

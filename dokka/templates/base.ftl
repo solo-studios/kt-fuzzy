@@ -6,8 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <@page_metadata.display/>
-    <@template_cmd name="pathToRoot">
-        <script>var pathToRoot = "${pathToRoot}";</script></@template_cmd>
+    <@template_cmd name="pathToRoot"><script>var pathToRoot = "${pathToRoot}";</script></@template_cmd>
     <script>document.documentElement.classList.replace("no-js", "js");</script>
     <#-- This script doesn't need to be there but it is nice to have
     since app in dark mode doesn't 'blink' (class is added before it is rendered) -->

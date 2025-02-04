@@ -28,6 +28,10 @@
 
 @file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
+import org.gradle.api.internal.project.ProjectInternal
+import org.gradle.api.plugins.internal.JvmPluginsHelper
+
+
 plugins {
     `kt-fuzzy`.repositories
     `kt-fuzzy`.compilation
@@ -54,3 +58,23 @@ kotlin {
         }
     }
 }
+
+// afterEvaluate {
+//     println("source sets=${sourceSets.asMap}")
+//
+//     project.configure<JavaPluginExtension> {
+//         // withSourcesJar()
+//         val main = sourceSets.getByName("commonMain")
+//         JvmPluginsHelper.createDocumentationVariantWithArtifact(
+//                 main.sourcesElementsConfigurationName,
+//                 null,
+//                 DocsType.SOURCES,
+//                 listOf(),
+//                 main.sourcesJarTaskName,
+//                 main.allSource,
+//                 project as ProjectInternal
+//                                                                )
+//
+//         // withJavadocJar()
+//     }
+// }
