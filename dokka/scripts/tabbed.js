@@ -72,7 +72,9 @@ function loadSavedTabs() {
     }
 }
 
-/** @param {Element} localLabel */
+/**
+ * @param {Element} localLabel
+ */
 function syncTabsByName(localLabel) {
     const labelContent = localLabel.innerHTML
     const labels = document.querySelectorAll('.tabbed-set > label, .tabbed-alternate > .tabbed-labels > label')
@@ -86,24 +88,58 @@ function syncTabsByName(localLabel) {
     }
 }
 
-/** @param {Element} tab */
+/**
+ * @returns {boolean}
+ */
+function isLocalStorageEnabled() {
+    try {
+        const key = `__local_storage_test`;
+        window.localStorage.setItem(key, null);
+        window.localStorage.removeItem(key);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+let localStorageEnabled = isLocalStorageEnabled();
+
+/**
+ * @param {Element} tab
+ */
 function saveTabSelection(tab) {
+    if (!localStorageEnabled)
+        return;
     const tabGroupId = tab.getAttribute("name")
     const tabId = tab.id
     localStorage.setItem(`${location.pathname}.${tabGroupId}`, tabId)
 }
 
+/**
+ * @param {Element} tab
+ */
 function clearTabSelection(tab) {
+    if (!localStorageEnabled)
+        return;
     const tabGroupId = tab.getAttribute("name")
     localStorage.removeItem(`${location.pathname}.${tabGroupId}`)
 }
 
-/** @param {String} tabGroupId */
+/**
+ * @param {string} tabGroupId
+ * @returns {?string}
+ */
 function loadTabIdsFromStorage(tabGroupId) {
+    if (!localStorageEnabled)
+        return null;
     return localStorage.getItem(`${location.pathname}.${tabGroupId}`)
 }
 
-/** @param {any[]} array */
+/**
+ * @template T
+ * @param {T[]} array
+ * @returns {T[]}
+ */
 function unique(array) {
     return Array.from(new Set(array));
 }
