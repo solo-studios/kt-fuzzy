@@ -1,9 +1,9 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.1.10"
 dokka = "1.9.10"
 nyx = "0.3.0-SNAPSHOT"
 axion-release = "1.15.5"
-kotest = "5.9.1"
+kotest = "6.0.0.M1"
 kotlinx-benchmark = "0.4.9"
 freefair-sass = "8.4"
 
@@ -53,7 +53,6 @@ dokka-plugin-style-tweaks = { group = "ca.solo-studios", name = "dokka-style-twe
 ## Kotest
 ### A flexible and elegant multi-platform test framework for Kotlin
 kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine", version.ref = "kotest" }
-kotest-framework-datatest = { group = "io.kotest", name = "kotest-framework-datatest", version.ref = "kotest" }
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
@@ -61,7 +60,6 @@ kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", ver
 [bundles]
 kotest = [
     "kotest-framework-engine",
-    "kotest-framework-datatest",
     "kotest-assertions",
     "kotest-property",
 ]

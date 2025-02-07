@@ -33,6 +33,7 @@ import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.scopes.FunSpecRootScope
 import io.kotest.datatest.getStableIdentifier
+import io.kotest.datatest.withData
 import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
 
@@ -42,10 +43,8 @@ actual fun FunSpecRootScope.testPrecomputed(
     resultFunction: (String, String) -> Double,
 ) {
     context(context) {
-        precomputed.forEach {
-            withClue({ getStableIdentifier(it) }) {
-                resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
-            }
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
         }
     }
 }
@@ -56,10 +55,8 @@ actual fun <T, U, V> FunSpecRootScope.testPrecomputed(
     resultFunction: (T, U) -> V,
 ) {
     context(context) {
-        precomputed.forEach {
-            withClue({ getStableIdentifier(it) }) {
-                resultFunction(it.first, it.second) shouldBe it.third
-            }
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe it.third
         }
     }
 }
