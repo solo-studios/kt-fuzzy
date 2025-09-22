@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jenkinsfile is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:17 a.m.
+ * Last modified on 22-09-2025 03:24 a.m.
  *
  * MIT License
  *
@@ -54,7 +54,8 @@ pipeline {
                 success {
                     archiveArtifacts artifacts: '**/build/libs/*.jar', excludes: '**/tmp/**', fingerprint: true, onlyIfSuccessful: true
 
-                    javadoc javadocDir: 'build/dokka/html/', keepAll: true
+                    javadoc javadocDir: 'kt-string-similarity/build/dokka/html/', keepAll: true
+                    javadoc javadocDir: 'kt-fuzzy/build/dokka/html/', keepAll: true
                 }
             }
         }
