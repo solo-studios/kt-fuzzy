@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-07-2023 04:33 p.m.
+ * Last modified on 22-09-2025 03:11 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -31,19 +30,26 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     kotlin("multiplatform")
+    id("ca.solo-studios.nyx")
+}
+
+nyx {
+    compile {
+        distributeLicense = true
+        withSourcesJar()
+
+        kotlin {
+            apiVersion = "2.0"
+            languageVersion = "2.0"
+        }
+    }
 }
 
 kotlin {
     explicitApi()
-
-    compilerOptions {
-        apiVersion = KotlinVersion.KOTLIN_2_0
-        languageVersion = KotlinVersion.KOTLIN_2_0
-    }
 
     applyDefaultHierarchyTemplate()
 

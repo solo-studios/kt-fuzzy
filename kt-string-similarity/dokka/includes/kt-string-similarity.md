@@ -1,4 +1,4 @@
-# Module kt-string-similarity
+# Module Kotlin String Similarity
 
 Kotlin String Similarity is a Kotlin Multiplatform library for measuring and comparing the similarity of strings.
 

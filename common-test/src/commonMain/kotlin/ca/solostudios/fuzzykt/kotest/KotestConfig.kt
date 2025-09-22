@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file KotestConfig.kt is part of kotlin-fuzzy
- * Last modified on 22-07-2023 04:21 p.m.
+ * Last modified on 22-09-2025 02:49 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -34,15 +33,20 @@ import io.kotest.core.names.DuplicateTestNameMode
 import io.kotest.core.names.TestNameCase
 import io.kotest.core.spec.SpecExecutionOrder
 import io.kotest.core.test.TestCaseOrder
+import io.kotest.engine.concurrency.SpecExecutionMode
+import io.kotest.engine.concurrency.TestExecutionMode
 
 @ExperimentalKotest
 class KotestConfig : AbstractProjectConfig() {
     override val testNameCase = TestNameCase.Lowercase
     override val duplicateTestNameMode = DuplicateTestNameMode.Error
-    override val parallelism = 8
-    override val concurrentSpecs = 4
-    override val concurrentTests = 8
+    override val testExecutionMode = TestExecutionMode.LimitedConcurrency(8)
+    override val specExecutionMode = SpecExecutionMode.LimitedConcurrency(4)
     override val testCaseOrder = TestCaseOrder.Sequential
     override val specExecutionOrder = SpecExecutionOrder.Lexicographic
     override var displayFullTestPath: Boolean? = false
+
+    // override val parallelism = 8
+    // override val concurrentSpecs = 4
+    // override val concurrentTests = 8
 }

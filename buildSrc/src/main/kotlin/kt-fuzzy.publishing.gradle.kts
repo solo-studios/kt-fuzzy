@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 04-09-2023 05:44 p.m.
+ * Last modified on 22-09-2025 03:11 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -29,63 +28,28 @@
 plugins {
     signing
     `maven-publish`
+    id("ca.solo-studios.nyx")
 }
 
-afterEvaluate {
-    // Make signing not break
-    tasks.withType<AbstractPublishToMaven>().configureEach {
-        dependsOn(tasks.withType<Sign>())
+nyx {
+    info {
+        group = "ca.solo-studios"
+        organizationName = "Solo Studios"
+        organizationUrl = "https://solo-studios.ca/"
+
+        developer {
+            id = "solonovamax"
+            name = "solonovamax"
+            email = "solonovamax@12oclockpoint.com"
+            url = "https://solonovamax.gay/"
+        }
+
+        repository.fromGithub("solo-studios", "kt-fuzzy")
+        license.useMIT()
     }
 
     publishing {
-        publications.withType<MavenPublication>().configureEach {
-            val projectName = project.name.formatAsName()
-            val projectGroup = project.group.toStringOrEmpty()
-            val projectVersion = project.version.toStringOrEmpty()
-            val projectDescription = project.description.toStringOrEmpty()
-            val projectUrl = project.repository.projectUrl
-            val projectBaseUri = project.repository.projectBaseUri
-
-            val licenseName = "MIT"
-            val licenseUrl = "https://mit-license.org/"
-
-            groupId = projectGroup
-            // This breaks shit (don't do it)
-            // artifactId = project.name
-            version = projectVersion
-
-            pom {
-                name = projectName
-                description = projectDescription
-                url = projectUrl
-
-                inceptionYear = "2021"
-
-                licenses {
-                    license {
-                        name = licenseName
-                        url = licenseUrl
-                    }
-                }
-                developers {
-                    developer {
-                        id = "solonovamax"
-                        name = "solonovamax"
-                        email = "solonovamax@12oclockpoint.com"
-                        url = "https://solonovamax.gay/"
-                    }
-                }
-                issueManagement {
-                    system = "GitHub"
-                    url = "$projectUrl/issues"
-                }
-                scm {
-                    connection = "scm:git:$projectUrl.git"
-                    developerConnection = "scm:git:ssh://$projectBaseUri.git"
-                    url = projectUrl
-                }
-            }
-        }
+        withSignedPublishing()
 
         repositories {
             maven {
@@ -93,7 +57,6 @@ afterEvaluate {
 
                 val repositoryId: String? by project
                 url = when {
-                    isSnapshot           -> uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                     repositoryId != null -> uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
                     else                 -> uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 }
@@ -101,29 +64,29 @@ afterEvaluate {
                 credentials(PasswordCredentials::class)
             }
             maven {
-                name = "SoloStudios"
+                name = "SoloStudiosReleases"
 
-                val releasesUrl = uri("https://maven.solo-studios.ca/releases/")
-                val snapshotUrl = uri("https://maven.solo-studios.ca/snapshots/")
-                url = if (isSnapshot) snapshotUrl else releasesUrl
+                url = uri("https://maven.solo-studios.ca/releases/")
 
                 credentials(PasswordCredentials::class)
                 authentication { // publishing doesn't work without this for some reason
                     create<BasicAuthentication>("basic")
                 }
             }
-        }
-    }
+            maven {
+                name = "SoloStudiosSnapshots"
 
-    signing {
-        // Allow specifying the key, key id, and password via environment variables.
-        val signingKey: String? by project
-        val signingKeyId: String? by project
-        val signingPassword: String? by project
-        if (signingKey != null && signingKeyId != null && signingPassword != null)
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        else
-            useGpgCmd()
-        sign(publishing.publications)
+                url = uri("https://maven.solo-studios.ca/snapshots/")
+
+                credentials(PasswordCredentials::class)
+                authentication { // publishing doesn't work without this for some reason
+                    create<BasicAuthentication>("basic")
+                }
+            }
+            maven {
+                name = "TestMaven"
+                url = file("./test-maven").absoluteFile.toURI()
+            }
+        }
     }
 }

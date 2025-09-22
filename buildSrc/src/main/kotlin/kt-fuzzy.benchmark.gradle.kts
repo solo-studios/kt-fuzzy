@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.benchmark.gradle.kts is part of kotlin-fuzzy
- * Last modified on 09-08-2023 07:24 p.m.
+ * Last modified on 05-03-2025 12:44 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -30,6 +29,8 @@
 
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     kotlin("multiplatform")
@@ -44,6 +45,14 @@ allOpen {
 
 @Suppress("unused")
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        withSourceSetTree(KotlinSourceSetTree("benchmarks"))
+        common {
+            withJvm()
+        }
+    }
+
     jvm {
         val benchmarks by compilations.creating {
             associateWith(this@jvm.compilations["main"])
@@ -51,14 +60,10 @@ kotlin {
     }
 
     sourceSets {
-        val commonBenchmarks by creating {
-            dependsOn(commonMain.get())
+        val commonBenchmarks by getting {
             dependencies {
                 implementation(libs.kotlinx.benchmark.runtime)
             }
-        }
-        val jvmBenchmarks by getting {
-            dependsOn(commonBenchmarks)
         }
     }
 }

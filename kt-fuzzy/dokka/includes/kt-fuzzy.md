@@ -1,4 +1,4 @@
-# Module kt-fuzzy
+# Module Kotlin Fuzzy
 
 A dependency-less Kotlin Multiplatform library for fuzzy string matching
 

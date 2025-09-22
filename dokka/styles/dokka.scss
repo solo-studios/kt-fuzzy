@@ -1,9 +1,8 @@
-/*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+/*!
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file dokka.css is part of kotlin-fuzzy
- * Last modified on 16-09-2023 05:05 p.m.
+ * The file dokka.scss is part of kotlin-fuzzy
+ * Last modified on 22-09-2025 03:11 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -26,12 +25,22 @@
  * SOFTWARE.
  */
 
-@import 'mixins';
+@import "mixins";
+
+.toc--part[data-active] > .toc--row .toc--button,
+.toc--part[data-active] > .toc--row .toc--link {
+    background-color: var(--sidemenu-section-active-color)
+}
+
+.toc--part[data-active] > .toc--row .toc--button:hover,
+.toc--part[data-active] > .toc--row .toc--link:hover {
+    background-color: color-mix(in oklab, var(--sidemenu-section-active-color), white 5%);
+}
 
 /* Checklists/checkboxes */
 
 /* Disable checkboxes */
-input[type='checkbox'][readonly] {
+input[type="checkbox"][readonly] {
     pointer-events: none;
 }
 
@@ -66,7 +75,7 @@ input[type='checkbox'][readonly] {
 .footnotes, .references {
     border-top: 1px solid var(--border-color);
     line-height: 1.2;
-    padding: 0 16px;
+    padding:    0 16px;
 
     li {
         margin-bottom: 16px;
@@ -129,13 +138,13 @@ div.code-toolbar {
     position: relative;
 
     > .toolbar {
-        opacity: 0;
+        opacity:    0;
         margin-right: 28px;
-        position: absolute;
-        right: .2em;
-        top: .3em;
+        position:   absolute;
+        right:      .2em;
+        top:        .3em;
         transition: $code-toolbar-transition;
-        z-index: 10;
+        z-index:    10;
 
         > .toolbar-item {
             display: inline-block;
@@ -145,9 +154,9 @@ div.code-toolbar {
                 background: rgba(224, 224, 224, .2);
                 border-radius: .5em;
                 box-shadow: 0 2px 0 0 rgba(0, 0, 0, .2);
-                color: var(--default-font-color);
-                font-size: .8em;
-                padding: 0 .5em;
+                color:      var(--default-font-color);
+                font-size:  .8em;
+                padding:    0 .5em;
 
                 &:focus, &:hover {
                     color: inherit;
@@ -162,12 +171,12 @@ div.code-toolbar {
             > button {
                 @include vendor-prefix(user-select, none);
                 background: 0 0;
-                border: 0;
-                color: inherit;
-                font: inherit;
+                border:     0;
+                color:      inherit;
+                font:       inherit;
                 line-height: normal;
-                overflow: visible;
-                padding: 0;
+                overflow:   visible;
+                padding:    0;
             }
         }
     }
@@ -195,13 +204,13 @@ pre.diff-highlight > code, pre > code.diff-highlight {
     .token {
         .deleted:not(.prefix) {
             background-color: rgba(255, 0, 0, .1);
-            color: inherit;
+            color:   inherit;
             display: block;
         }
 
         .inserted:not(.prefix) {
             background-color: rgba(0, 255, 128, .1);
-            color: inherit;
+            color:   inherit;
             display: block;
         }
     }

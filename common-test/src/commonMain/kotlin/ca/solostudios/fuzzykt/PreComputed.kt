@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file PreComputed.kt is part of kotlin-fuzzy
- * Last modified on 29-09-2023 08:01 p.m.
+ * Last modified on 22-09-2025 01:51 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -28,26 +27,42 @@
 
 package ca.solostudios.fuzzykt
 
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
 import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.datatest.withData
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
+import kotlin.jvm.JvmName
 
 /**
  * Tests a precomputed value with a context.
- *
- * This has to be platform-specific because js hates nested tests, so on js it does a hack to not be nested.
  *
  * @param context The context name
  * @param precomputed The precomputed data
  * @param resultFunction The similarity function
  */
-expect fun FunSpecRootScope.testPrecomputed(
+fun FunSpecRootScope.testPrecomputed(
     context: String,
     precomputed: List<FuzzyTestData>,
     resultFunction: (String, String) -> Double,
-)
+) {
+    context(context) {
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
+        }
+    }
+}
 
-expect fun <T, U, V> FunSpecRootScope.testPrecomputed(
+@JvmName("testPrecomputedTriple")
+fun <T, U, V> FunSpecRootScope.testPrecomputed(
     context: String,
     precomputed: List<Triple<T, U, V>>,
     resultFunction: (T, U) -> V,
-)
+) {
+    context(context) {
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe it.third
+        }
+    }
+}

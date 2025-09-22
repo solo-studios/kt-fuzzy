@@ -1,11 +1,12 @@
 [versions]
-kotlin = "2.1.10"
-dokka = "1.9.10"
+kotlin = "2.2.10"
+dokka = "2.0.0"
 nyx = "0.3.0-SNAPSHOT"
-axion-release = "1.15.5"
-kotest = "6.0.0.M1"
-kotlinx-benchmark = "0.4.9"
-freefair-sass = "8.4"
+axion-release = "1.20.1"
+kotest = "6.0.3"
+ksp = "2.2.10-2.0.2"
+kotlinx-benchmark = "0.4.13"
+freefair-sass = "9.0.0-rc2"
 
 [plugins]
 ## Kotlin Plugins
@@ -23,7 +24,9 @@ nyx = { id = "ca.solo-studios.nyx", version.ref = "nyx" }
 axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
 
 ## Kotest
-kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
+kotest = { id = "io.kotest", version.ref = "kotest" }
+
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 ## kotlinx.benchmark
 ### Toolkit for running benchmarks for multiplatform code written in Kotlin
@@ -35,9 +38,6 @@ sass-base = { id = "io.freefair.sass-base", version.ref = "freefair-sass" }
 
 ## Kotlin stdlib
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
-kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
-
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 ## kotlinx.benchmark runtime
 ### Runtime for kotlinx.benchmark

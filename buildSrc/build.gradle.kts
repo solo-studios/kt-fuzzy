@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 16-09-2023 04:38 p.m.
+ * Last modified on 22-09-2025 03:08 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -25,6 +24,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import ca.solostudios.nyx.util.soloStudios
+import ca.solostudios.nyx.util.soloStudiosSnapshots
 
 plugins {
     `kotlin-dsl`
@@ -36,27 +38,17 @@ repositories {
     // for kotlin-dsl plugin
     gradlePluginPortal()
 
-    maven("https://maven.solo-studios.ca/releases/") {
-        name = "Solo Studios"
-    }
-    maven("https://maven.solo-studios.ca/snapshots/") {
-        name = "Solo Studios"
-    }
+    soloStudios()
+    soloStudiosSnapshots()
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+nyx {
+    compile {
+        jvmToolchain = 17
 
-kotlin {
-    target {
-        compilations.configureEach {
-            kotlinOptions {
-                jvmTarget = JavaVersion.VERSION_17.toString()
-                languageVersion = "1.8"
-                apiVersion = "1.8"
-            }
+        kotlin {
+            apiVersion = "2.0"
+            languageVersion = "2.0"
         }
     }
 }
@@ -67,25 +59,38 @@ dependencies {
     implementation(libs.dokka.plugin.script)
     implementation(libs.dokka.plugin.style.tweaks)
 
-    implementation(gradlePlugin(libs.plugins.kotest.multiplatform, libs.versions.kotest))
 
-    implementation(gradlePlugin(libs.plugins.dokka, libs.versions.dokka))
-    implementation(gradlePlugin(libs.plugins.kotlin.multiplatform, libs.versions.kotlin))
-    implementation(gradlePlugin(libs.plugins.kotlin.plugin.allopen, libs.versions.kotlin))
+    implementation(libs.plugins.kotest.toDependency())
 
-    implementation(gradlePlugin(libs.plugins.nyx, libs.versions.nyx))
+    implementation(libs.plugins.ksp.toDependency())
 
-    implementation(gradlePlugin(libs.plugins.axion.release, libs.versions.axion.release))
+    implementation(libs.plugins.dokka.toDependency())
+    implementation(libs.plugins.kotlin.multiplatform.toDependency())
+    implementation(libs.plugins.kotlin.plugin.allopen.toDependency())
 
-    implementation(gradlePlugin(libs.plugins.kotlinx.benchmark, libs.versions.kotlinx.benchmark))
+    implementation(libs.plugins.nyx.toDependency())
 
-    implementation(gradlePlugin(libs.plugins.sass.base, libs.versions.freefair.sass))
+    implementation(libs.plugins.axion.release.toDependency())
+
+    implementation(libs.plugins.kotlinx.benchmark.toDependency())
+
+    implementation(libs.plugins.sass.base.toDependency())
 
     // https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
-fun gradlePlugin(id: Provider<PluginDependency>, version: Provider<String>): String {
-    val pluginId = id.get().pluginId
-    return "$pluginId:$pluginId.gradle.plugin:${version.get()}"
+fun Provider<PluginDependency>.toDependency(): Provider<ExternalModuleDependency> = map { plugin ->
+    val pluginId = plugin.pluginId
+    val version = plugin.version
+
+    return@map dependencyFactory.create(pluginId, "$pluginId.gradle.plugin", null).apply {
+        version {
+            branch = version.branch
+            strictly(version.strictVersion)
+            require(version.requiredVersion)
+            prefer(version.preferredVersion)
+            reject(*version.rejectedVersions.toTypedArray())
+        }
+    }
 }

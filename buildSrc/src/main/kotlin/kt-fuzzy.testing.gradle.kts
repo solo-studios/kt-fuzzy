@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 31-08-2023 04:53 p.m.
+ * Last modified on 22-09-2025 03:04 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -28,15 +27,28 @@
 
 @file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
-import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsSubTargetDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import kotlin.math.max
 
 plugins {
     kotlin("multiplatform")
-    id("io.kotest.multiplatform")
+    id("com.google.devtools.ksp")
+    id("io.kotest")
 }
 
 kotlin {
+    // kotest targets jvm 11
+    targets.withType<KotlinJvmTarget>().configureEach {
+        compilations.named { it.contains("test", ignoreCase = true) }.configureEach {
+            compileTaskProvider.configure {
+                compilerOptions {
+                    this.jvmTarget = JvmTarget.JVM_11
+                }
+            }
+        }
+    }
+
     sourceSets {
         val commonTest by getting {
             dependencies {
@@ -52,22 +64,6 @@ kotlin {
             }
         }
     }
-
-    js(IR) {
-        // I think tests are broken for kotlin 1.9.0, as the js test task doesn't seem to run lol
-        nodejs {
-            configureTests()
-        }
-        browser {
-            configureTests()
-        }
-    }
-}
-
-fun KotlinJsSubTargetDsl.configureTests() {
-    testTask(Action {
-        useMocha()
-    })
 }
 
 tasks {

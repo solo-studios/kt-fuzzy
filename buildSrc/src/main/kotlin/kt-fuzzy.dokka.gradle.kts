@@ -1,9 +1,8 @@
 /*
- * kt-fuzzy - A Kotlin library for fuzzy string matching
- * Copyright (c) 2023-2023 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 16-09-2023 04:49 p.m.
+ * Last modified on 22-09-2025 02:39 a.m.
  *
  * MIT License
  *
@@ -17,7 +16,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * KT-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -26,28 +25,29 @@
  * SOFTWARE.
  */
 
-import ca.solostudios.dokkascript.plugin.DokkaScriptsConfiguration
-import ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin
-import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksConfiguration
-import ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin
+@file:Suppress("serial")
+
 import com.sass_lang.embedded_protocol.OutputStyle
+import gradle.kotlin.dsl.accessors._731353d3330d41c97ba54bd629a1162c.nyx
 import io.freefair.gradle.plugins.sass.SassCompile
-import java.time.Year
 import org.apache.tools.ant.filters.ReplaceTokens
-import org.gradle.api.internal.component.SoftwareComponentInternal
-import org.gradle.jvm.tasks.Jar
 import org.intellij.lang.annotations.Language
-import org.jetbrains.dokka.DokkaConfiguration.Visibility
-import org.jetbrains.dokka.base.DokkaBase
-import org.jetbrains.dokka.base.DokkaBaseConfiguration
-import org.jetbrains.dokka.gradle.AbstractDokkaTask
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
+import org.jetbrains.dokka.gradle.engine.plugins.DokkaPluginParametersBaseSpec
+import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
+import java.time.Year
 
 plugins {
     id("org.jetbrains.dokka")
     id("io.freefair.sass-base")
+    id("ca.solo-studios.nyx")
+    id("pl.allegro.tech.build.axion-release")
+}
+
+nyx {
+    compile {
+        withJavadocJar()
+    }
 }
 
 dependencies {
@@ -63,101 +63,72 @@ sass {
     sourceMapEnabled = false
 }
 
-// project.configure<JavaPluginExtension> {
-//     withSourcesJar()
-//     withJavadocJar()
-// }
-
 val dokkaDirs = DokkaDirectories(project)
 
-tasks {
-    val dokkaHtml by named<DokkaTask>("dokkaHtml")
-
-    val javadocJar by register<Jar>("javadocJar") {
-        dependsOn(dokkaHtml)
-        from(dokkaHtml.outputDirectory)
-        archiveClassifier = "javadoc"
-        group = JavaBasePlugin.DOCUMENTATION_GROUP
+val processDokkaIncludes by tasks.registering(ProcessResources::class) {
+    from(dokkaDirs.includes) {
+        exclude { it.name.startsWith("_") }
     }
 
-    // Here's a configuration to declare the outgoing variant
-    val javadocElements by configurations.register("javadocElements") {
-        description = "Declares build script outgoing variant"
-        isCanBeConsumed = true
-        isCanBeResolved = false
-        attributes {
-            // See https://docs.gradle.org/current/userguide/variant_attributes.html
-            attributes {
-                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.DOCUMENTATION))
-                attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
-                attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType.JAVADOC))
-                attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_RUNTIME))
-            }
-        }
-        outgoing.artifact(javadocJar) {
-            classifier = "sources"
-        }
+    doFirst {
+        val dependency = dokkaDirs.readInclude("dependency")
+        filter<ReplaceTokens>("tokens" to mapOf("dependencies" to dependency), "beginToken" to "{{", "endToken" to "}}")
+        filter(::includesLineTransformer)
+        expand("project" to ProjectInfo.fromProject(project))
     }
 
-    // This is probably the most non-trivial incantation: adding the variant to "java" component
-    // println("components: ${components.asMap}")
-    // components.withType<SoftwareComponentInternal>() {
-    //     println("name =$name")
-    // }
-    // (components["kotlin"] as AdhocComponentWithVariants).addVariantsFromConfiguration(javadocElements) {}
+    into(dokkaDirs.includesOutput)
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+}
 
-    // if (project.plugins.hasPlugin("publishing"))
-    //     publishing.publications.withType<MavenPublication>() {
-    //         artifact(javadocJar)
-    //     }
 
-    val processDokkaIncludes by register<ProcessResources>("processDokkaIncludes") {
-        from(dokkaDirs.includes) {
-            exclude { it.name.startsWith("_") }
-        }
+val compileDokkaSass by tasks.registering(SassCompile::class) {
+    group = BasePlugin.BUILD_GROUP
+    source = files(dokkaDirs.styles).asFileTree
+    destinationDir = dokkaDirs.stylesOutput
+}
 
-        doFirst {
-            val dependency = dokkaDirs.readInclude("dependency")
-            filter<ReplaceTokens>("tokens" to mapOf("dependencies" to dependency), "beginToken" to "{{", "endToken" to "}}")
-            filter(::includesLineTransformer)
-            expand("project" to ProjectInfo.fromProject(project))
-        }
+dokka {
+    moduleName = nyx.info.name
+    moduleVersion = nyx.info.version
+    dokkaSourceSets.configureEach {
+        includes.from(dokkaDirs.includesOutput.asFileTree.files)
+        reportUndocumented = true
+        documentedVisibilities = setOf(VisibilityModifier.Public, VisibilityModifier.Protected)
 
-        into(dokkaDirs.includesOutput)
-        group = JavaBasePlugin.DOCUMENTATION_GROUP
+        // sourceLink {
+        //     localDirectory = projectDir.resolve("src")
+        //     remoteUrl = nyx.info.repository.projectUrl.map { uri("$it/blob/${scmVersion.scmPosition.revision}/src") }
+        //     remoteLineSuffix = "#L"
+        // }
     }
 
-    val compileDokkaSass by register<SassCompile>("compileDokkaSass") {
-        group = BasePlugin.BUILD_GROUP
-        source = files(dokkaDirs.styles).asFileTree
-        destinationDir = dokkaDirs.stylesOutput
-    }
-
-    withType<AbstractDokkaTask>().configureEach {
-        inputs.files(dokkaDirs.stylesOutput, dokkaDirs.assets, dokkaDirs.templates, dokkaDirs.scripts)
-
-        dependsOn(compileDokkaSass)
-
-        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+    pluginsConfiguration {
+        html {
+            homepageLink = nyx.info.repository.projectUrl
             footerMessage = "© ${Year.now()} Copyright solo-studios"
             separateInheritedMembers = false
 
-            // Evil bullshit
             val rootStyles = dokkaDirs.styles.flatMap { it.walk().filter { file -> file.extension == "css" } }
-            val compiledStyles = dokkaDirs.stylesOutput.asFile.walk().toList()
 
-            customStyleSheets = rootStyles + compiledStyles
-            customAssets = dokkaDirs.assets.flatMap { it.walk() }
+            customStyleSheets.from(fileTree(compileDokkaSass.flatMap { it.destinationDir }), rootStyles)
+            customAssets.from(dokkaDirs.assets.flatMap { it.walk() })
             templatesDir = dokkaDirs.templates
         }
-        pluginConfiguration<DokkaScriptsPlugin, DokkaScriptsConfiguration> {
-            scripts = dokkaDirs.scripts.flatMap { it.listFiles().orEmpty().toList() }
+
+        registerBinding(DokkaScriptsPluginParameters::class, DokkaScriptsPluginParameters::class)
+
+        register<DokkaScriptsPluginParameters>("dokkaScripts") {
+            scripts.from(dokkaDirs.scripts.flatMap { it.listFiles().orEmpty().toList() })
             remoteScripts = listOf(
-                    // MathJax
-                    "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML&latest",
-                                  )
+                // MathJax
+                "https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0/tex-chtml.js",
+            )
         }
-        pluginConfiguration<DokkaStyleTweaksPlugin, DokkaStyleTweaksConfiguration> {
+
+        registerBinding(DokkaStyleTweaksPluginParameters::class, DokkaStyleTweaksPluginParameters::class)
+
+        register<DokkaStyleTweaksPluginParameters>("dokkaStyles") {
             minimalScrollbar = true
             darkPurpleHighlight = true
             darkColorSchemeFix = true
@@ -169,49 +140,119 @@ tasks {
             disableCodeWrapping = true
             sidebarWidth = "340px"
         }
-
-        moduleName = project.name
-        moduleVersion = project.version.toStringOrEmpty()
     }
+}
 
-    withType<DokkaMultiModuleTask>().configureEach {
-        if (project.rootProject == project)
-            moduleName = project.name.formatAsName()
-        else
-            isEnabled = false
-    }
+abstract class DokkaScriptsPluginParameters @Inject constructor(name: String) : DokkaPluginParametersBaseSpec(
+    name,
+    "ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin"
+) {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    @get:NormalizeLineEndings
+    abstract val scripts: ConfigurableFileCollection
+
+    @get:Input
+    abstract val remoteScripts: ListProperty<String>
 
 
-    withType<DokkaTask>().configureEach {
-        dependsOn(processDokkaIncludes)
-
-        dokkaSourceSets.configureEach {
-            includes.from(dokkaDirs.includesOutput.asFileTree)
-
-            reportUndocumented = true
-            documentedVisibilities = setOf(Visibility.PUBLIC, Visibility.PROTECTED)
+    override fun jsonEncode(): String {
+        val scriptEntries = scripts.files.joinToString(separator = ",", prefix = "[", postfix = "]") {
+            val file = it.canonicalFile.invariantSeparatorsPath
+            "\"$file\""
         }
-    }
-
-    withType<DokkaTaskPartial>().configureEach {
-        dependsOn(processDokkaIncludes)
-
-        dokkaSourceSets.configureEach {
-            includes.from(dokkaDirs.includesOutput)
-
-            reportUndocumented = true
+        val remoteScriptsEntries = remoteScripts.get().joinToString(separator = ",", prefix = "[", postfix = "]") {
+            "\"$it\""
         }
+        // language=JSON
+        return """
+            {
+                "scripts": $scriptEntries,
+                "remoteScripts": $remoteScriptsEntries
+            }
+        """.trimIndent()
+    }
+}
+
+abstract class DokkaStyleTweaksPluginParameters @Inject constructor(name: String) : DokkaPluginParametersBaseSpec(
+    name,
+    "ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin"
+) {
+    @get:Input
+    abstract val darkColorSchemeFix: Property<Boolean>
+
+    @get:Input
+    abstract val darkPurpleHighlight: Property<Boolean>
+
+    @get:Input
+    abstract val disableCodeWrapping: Property<Boolean>
+
+    @get:Input
+    abstract val improvedBlockquoteBorder: Property<Boolean>
+
+    @get:Input
+    abstract val improvedSectionTabBorder: Property<Boolean>
+
+    @get:Input
+    abstract val lighterBlockquoteText: Property<Boolean>
+
+    @get:Input
+    abstract val minimalScrollbar: Property<Boolean>
+
+    @get:Input
+    abstract val sectionTabFontWeight: Property<String>
+
+    @get:Input
+    abstract val sectionTabTransition: Property<Boolean>
+
+    @get:Input
+    abstract val sidebarWidth: Property<String>
+
+    override fun jsonEncode(): String {
+        val darkColorSchemeFix = darkColorSchemeFix.getOrElse(false)
+        val darkPurpleHighlight = darkPurpleHighlight.getOrElse(false)
+        val disableCodeWrapping = disableCodeWrapping.getOrElse(false)
+        val improvedBlockquoteBorder = improvedBlockquoteBorder.getOrElse(false)
+        val improvedSectionTabBorder = improvedSectionTabBorder.getOrElse(false)
+        val lighterBlockquoteText = lighterBlockquoteText.getOrElse(false)
+        val minimalScrollbar = minimalScrollbar.getOrElse(false)
+        val sectionTabFontWeight = sectionTabFontWeight.orNull.let { "\"$it\"" }
+        val sectionTabTransition = sectionTabTransition.getOrElse(false)
+        val sidebarWidth = sidebarWidth.orNull?.let { "\"$it\"" }
+        // language=JSON
+        return """
+            {
+                "darkColorSchemeFix": $darkColorSchemeFix,
+                "darkPurpleHighlight": $darkPurpleHighlight,
+                "disableCodeWrapping": $disableCodeWrapping,
+                "improvedBlockquoteBorder": $improvedBlockquoteBorder,
+                "improvedSectionTabBorder": $improvedSectionTabBorder,
+                "lighterBlockquoteText": $lighterBlockquoteText,
+                "minimalScrollbar": $minimalScrollbar,
+                "sectionTabFontWeight": $sectionTabFontWeight,
+                "sectionTabTransition": $sectionTabTransition,
+                "sidebarWidth": $sidebarWidth
+            }
+        """.trimIndent()
+    }
+}
+
+tasks {
+    withType<DokkaGenerateTask>().configureEach {
+        inputs.files(dokkaDirs.stylesOutput, dokkaDirs.assets, dokkaDirs.templates, dokkaDirs.scripts)
+
+        dependsOn(compileDokkaSass, processDokkaIncludes)
     }
 }
 
 @Language("RegExp")
 val stringReplacements = listOf(
-        "☐" to """<input type="checkbox" readonly>""",
-        "☒" to """<input type="checkbox" readonly checked>""",
-        "- \\[x\\]" to """- <input class="checklist-item" type="checkbox" readonly>""",
-        "\\[@ft-(\\w+)\\]" to """<sup class="footnote"><a href="#footnote-$1">&#91;$1&#93;</a></sup>""",
-        "\\[@ref-(\\d+)\\]" to """<sup class="reference"><a href="#reference-$1">&#91;$1&#93;</a></sup>""",
-                               ).map { it.first.toRegex() to it.second }
+    "☐" to """<input type="checkbox" readonly>""",
+    "☒" to """<input type="checkbox" readonly checked>""",
+    "- \\[x]" to """- <input class="checklist-item" type="checkbox" readonly>""",
+    "\\[@ft-(\\w+)]" to """<sup class="footnote"><a href="#footnote-$1">&#91;$1&#93;</a></sup>""",
+    "\\[@ref-(\\d+)]" to """<sup class="reference"><a href="#reference-$1">&#91;$1&#93;</a></sup>""",
+).map { it.first.toRegex() to it.second }
 
 fun includesLineTransformer(sourceLine: String): String {
     return stringReplacements.fold(sourceLine) { line, (old, new) ->
