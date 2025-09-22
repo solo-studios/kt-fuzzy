@@ -1,3 +1,0 @@
-# For some reason it won't apply the indent size properly to yml files, so I need this
-[*]
-indent_size = 2
