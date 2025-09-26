@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file PlatformExtensions.jvm.kt is part of kotlin-fuzzy
- * Last modified on 25-09-2025 08:46 p.m.
+ * Last modified on 25-09-2025 09:41 p.m.
  *
  * MIT License
  *
@@ -29,6 +29,7 @@ package ca.solostudios.fuzzykt.kotest
 
 import ca.solostudios.fuzzykt.getEnv
 import io.kotest.core.extensions.Extension
+import io.kotest.extensions.allure.AllureTestReporter
 import io.kotest.extensions.htmlreporter.HtmlReporter
 import io.kotest.extensions.junitxml.JunitXmlReporter
 
@@ -48,6 +49,9 @@ actual fun platformExtensions(): List<Extension> {
         ),
         HtmlReporter(
             outputDir = "reports/tests/$taskName"
-        )
+        ),
+        AllureTestReporter(
+            includeContainers = false
+        ),
     )
 }
