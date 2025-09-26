@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 25-09-2025 08:32 p.m.
+ * The file PreComputed.jvm.kt is part of kotlin-fuzzy
+ * Last modified on 25-09-2025 04:16 p.m.
  *
  * MIT License
  *
@@ -25,40 +25,38 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+package ca.solostudios.fuzzykt
 
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
+import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.datatest.withData
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
 
-
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
+actual inline fun FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<FuzzyTestData>,
+    crossinline resultFunction: (String, String) -> Double,
+) {
+    context(context) {
+        // |lhs - rhs| <= epsilon * max(|lhs|, |rhs|)
+        withData(precomputed) {
+            // resultFunction(it.first, it.second) shouldBe
+            resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
+        }
+    }
 }
 
-group = "ca.solo-studios"
-description = """
-    Common test sources for kt-fuzzy and kt-string-similarity
-""".trimIndent()
-
-kotlin {
-    explicitApi = ExplicitApiMode.Disabled
-
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-                implementation(libs.bundles.kotest)
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.kotest.extensions.junitxml)
-                implementation(libs.kotest.extensions.htmlreporter)
-                implementation(libs.kotest.extensions.allure)
-            }
+@JvmName("testPrecomputedTriple")
+actual inline fun <T, U, V> FunSpecRootScope.testPrecomputed(
+    context: String,
+    precomputed: List<Triple<T, U, V>>,
+    crossinline resultFunction: (T, U) -> V,
+) {
+    context(context) {
+        withData(precomputed) {
+            resultFunction(it.first, it.second) shouldBe it.third
         }
     }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:08 a.m.
+ * Last modified on 22-09-2025 03:43 a.m.
  *
  * MIT License
  *
@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.plugins.kotest.toDependency())
 
     implementation(libs.plugins.ksp.toDependency())
+
+    implementation(libs.plugins.allure.report.toDependency())
+    implementation(libs.plugins.allure.adapter.toDependency())
 
     implementation(libs.plugins.dokka.toDependency())
     implementation(libs.plugins.kotlin.multiplatform.toDependency())

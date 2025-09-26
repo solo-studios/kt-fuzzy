@@ -3,8 +3,10 @@ kotlin = "2.2.10"
 dokka = "2.0.0"
 nyx = "0.3.0-SNAPSHOT"
 axion-release = "1.20.1"
-kotest = "6.0.3"
 ksp = "2.2.10-2.0.2"
+kotest = "6.0.3"
+allure-reporter = "2.34.1"
+allure-gradle = "3.0.0"
 kotlinx-benchmark = "0.4.13"
 freefair-sass = "9.0.0-rc2"
 
@@ -23,10 +25,14 @@ nyx = { id = "ca.solo-studios.nyx", version.ref = "nyx" }
 ### Gradle release and version management plugin.
 axion-release = { id = "pl.allegro.tech.build.axion-release", version.ref = "axion-release" }
 
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
 ## Kotest
 kotest = { id = "io.kotest", version.ref = "kotest" }
 
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+allure-report = { id = "io.qameta.allure-report", version.ref = "allure-gradle" }
+allure-aggregate-report = { id = "io.qameta.allure-aggregate-report", version.ref = "allure-gradle" }
+allure-adapter = { id = "io.qameta.allure-adapter", version.ref = "allure-gradle" }
 
 ## kotlinx.benchmark
 ### Toolkit for running benchmarks for multiplatform code written in Kotlin
@@ -56,6 +62,9 @@ kotest-framework-engine = { group = "io.kotest", name = "kotest-framework-engine
 kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
 kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
 kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+kotest-extensions-htmlreporter = { group = "io.kotest", name = "kotest-extensions-htmlreporter", version.ref = "kotest" }
+kotest-extensions-junitxml = { group = "io.kotest", name = "kotest-extensions-junitxml", version.ref = "kotest" }
+kotest-extensions-allure = { group = "io.kotest", name = "kotest-extensions-allure", version.ref = "kotest" }
 
 [bundles]
 kotest = [

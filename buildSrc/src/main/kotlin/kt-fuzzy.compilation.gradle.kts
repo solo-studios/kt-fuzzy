@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:11 a.m.
+ * Last modified on 25-09-2025 08:54 p.m.
  *
  * MIT License
  *
@@ -62,6 +62,7 @@ kotlin {
     // Why is kotlin/js broken? I don't fucking know!
     // For some reason it refuses to run my tests!
     js(IR) {
+        // TODO 2025-09-22 (solonovamax): remove both of these
         useCommonJs()
         useEsModules()
 
@@ -74,10 +75,14 @@ kotlin {
     wasmJs {
         browser()
         nodejs()
-        d8()
+        // TODO 2025-09-25 (solonovamax): The d8 target is currently broken due to an issue with kotlin's Uuid class
+        // d8()
     }
-    // wasmWasi()
 
+    // TODO 2025-09-22 (solonovamax): enable wasm wasi target
+    // wasmWasi {
+    //     nodejs()
+    // }
 
     mingwX64()
 
@@ -87,6 +92,7 @@ kotlin {
     macosX64()
     macosArm64()
 
+    // TODO 2025-09-22 (solonovamax): enable android targets
     // TODO build android shit (idk why it doesn't work, too lazy to figure it out, the jvm source sets should be fine)
     // androidTarget()
     // androidNativeX64()
@@ -101,6 +107,7 @@ kotlin {
     watchosX64()
     watchosArm32()
     watchosArm64()
+    watchosDeviceArm64()
     watchosSimulatorArm64()
 
     tvosX64()

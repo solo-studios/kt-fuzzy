@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 25-09-2025 08:32 p.m.
+ * The file modify-browsers.js is part of kotlin-fuzzy
+ * Last modified on 23-09-2025 12:17 a.m.
  *
  * MIT License
  *
@@ -25,40 +25,33 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+// noinspection JSUnnecessarySemicolon
+;(function (config) {
+    /** @type {{[key: string]: Object}} */
+    const customLaunchers = {};
 
+    for (/** @type {string} */ let browser of config.browsers) {
+        const customBrowser = {base: browser};
 
-plugins {
-    `kt-fuzzy`.repositories
-    `kt-fuzzy`.compilation
-    `kt-fuzzy`.testing
-    `kt-fuzzy`.versioning
-}
-
-group = "ca.solo-studios"
-description = """
-    Common test sources for kt-fuzzy and kt-string-similarity
-""".trimIndent()
-
-kotlin {
-    explicitApi = ExplicitApiMode.Disabled
-
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-                implementation(libs.bundles.kotest)
-            }
+        const lowerBrowser = browser.toLowerCase();
+        if (lowerBrowser.includes("chrome") || lowerBrowser.includes("chromium")) {
+            customBrowser.flags = [
+                "--disable-client-side-phishing-detection",
+                "--disable-features=Translate",
+                "--disable-notifications",
+                "--mute-audio",
+                "--password-store=basic",
+                "--use-mock-keychain",
+            ];
+        } else if (lowerBrowser.includes("firefox")) {
+            // TODO 2025-09-22 (solonovamax): any flags that I should set?
         }
 
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.kotest.extensions.junitxml)
-                implementation(libs.kotest.extensions.htmlreporter)
-                implementation(libs.kotest.extensions.allure)
-            }
-        }
+        customLaunchers[`${browser}_custom`] = customBrowser;
     }
-}
+
+    config.set({customLaunchers: customLaunchers});
+
+    config.browsers = config.browsers.map(browser => `${browser}_custom`);
+})(config);

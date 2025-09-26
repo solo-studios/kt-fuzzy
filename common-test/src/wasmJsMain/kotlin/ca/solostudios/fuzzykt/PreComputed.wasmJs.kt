@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file PreComputed.kt is part of kotlin-fuzzy
- * Last modified on 25-09-2025 03:28 p.m.
+ * The file PreComputed.wasmJs.kt is part of kotlin-fuzzy
+ * Last modified on 25-09-2025 08:54 p.m.
  *
  * MIT License
  *
@@ -27,24 +27,41 @@
 
 package ca.solostudios.fuzzykt
 
+import ca.solostudios.fuzzykt.utils.DEFAULT_TOLERANCE
 import ca.solostudios.fuzzykt.utils.FuzzyTestData
+import io.kotest.assertions.withClue
 import io.kotest.core.spec.style.scopes.FunSpecRootScope
+import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.shouldBe
 
-/**
- * Tests a precomputed value with a context.
- *
- * @param context The context name
- * @param precomputed The precomputed data
- * @param resultFunction The similarity function
- */
-expect inline fun FunSpecRootScope.testPrecomputed(
+actual inline fun FunSpecRootScope.testPrecomputed(
     context: String,
     precomputed: List<FuzzyTestData>,
     crossinline resultFunction: (String, String) -> Double,
-)
+) {
+    context(context) {
+        precomputed.forEach {
+            // previously we used StableIdents.getStableIdentifier(it), but this is now internal.
+            // and I can't work around that with funny reflection like I would on the JVM
+            withClue({ it.toString() }) {
+                resultFunction(it.first, it.second) shouldBe (it.result plusOrMinus DEFAULT_TOLERANCE)
+            }
+        }
+    }
+}
 
-expect inline fun <T, U, V> FunSpecRootScope.testPrecomputed(
+actual inline fun <T, U, V> FunSpecRootScope.testPrecomputed(
     context: String,
     precomputed: List<Triple<T, U, V>>,
     crossinline resultFunction: (T, U) -> V,
-)
+) {
+    context(context) {
+        precomputed.forEach {
+            // previously we used StableIdents.getStableIdentifier(it), but this is now internal.
+            // and I can't work around that with funny reflection like I would on the JVM
+            withClue({ it.toString() }) {
+                resultFunction(it.first, it.second) shouldBe it.third
+            }
+        }
+    }
+}

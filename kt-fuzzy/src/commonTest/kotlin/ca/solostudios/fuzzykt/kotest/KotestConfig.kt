@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file KotestConfig.kt is part of kotlin-fuzzy
- * Last modified on 22-09-2025 02:49 a.m.
+ * Last modified on 22-09-2025 05:45 p.m.
  *
  * MIT License
  *
@@ -27,26 +27,4 @@
 
 package ca.solostudios.fuzzykt.kotest
 
-import io.kotest.common.ExperimentalKotest
-import io.kotest.core.config.AbstractProjectConfig
-import io.kotest.core.names.DuplicateTestNameMode
-import io.kotest.core.names.TestNameCase
-import io.kotest.core.spec.SpecExecutionOrder
-import io.kotest.core.test.TestCaseOrder
-import io.kotest.engine.concurrency.SpecExecutionMode
-import io.kotest.engine.concurrency.TestExecutionMode
-
-@ExperimentalKotest
-class KotestConfig : AbstractProjectConfig() {
-    override val testNameCase = TestNameCase.Lowercase
-    override val duplicateTestNameMode = DuplicateTestNameMode.Error
-    override val testExecutionMode = TestExecutionMode.LimitedConcurrency(8)
-    override val specExecutionMode = SpecExecutionMode.LimitedConcurrency(4)
-    override val testCaseOrder = TestCaseOrder.Sequential
-    override val specExecutionOrder = SpecExecutionOrder.Lexicographic
-    override var displayFullTestPath: Boolean? = false
-
-    // override val parallelism = 8
-    // override val concurrentSpecs = 4
-    // override val concurrentTests = 8
-}
+class KotestConfig : AbstractKotestConfig()

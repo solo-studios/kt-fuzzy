@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
+ *
+ * The file AbstractKotestConfig.kt is part of kotlin-fuzzy
+ * Last modified on 23-09-2025 01:24 a.m.
+ *
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * KOTLIN-FUZZY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package ca.solostudios.fuzzykt.kotest
+
+import io.kotest.core.config.AbstractProjectConfig
+import io.kotest.core.extensions.Extension
+import io.kotest.core.names.DuplicateTestNameMode
+import io.kotest.core.names.TestNameCase
+import io.kotest.core.spec.SpecExecutionOrder
+import io.kotest.core.test.TestCaseOrder
+import io.kotest.engine.concurrency.SpecExecutionMode
+import io.kotest.engine.concurrency.TestExecutionMode
+
+abstract class AbstractKotestConfig : AbstractProjectConfig() {
+    override val testNameCase = TestNameCase.Lowercase
+    override val duplicateTestNameMode = DuplicateTestNameMode.Error
+    override val testExecutionMode = TestExecutionMode.LimitedConcurrency(8)
+    override val specExecutionMode = SpecExecutionMode.LimitedConcurrency(4)
+    override val testCaseOrder = TestCaseOrder.Sequential
+    override val specExecutionOrder = SpecExecutionOrder.Lexicographic
+    override var displayFullTestPath: Boolean? = false
+
+    override val extensions: List<Extension> = platformExtensions()
+}
+
+/**
+ * Only works on jvm platforms.
+ */
+object JvmKotestConfig : AbstractKotestConfig()

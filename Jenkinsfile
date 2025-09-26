@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jenkinsfile is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:24 a.m.
+ * Last modified on 25-09-2025 08:28 p.m.
  *
  * MIT License
  *
@@ -129,6 +129,7 @@ pipeline {
         always {
             junit testResults: '**/build/test-results/*/TEST-*.xml'
             recordIssues enabledForFailure: true, tools: [kotlin()]
+            allure includeProperties: false, jdk: '', results: [[path: 'build/allure-results']]
 
             cleanWs()
         }

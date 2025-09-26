@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2021-2025 solonovamax <solonovamax@12oclockpoint.com>
+ * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
- * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 04:00 a.m.
+ * The file Environment.js.kt is part of kotlin-fuzzy
+ * Last modified on 25-09-2025 03:47 p.m.
  *
  * MIT License
  *
@@ -25,15 +25,14 @@
  * SOFTWARE.
  */
 
-// import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-// import org.jmailen.gradle.kotlinter.tasks.InstallPreCommitHookTask
+package ca.solostudios.fuzzykt
 
-plugins {
-    `kt-fuzzy`.dokka
-    `kt-fuzzy`.repositories
-    id("io.qameta.allure-aggregate-report")
-    // alias(libs.plugins.allure.aggregate.report)
-}
-
-group = "ca.solo-studios"
-repository = Repository("solo-studios", "kt-fuzzy", "github.com")
+actual fun getEnv(name: String): String? = try {
+    js("env[name]")
+} catch (_: dynamic) {
+    try {
+        js("process.env[name]")
+    } catch (_: dynamic) {
+        null
+    }
+}?.toString()

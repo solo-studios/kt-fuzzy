@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:11 a.m.
+ * Last modified on 25-09-2025 04:04 p.m.
  *
  * MIT License
  *
@@ -53,23 +53,3 @@ kotlin {
         }
     }
 }
-
-// afterEvaluate {
-//     println("source sets=${sourceSets.asMap}")
-//
-//     project.configure<JavaPluginExtension> {
-//         // withSourcesJar()
-//         val main = sourceSets.getByName("commonMain")
-//         JvmPluginsHelper.createDocumentationVariantWithArtifact(
-//                 main.sourcesElementsConfigurationName,
-//                 null,
-//                 DocsType.SOURCES,
-//                 listOf(),
-//                 main.sourcesJarTaskName,
-//                 main.allSource,
-//                 project as ProjectInternal
-//                                                                )
-//
-//         // withJavadocJar()
-//     }
-// }
