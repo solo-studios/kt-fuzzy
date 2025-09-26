@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 25-09-2025 08:51 p.m.
+ * Last modified on 25-09-2025 09:02 p.m.
  *
  * MIT License
  *
@@ -116,7 +116,7 @@ tasks {
         }
 
         environment("GRADLE_TASK_NAME", name)
-        systemProperty("gradle.build.dir", layout.buildDirectory.get().asFile.absolutePathw)
+        systemProperty("gradle.build.dir", layout.buildDirectory.get().asFile.absolutePath)
         systemProperty("kotest.framework.config.fqn", "ca.solostudios.fuzzykt.kotest.JvmKotestConfig")
     }
 
