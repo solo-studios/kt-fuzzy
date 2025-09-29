@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 02:39 a.m.
+ * Last modified on 28-09-2025 11:17 p.m.
  *
  * MIT License
  *
@@ -34,6 +34,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.dokka.gradle.engine.plugins.DokkaPluginParametersBaseSpec
+import org.jetbrains.dokka.gradle.internal.InternalDokkaGradlePluginApi
 import org.jetbrains.dokka.gradle.tasks.DokkaGenerateTask
 import java.time.Year
 
@@ -96,11 +97,14 @@ dokka {
         reportUndocumented = true
         documentedVisibilities = setOf(VisibilityModifier.Public, VisibilityModifier.Protected)
 
-        // sourceLink {
-        //     localDirectory = projectDir.resolve("src")
-        //     remoteUrl = nyx.info.repository.projectUrl.map { uri("$it/blob/${scmVersion.scmPosition.revision}/src") }
-        //     remoteLineSuffix = "#L"
-        // }
+        sourceLink {
+            localDirectory = projectDir.resolve("src")
+            remoteUrl = nyx.info.repository.projectUrl.map {
+                val projectRelativeDir = projectDir.relativeTo(rootDir).invariantSeparatorsPath
+                uri("$it/blob/${scmVersion.scmPosition.revision}/$projectRelativeDir/src")
+            }
+            remoteLineSuffix = "#L"
+        }
     }
 
     pluginsConfiguration {
@@ -143,6 +147,7 @@ dokka {
     }
 }
 
+@OptIn(InternalDokkaGradlePluginApi::class)
 abstract class DokkaScriptsPluginParameters @Inject constructor(name: String) : DokkaPluginParametersBaseSpec(
     name,
     "ca.solostudios.dokkascript.plugin.DokkaScriptsPlugin"
@@ -174,6 +179,7 @@ abstract class DokkaScriptsPluginParameters @Inject constructor(name: String) : 
     }
 }
 
+@OptIn(InternalDokkaGradlePluginApi::class)
 abstract class DokkaStyleTweaksPluginParameters @Inject constructor(name: String) : DokkaPluginParametersBaseSpec(
     name,
     "ca.solostudios.dokkastyles.plugin.DokkaStyleTweaksPlugin"

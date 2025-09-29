@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 21-09-2025 10:20 p.m.
+ * Last modified on 29-09-2025 07:39 p.m.
  *
  * MIT License
  *
@@ -25,7 +25,7 @@
  * SOFTWARE.
  */
 
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
+@file:Suppress("unused")
 
 plugins {
     `kt-fuzzy`.repositories

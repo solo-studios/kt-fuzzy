@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.testing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 25-09-2025 09:02 p.m.
+ * Last modified on 26-09-2025 02:00 p.m.
  *
  * MIT License
  *
@@ -47,7 +47,7 @@ kotlin {
         compilations.named { it.contains("test", ignoreCase = true) }.configureEach {
             compileTaskProvider.configure {
                 compilerOptions {
-                    this.jvmTarget = JvmTarget.JVM_11
+                    jvmTarget = JvmTarget.JVM_11
                 }
             }
         }

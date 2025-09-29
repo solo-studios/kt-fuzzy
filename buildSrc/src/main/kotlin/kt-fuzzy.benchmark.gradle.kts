@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.benchmark.gradle.kts is part of kotlin-fuzzy
- * Last modified on 05-03-2025 12:44 a.m.
+ * Last modified on 29-09-2025 07:42 p.m.
  *
  * MIT License
  *
@@ -24,8 +24,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-@file:Suppress("KotlinRedundantDiagnosticSuppress", "UNUSED_VARIABLE")
 
 import kotlinx.benchmark.gradle.JvmBenchmarkTarget
 import kotlinx.benchmark.gradle.benchmark

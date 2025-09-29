@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 04:00 a.m.
+ * Last modified on 29-09-2025 07:35 p.m.
  *
  * MIT License
  *
@@ -25,15 +25,16 @@
  * SOFTWARE.
  */
 
-// import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-// import org.jmailen.gradle.kotlinter.tasks.InstallPreCommitHookTask
-
 plugins {
     `kt-fuzzy`.dokka
     `kt-fuzzy`.repositories
     id("io.qameta.allure-aggregate-report")
-    // alias(libs.plugins.allure.aggregate.report)
 }
 
 group = "ca.solo-studios"
 repository = Repository("solo-studios", "kt-fuzzy", "github.com")
+
+dependencies {
+    dokka(projects.ktFuzzy)
+    dokka(projects.ktStringSimilarity)
+}
