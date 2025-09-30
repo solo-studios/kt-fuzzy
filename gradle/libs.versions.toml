@@ -9,6 +9,7 @@ allure-reporter = "2.34.1"
 allure-gradle = "3.0.0"
 kotlinx-benchmark = "0.4.13"
 freefair-sass = "9.0.0-rc2"
+android-gradle-plugin = "8.13.0"
 
 [plugins]
 ## Kotlin Plugins
@@ -39,6 +40,8 @@ allure-adapter = { id = "io.qameta.allure-adapter", version.ref = "allure-gradle
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
 
 sass-base = { id = "io.freefair.sass-base", version.ref = "freefair-sass" }
+
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 
 [libraries]
 

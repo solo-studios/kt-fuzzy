@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 28-09-2025 11:17 p.m.
+ * Last modified on 29-09-2025 07:58 p.m.
  *
  * MIT License
  *
@@ -28,7 +28,6 @@
 @file:Suppress("serial")
 
 import com.sass_lang.embedded_protocol.OutputStyle
-import gradle.kotlin.dsl.accessors._731353d3330d41c97ba54bd629a1162c.nyx
 import io.freefair.gradle.plugins.sass.SassCompile
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.intellij.lang.annotations.Language

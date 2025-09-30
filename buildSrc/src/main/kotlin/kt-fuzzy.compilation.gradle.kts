@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.compilation.gradle.kts is part of kotlin-fuzzy
- * Last modified on 25-09-2025 08:54 p.m.
+ * Last modified on 29-09-2025 09:08 p.m.
  *
  * MIT License
  *
@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("multiplatform")
+    // id("com.android.library")
     id("ca.solo-studios.nyx")
 }
 
@@ -92,13 +93,11 @@ kotlin {
     macosX64()
     macosArm64()
 
-    // TODO 2025-09-22 (solonovamax): enable android targets
-    // TODO build android shit (idk why it doesn't work, too lazy to figure it out, the jvm source sets should be fine)
-    // androidTarget()
-    // androidNativeX64()
-    // androidNativeX86()
-    // androidNativeArm32()
-    // androidNativeArm64()
+    // androidTarget() // TODO 2025-09-29 (solonovamax): Android is broken
+    androidNativeX64()
+    androidNativeX86()
+    androidNativeArm32()
+    androidNativeArm64()
 
     iosX64()
     iosArm64()
@@ -114,3 +113,40 @@ kotlin {
     tvosArm64()
     tvosSimulatorArm64()
 }
+
+// TODO 2025-09-29 (solonovamax): something about AGP entirely breaks the allure gradle plugin.
+//  I have no clue what it is, and absolutely zero desire to debug this right now.
+//  here's a starting point if anyone else wants to try to figure this out.
+// android {
+//     namespace = "ca.solostudios"
+//     compileSdk = 36
+//     defaultConfig {
+//         minSdk = 21
+//         aarMetadata {
+//             minCompileSdk = 21
+//         }
+//     }
+//
+//     // TODO 2025-09-29 (solonovamax): multiple product flavours breaks the allure plugin
+//     // flavorDimensions("api")
+//     //
+//     // productFlavors {
+//     //     register("minApi24") {
+//     //         dimension = "api"
+//     //         minSdk = 24
+//     //     }
+//     //
+//     //     register("minApi21") {
+//     //         dimension = "api"
+//     //         minSdk = 21
+//     //     }
+//     // }
+//
+//     publishing {
+//         multipleVariants {
+//             allVariants()
+//             withSourcesJar()
+//             withJavadocJar()
+//         }
+//     }
+// }
