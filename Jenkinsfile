@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jenkinsfile is part of kotlin-fuzzy
- * Last modified on 29-09-2025 07:36 p.m.
+ * Last modified on 29-09-2025 09:49 p.m.
  *
  * MIT License
  *
@@ -36,6 +36,10 @@ pipeline {
         githubPush()
     }
 
+    environment {
+        DISCORD_WEBHOOK_URL = credentials('kt-fuzzy-discord-webhook-url')
+    }
+
     stages {
         stage('Setup Gradle') {
             steps {
@@ -46,7 +50,7 @@ pipeline {
         stage('Build') {
             steps {
                 withGradle {
-                    sh './gradlew build -x allTests -x check'
+                    sh './gradlew build dokkaGenerate -x allTests -x check'
                 }
             }
 
@@ -63,6 +67,13 @@ pipeline {
             steps {
                 withGradle {
                     sh './gradlew allTests'
+                }
+            }
+
+            post {
+                always {
+                    junit testResults: '**/build/test-results/*/TEST-*.xml'
+                    allure includeProperties: false, jdk: '', results: [[path: '**/build/allure-results']]
                 }
             }
         }
@@ -126,9 +137,28 @@ pipeline {
 
     post {
         always {
-            junit testResults: '**/build/test-results/*/TEST-*.xml'
-            recordIssues enabledForFailure: true, tools: [kotlin()]
-            allure includeProperties: false, jdk: '', results: [[path: '**/build/allure-results']]
+            discoverReferenceBuild()
+
+            recordIssues(
+                    aggregatingResults: true,
+                    enabledForFailure: true,
+                    minimumSeverity: 'ERROR',
+                    sourceCodeEncoding: 'UTF-8',
+                    checksAnnotationScope: 'ALL',
+                    sourceCodeRetention: 'LAST_BUILD',
+                    tools: [kotlin()]
+            )
+
+            discordSend(
+                    title: env.JOB_NAME + ' ' + env.BUILD_DISPLAY_NAME,
+                    showChangeset: true,
+                    enableArtifactsList: false,
+                    link: env.BUILD_URL,
+                    result: currentBuild.currentResult,
+                    customAvatarUrl: 'https://github.com/solo-studios.png',
+                    customUsername: 'Solo Studios Jenkins',
+                    webhookURL: env.DISCORD_WEBHOOK_URL,
+            )
 
             cleanWs()
         }
