@@ -27,17 +27,75 @@
         }
     </script>
     <!-- MathJax configuration -->
-    <script>
-        window.MathJax = {
-            options: {
-                menuOptions: {
-                    settings: {
-                        zoom: "DoubleClick",
-                        zscale: "300%",
-                    }
-                }
-            },
+    <script type="text/x-mathjax-config">
+        const backgroundBoxShadow = {
+            "box-shadow": "5px 5px 15px var(--background-color)",
+            "-webkit-box-shadow": "5px 5px 15px var(--background-color)",
+            "-moz-box-shadow": "5px 5px 15px var(--background-color)",
+            "-khtml-box-shadow": "5px 5px 15px var(--background-color)",
+            "filter": "none",
         };
+        const sizeS1BorderRadius = {
+            "border-radius": "var(--size-s1)",
+            "-webkit-border-radius": "var(--size-s1)",
+            "-moz-border-radius": "var(--size-s1)",
+            "-khtml-border-radius": "var(--size-s1)",
+        };
+        const popupStyles = {
+            "background-color": "var(--background-color) !important",
+            "color": "var(--default-font-color) !important",
+            "border": "2px solid var(--border-color) !important",
+            "box-shadow": "none !important",
+            "-webkit-box-shadow": "none !important",
+            "-moz-box-shadow": "none !important",
+            "-khtml-box-shadow": "none !important",
+            "filter": "none !important",
+            "border-radius": "var(--size-s2) !important",
+            "-webkit-border-radius": "var(--size-s2) !important",
+            "-moz-border-radius": "var(--size-s2) !important",
+            "-khtml-border-radius": "var(--size-s2) !important",
+        };
+        MathJax.Hub.Config({
+            menuSettings: {
+                zoom: "Double-Click",
+                zscale: "300%"
+            },
+            styles: {
+                "#MathJax_Zoom": {
+                    "background-color": "var(--background-color)",
+                    "border": "1px solid var(--border-color)",
+                    ...backgroundBoxShadow,
+                },
+                ".MathJax_Menu": {
+                    "background-color": "color-mix(in oklab, var(--background-color) 96%, var(--default-gray))",
+                    "color": "var(--default-font-color)",
+                    "border": "1px solid var(--border-color)",
+                    ...sizeS1BorderRadius,
+                    ...backgroundBoxShadow,
+                },
+                ".MathJax_MenuActive": {
+                    "background-color": "var(--toc-hover-color)",
+                    "color": "inherit"
+                },
+                ".MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus": {
+                    "background-color": "var(--toc-hover-color)",
+                },
+                "#MathJax_Help": popupStyles,
+                "#MathJax_About": popupStyles,
+                "#MathJax_About > span": {
+                    "background-color": "var(--code-background) !important",
+                },
+                "#MathJax_HelpContent": {
+                    "background-color": "var(--code-background) !important",
+                },
+                ".MathJax_MenuClose": {
+                    "border": "none"
+                },
+                ".MathJax_MenuClose span": {
+                    "background-color": "none",
+                }
+            }
+        });
     </script>
     <!-- MathJax script -->
     <#-- Resources (scripts, stylesheets) are handled by Dokka.

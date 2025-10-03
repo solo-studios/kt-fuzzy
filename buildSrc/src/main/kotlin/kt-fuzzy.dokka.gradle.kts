@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.dokka.gradle.kts is part of kotlin-fuzzy
- * Last modified on 29-09-2025 07:58 p.m.
+ * Last modified on 02-10-2025 10:18 p.m.
  *
  * MIT License
  *
@@ -125,7 +125,7 @@ dokka {
             scripts.from(dokkaDirs.scripts.flatMap { it.listFiles().orEmpty().toList() })
             remoteScripts = listOf(
                 // MathJax
-                "https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0/tex-chtml.js",
+                "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML&latest",
             )
         }
 
