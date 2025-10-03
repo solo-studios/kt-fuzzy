@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 29-09-2025 07:57 p.m.
+ * Last modified on 03-10-2025 12:51 a.m.
  *
  * MIT License
  *
@@ -34,12 +34,12 @@ plugins {
 }
 
 repositories {
+    soloStudios()
+    soloStudiosSnapshots()
+
     mavenCentral()
     // for kotlin-dsl plugin
     gradlePluginPortal()
-
-    soloStudios()
-    soloStudiosSnapshots()
 
     // for android
     google()
@@ -75,6 +75,8 @@ dependencies {
     implementation(libs.plugins.kotlin.plugin.allopen.toDependency())
 
     implementation(libs.plugins.nyx.toDependency())
+
+    implementation(libs.plugins.sonatype.publish.toDependency())
 
     implementation(libs.plugins.axion.release.toDependency())
 

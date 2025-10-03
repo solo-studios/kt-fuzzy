@@ -2,7 +2,7 @@
  * Copyright (c) 2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file Jenkinsfile is part of kotlin-fuzzy
- * Last modified on 29-09-2025 09:49 p.m.
+ * Last modified on 03-10-2025 12:52 a.m.
  *
  * MIT License
  *
@@ -122,8 +122,8 @@ pipeline {
                         ),
                         usernamePassword(
                                 credentialsId: 'sonatype-maven-credentials',
-                                passwordVariable: 'ORG_GRADLE_PROJECT_SonatypePassword',
-                                usernameVariable: 'ORG_GRADLE_PROJECT_SonatypeUsername'
+                                passwordVariable: 'ORG_GRADLE_PROJECT_SonatypeCentralPassword',
+                                usernameVariable: 'ORG_GRADLE_PROJECT_SonatypeCentralUsername'
                         )
                 ]) {
                     withGradle {

@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.publishing.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 03:11 a.m.
+ * Last modified on 03-10-2025 12:53 a.m.
  *
  * MIT License
  *
@@ -25,10 +25,17 @@
  * SOFTWARE.
  */
 
+import ca.solostudios.nyx.sonatype.PublishingType
+
 plugins {
     signing
     `maven-publish`
     id("ca.solo-studios.nyx")
+    id("ca.solo-studios.sonatype-publish")
+}
+
+sonatype {
+    publishingType = PublishingType.AUTOMATIC
 }
 
 nyx {
@@ -53,17 +60,6 @@ nyx {
 
         repositories {
             maven {
-                name = "Sonatype"
-
-                val repositoryId: String? by project
-                url = when {
-                    repositoryId != null -> uri("https://s01.oss.sonatype.org/service/local/staging/deployByRepositoryId/$repositoryId/")
-                    else                 -> uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                }
-
-                credentials(PasswordCredentials::class)
-            }
-            maven {
                 name = "SoloStudiosReleases"
 
                 url = uri("https://maven.solo-studios.ca/releases/")
@@ -82,10 +78,6 @@ nyx {
                 authentication { // publishing doesn't work without this for some reason
                     create<BasicAuthentication>("basic")
                 }
-            }
-            maven {
-                name = "TestMaven"
-                url = file("./test-maven").absoluteFile.toURI()
             }
         }
     }

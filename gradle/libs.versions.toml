@@ -21,6 +21,7 @@ kotlin-plugin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.re
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 nyx = { id = "ca.solo-studios.nyx", version.ref = "nyx" }
+sonatype-publish = { id = "ca.solo-studios.sonatype-publish", version.ref = "nyx" }
 
 ## Axion release plugin
 ### Gradle release and version management plugin.
