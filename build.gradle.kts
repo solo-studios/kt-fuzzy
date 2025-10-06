@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file build.gradle.kts is part of kotlin-fuzzy
- * Last modified on 29-09-2025 07:35 p.m.
+ * Last modified on 05-10-2025 08:20 p.m.
  *
  * MIT License
  *
@@ -28,8 +28,11 @@
 plugins {
     `kt-fuzzy`.dokka
     `kt-fuzzy`.repositories
+    id("pl.allegro.tech.build.axion-release")
     id("io.qameta.allure-aggregate-report")
 }
+
+nyx.info.version = scmVersion.version
 
 group = "ca.solo-studios"
 repository = Repository("solo-studios", "kt-fuzzy", "github.com")

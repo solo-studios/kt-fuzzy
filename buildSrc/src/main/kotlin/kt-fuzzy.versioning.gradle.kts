@@ -2,7 +2,7 @@
  * Copyright (c) 2023-2025 solonovamax <solonovamax@12oclockpoint.com>
  *
  * The file kt-fuzzy.versioning.gradle.kts is part of kotlin-fuzzy
- * Last modified on 22-09-2025 02:39 a.m.
+ * Last modified on 05-10-2025 08:18 p.m.
  *
  * MIT License
  *
@@ -26,15 +26,7 @@
  */
 
 plugins {
-    id("pl.allegro.tech.build.axion-release")
     id("ca.solo-studios.nyx")
 }
 
-scmVersion {
-    tag {
-        prefix = project.name
-        versionSeparator = "-"
-    }
-}
-
-nyx.info.version = scmVersion.version
+nyx.info.version = rootProject.version.toStringOrEmpty()
